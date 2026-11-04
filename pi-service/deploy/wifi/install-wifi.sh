@@ -26,7 +26,9 @@ RETRY_MINUTES=10
 EOF
   echo "Created $CONF"
 fi
-chmod 600 "$CONF"
+# Readable by the driving service's user (the Live View's Join card shows the hotspot name, and the
+# password only to devices already on the hotspot); hidden from other users.
+chown "root:${SUDO_USER:-root}" "$CONF"; chmod 640 "$CONF"
 . "$CONF"
 [ ${#HOTSPOT_PASSWORD} -ge 8 ] || { echo "HOTSPOT_PASSWORD in $CONF must be at least 8 characters." >&2; exit 1; }
 

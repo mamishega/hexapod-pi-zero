@@ -32,6 +32,7 @@ const robot = new RobotController({links: {uart: linkClass({path: config.serial}
 if (config.livePort) {
   live = createLiveServer({root: path.join(ROOT, 'live'), port: config.livePort, log});
   robot.subscribe(() => live.robot(robot.getSnapshot()));
+  live.watchLink(robot); // message inspector: every command to the board and its reply
 }
 let lastMessage = robot.getSnapshot().message.text, lastConnection = ''; // skip the browser's opening hint
 robot.subscribe(() => {

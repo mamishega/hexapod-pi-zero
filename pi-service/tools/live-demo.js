@@ -18,10 +18,19 @@ const log = (text, error = /^ERROR/.test(text)) => { console.log(`${new Date().t
 const live = createLiveServer({root: path.join(ROOT, 'live'), port, host: process.env.HEXAPOD_LIVE_HOST || '127.0.0.1', log: text => console.log(text)});
 
 const robot = new RobotController({links: {sim: SimulatedLink}});
+live.watchLink(robot);
+// The simulator has no battery sensor: invent a plausible one (marked simulated on the page).
+let charge = 7.6;
+const withDemoPower = s => {
+  if (!s.live) return s;
+  const amps = s.live.walking ? 1.8 + Math.random() * 0.9 : s.live.active ? 0.45 + Math.random() * 0.1 : 0.08;
+  charge = Math.max(6.6, charge - amps * 0.00002);
+  return {...s, live: {...s.live, power: {voltage: Math.round((charge - amps * 0.12) * 100) / 100, current: Math.round(amps * 100) / 100, simulated: true}}};
+};
 let lastMessage = '';
 robot.subscribe(() => {
   const s = robot.getSnapshot();
-  live.robot(s);
+  live.robot(withDemoPower(s));
   if (s.message.text !== lastMessage) { lastMessage = s.message.text; log(`${s.message.error ? 'ERROR ' : ''}${s.message.text}`); }
 });
 

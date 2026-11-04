@@ -1,6 +1,12 @@
 // Hexapod Live View: draws the live robot, the Xbox controller and the signal path from
 // Server-Sent Events sent by the driving service. Read-only: this page sends no commands.
-import {LEG_NAMES, DEFAULT_POSE, copyPose, mixPose, legJoints, project, bodyStep} from './motion-geometry.js';
+import {LEG_NAMES, DEFAULT_POSE, copyPose, legJoints, project, bodyStep, balance} from './motion-geometry.js';
+import {Timeline} from './timeline.js';
+import {drawGaitChart} from './gait-chart.js';
+import {drawPower} from './power-chart.js';
+import {createInspector} from './messages.js';
+import {drawLegInspector} from './leg-inspector.js';
+import {fillJoin} from './join.js';
 
 const $ = id => document.getElementById(id);
 const SVG = 'http://www.w3.org/2000/svg';
@@ -36,10 +42,13 @@ const GAIT_LESSON = {
 // ---------------------------------------------------------------- state
 const view = {robot: null, pad: {connected: false}, online: false};
 let dirty = true, lastDraw = 0; // redraw the robot only when something changed
-const scene = {
-  pose: copyPose(DEFAULT_POSE), from: copyPose(DEFAULT_POSE), to: copyPose(DEFAULT_POSE),
-  t0: 0, span: 200, lastUpdate: 0, body: {x: 0, y: 0, theta: 0}, camera: 'angled', trails: true, prints: [],
-};
+const scene = {pose: copyPose(DEFAULT_POSE), lastT: 0, body: {x: 0, y: 0, theta: 0}, camera: 'angled', trails: true, balance: true, prints: []};
+// Everything shown comes from this buffer of robot updates, drawn LIVE_DELAY behind the newest one
+// so there is always a next update to glide towards. Pause / slow motion / replay move the playhead.
+const timeline = new Timeline();
+const LIVE_DELAY = 260, REPLAY_MS = 20000;
+const play = {mode: 'live', t: 0, speed: 1, last: 0}; // mode: live | paused | replay
+const ui = {leg: 0, power: [], serverOffset: 0, lastPower: -Infinity};
 
 // ---------------------------------------------------------------- robot scene
 const poly = (points, cam) => points.map(p => project(p, cam).map(v => v.toFixed(1)).join(',')).join(' ');
@@ -67,6 +76,16 @@ function drawScene(now) {
   }
   const shell = [[-58, -70, 9], [0, -101, 9], [58, -70, 9], [72, 0, 9], [58, 70, 9], [0, 101, 9], [-58, 70, 9], [-72, 0, 9]].map(world);
   out += `<polygon points="${poly(shell.map(([x, y]) => [x, y, -ground]), cam)}" fill="#091e25" opacity=".45"/>`;
+  // Balance: the area between the feet on the ground, and the body's centre. Inside = stable.
+  if (scene.balance) {
+    const b = balance(pose);
+    if (b.hull.length >= 3) {
+      const colour = b.stable ? '#86efac' : '#f87171';
+      out += `<polygon points="${poly(b.hull.map(([x, y]) => [...rotate([x, y, 0], body.theta).slice(0, 2), -ground]), cam)}" fill="${colour}" fill-opacity=".14" stroke="${colour}" stroke-width="1.5" stroke-dasharray="6 4"/>`;
+    }
+    const [cx, cy] = project([0, 0, -ground], cam);
+    out += `<g stroke="${b.stable ? '#86efac' : '#f87171'}" stroke-width="2"><circle cx="${cx}" cy="${cy}" r="7" fill="none"/><path d="M${cx - 11} ${cy}h22M${cx} ${cy - 11}v22"/></g>`;
+  }
   // Painter's order: draw the far side first. "Nearer" depends on the camera.
   const depth = {angled: p => project(p, 'angled')[1], top: p => p[2], front: p => -p[1], side: p => p[0]}[cam];
   const legs = pose.map((xyz, i) => ({i, joints: legJoints(xyz, i).map(world), lift: ground - xyz[2]}))
@@ -100,18 +119,23 @@ function drawScene(now) {
 }
 const visibleRobotViews = () => [...document.querySelectorAll('svg.robot-view')].filter(svg => svg.getClientRects().length);
 
-// Called every animation frame: glide from the last pose towards the newest one.
-function stepScene(now) {
-  const prev = scene.pose;
-  const t = scene.span > 0 ? clamp((now - scene.t0) / scene.span, 0, 1) : 1;
-  const next = mixPose(scene.from, scene.to, t);
-  // Grounded feet push the body: move the world under the robot by the same amount.
-  const s = bodyStep(prev, next);
-  if (Number.isFinite(s.dx) && view.robot?.live?.walking) {
-    const c = Math.cos(scene.body.theta), si = Math.sin(scene.body.theta);
-    scene.body = {x: scene.body.x + c * s.dx - si * s.dy, y: scene.body.y + si * s.dx + c * s.dy, theta: scene.body.theta + s.dtheta};
+// Called every animation frame with the playhead time: the pose there, and the body moved by
+// the feet that pushed it since the last frame (only when playing forwards).
+function stepScene(t) {
+  const pose = timeline.poseAt(t);
+  if (!pose) return false;
+  const prev = scene.pose, forward = t >= scene.lastT && t - scene.lastT < 250;
+  scene.lastT = t;
+  if (pose.every((p, i) => p[0] === prev[i][0] && p[1] === prev[i][1] && p[2] === prev[i][2])) return false;
+  if (forward && timeline.frameAt(t)?.walking) {
+    const s = bodyStep(prev, pose);
+    if (Number.isFinite(s.dx)) {
+      const c = Math.cos(scene.body.theta), si = Math.sin(scene.body.theta);
+      scene.body = {x: scene.body.x + c * s.dx - si * s.dy, y: scene.body.y + si * s.dx + c * s.dy, theta: scene.body.theta + s.dtheta};
+    }
   }
-  scene.pose = next;
+  scene.pose = pose;
+  return true;
 }
 
 function recordFootprints(now) {
@@ -126,14 +150,6 @@ function recordFootprints(now) {
   if (scene.prints.length > 240) scene.prints.splice(0, scene.prints.length - 240);
 }
 
-function newPose(positions, now) {
-  scene.from = copyPose(scene.pose);
-  scene.to = copyPose(positions);
-  // Glide over the time since the last update, so motion looks continuous.
-  scene.span = scene.lastUpdate ? clamp(now - scene.lastUpdate, 60, 700) : 250;
-  scene.t0 = now; scene.lastUpdate = now;
-}
-
 document.querySelectorAll('[data-view]').forEach(button => button.addEventListener('click', () => {
   scene.camera = button.dataset.view; dirty = true;
   // Every page with a robot shares the same camera.
@@ -141,6 +157,50 @@ document.querySelectorAll('[data-view]').forEach(button => button.addEventListen
 }));
 $('trails').addEventListener('click', event => {
   scene.trails = !scene.trails; dirty = true; event.currentTarget.setAttribute('aria-pressed', String(scene.trails));
+});
+$('balance').addEventListener('click', event => {
+  scene.balance = !scene.balance; dirty = true; event.currentTarget.setAttribute('aria-pressed', String(scene.balance));
+});
+
+// ---------------------------------------------------------------- pause, slow motion, replay
+function setMode(mode) {
+  play.mode = mode;
+  timeline.hold = mode === 'paused'; // keep the paused moment however long it stays paused
+  const live = mode === 'live';
+  $('play').querySelector('use').setAttribute('href', mode === 'paused' ? '#i-play' : '#i-pause');
+  $('play').setAttribute('aria-label', mode === 'paused' ? 'Play' : 'Pause');
+  $('go-live').hidden = live;
+}
+function setSpeed(speed) {
+  play.speed = speed;
+  document.querySelectorAll('[data-speed]').forEach(b => b.setAttribute('aria-pressed', String(Number(b.dataset.speed) === speed)));
+}
+function goLive() { setSpeed(1); setMode('live'); }
+function togglePlay() {
+  if (play.mode === 'paused') {
+    const [lo] = replayRange(performance.now());
+    if (play.t < lo) play.t = lo; // paused longer than the replay window: resume from its oldest moment
+    setMode('replay');
+  } else setMode('paused');
+}
+$('play').addEventListener('click', togglePlay);
+$('go-live').addEventListener('click', goLive);
+document.querySelectorAll('[data-speed]').forEach(b => b.addEventListener('click', () => {
+  setSpeed(Number(b.dataset.speed));
+  if (play.mode === 'live' && play.speed < 1) setMode('replay'); // slow motion from now: falls behind live
+}));
+const replayRange = now => [Math.max(timeline.start, now - REPLAY_MS), now - LIVE_DELAY];
+let scrubbing = false;
+$('scrub').addEventListener('input', () => {
+  scrubbing = true;
+  const [lo, hi] = replayRange(performance.now());
+  play.t = lo + (hi - lo) * Number($('scrub').value) / 1000;
+  if (play.mode === 'live') setMode('paused');
+});
+$('scrub').addEventListener('change', () => { scrubbing = false; });
+addEventListener('keydown', e => {
+  if (e.code !== 'Space' || page !== 'live' || /^(INPUT|BUTTON|SELECT|TEXTAREA)$/.test(e.target.tagName)) return;
+  e.preventDefault(); togglePlay();
 });
 
 // ---------------------------------------------------------------- controller diagram
@@ -338,12 +398,18 @@ function renderWalk(robot) {
 function buildServos() {
   $('servos').innerHTML = LEG_NAMES.map((name, i) => `<div class="leg" id="leg-${i}"><h3>${name} <span>${i < 3 ? 'left' : 'right'} · ${['front', 'middle', 'back'][i % 3]}</span></h3>` +
     ['Hip', 'Upper', 'Lower'].map((joint, j) => `<div class="joint"><span>${joint}</span><div class="gauge"><i id="g-${i}-${j}"></i></div><output id="a-${i}-${j}">—</output></div>`).join('') + '</div>').join('');
+  for (let i = 0; i < 6; i++) $(`leg-${i}`).addEventListener('click', () => selectLeg(i));
+  selectLeg(ui.leg);
 }
-function renderServos(live) {
-  const angles = live?.angles, positions = live?.positions;
-  const ground = positions ? Math.max(...positions.map(p => p[2])) : 0;
+function selectLeg(i) {
+  ui.leg = i;
+  document.querySelectorAll('[data-leg]').forEach(b => b.setAttribute('aria-pressed', String(Number(b.dataset.leg) === i)));
+  for (let k = 0; k < 6; k++) $(`leg-${k}`)?.classList.toggle('selected', k === i);
+}
+document.querySelectorAll('[data-leg]').forEach(b => b.addEventListener('click', () => selectLeg(Number(b.dataset.leg))));
+function renderServos(angles, feet) {
   for (let i = 0; i < 6; i++) {
-    const lifted = !!positions && ground - positions[i][2] > 1;
+    const lifted = !!feet && !feet[i];
     $(`leg-${i}`).classList.toggle('lifted', lifted);
     $(`leg-${i}`).querySelector('h3 span').textContent = `${i < 3 ? 'left' : 'right'} · ${['front', 'middle', 'back'][i % 3]}${lifted ? ' · lifted' : ''}`;
     for (let j = 0; j < 3; j++) {
@@ -390,18 +456,14 @@ function addFeed({text, error, time}) {
 }
 
 // ---------------------------------------------------------------- events
-let wasWalking = false, lastPositions = null, replaying = false;
+let wasWalking = false, replaying = false;
 function onRobot(robot, now) {
   const firstPose = !view.robot?.live?.positions;
   view.robot = robot;
   const live = robot?.live;
   if (live?.positions) {
-    const key = JSON.stringify(live.positions);
-    if (key !== lastPositions) {
-      lastPositions = key;
-      if (firstPose) { scene.pose = copyPose(live.positions); scene.from = copyPose(live.positions); scene.to = copyPose(live.positions); dirty = true; }
-      else newPose(live.positions, now);
-    }
+    timeline.push({t: now, positions: live.positions, angles: live.angles, active: live.active, walking: live.walking});
+    if (firstPose) { scene.pose = copyPose(live.positions); dirty = true; }
     packet(1, 'up', now);
     if (live.active && live.moving) packet(2, 'down', now);
   }
@@ -409,7 +471,14 @@ function onRobot(robot, now) {
   if (walking && !wasWalking) explain(WALKING);
   if (!walking && wasWalking) explain(STOPPED);
   wasWalking = walking;
-  renderWalk(robot); renderServos(live); renderChips();
+  const p = live?.power, serverNow = Date.now() + ui.serverOffset;
+  if (Number.isFinite(p?.voltage) && serverNow - ui.lastPower >= 1000) {
+    ui.lastPower = serverNow;
+    ui.power.push({t: serverNow, v: p.voltage, a: Number.isFinite(p.current) ? p.current : null, w: live.walking ? 1 : 0, sim: p.simulated ? 1 : 0});
+    if (ui.power.length > 700) ui.power.splice(0, ui.power.length - 700);
+    ui.powerDirty = true;
+  }
+  renderWalk(robot); renderChips();
 }
 function onPad(pad, now) {
   if (pad.connected && view.pad.connected) packet(0, 'down', now);
@@ -424,9 +493,13 @@ function connect() {
     const d = JSON.parse(e.data), now = performance.now();
     view.online = true;
     $('feed').replaceChildren(); replaying = true; d.log.forEach(addFeed); replaying = false;
+    if (Number.isFinite(d.serverTime)) ui.serverOffset = d.serverTime - Date.now();
+    ui.power = Array.isArray(d.power) ? d.power.slice() : []; ui.lastPower = ui.power.at(-1)?.t ?? -Infinity; ui.powerDirty = true;
+    inspector.clear(); inspector.add(d.messages || []);
     if (d.pad) onPad(d.pad, now);
     if (d.robot) onRobot(d.robot, now); else renderChips();
   });
+  source.addEventListener('msgs', e => inspector.add(JSON.parse(e.data)));
   source.addEventListener('robot', e => onRobot(JSON.parse(e.data), performance.now()));
   source.addEventListener('pad', e => onPad(JSON.parse(e.data), performance.now()));
   source.addEventListener('action', e => {
@@ -454,6 +527,25 @@ matchMedia('(prefers-color-scheme: light)').addEventListener?.('change', showThe
 if (document.fullscreenEnabled) $('fullscreen').addEventListener('click', () => (document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen()).catch(() => {}));
 else $('fullscreen').hidden = true; // e.g. iPhone Safari
 
+// ---------------------------------------------------------------- message inspector
+const inspector = createInspector($('msgs'), {
+  showStatus: () => $('msg-status').checked,
+  frozen: () => $('msg-freeze').getAttribute('aria-pressed') === 'true',
+  counter: n => { $('msg-hidden').textContent = n && !$('msg-status').checked ? `(${n} hidden)` : ''; },
+});
+$('msg-freeze').addEventListener('click', e => {
+  const on = e.currentTarget.getAttribute('aria-pressed') !== 'true';
+  e.currentTarget.setAttribute('aria-pressed', String(on)); e.currentTarget.textContent = on ? 'Frozen' : 'Freeze';
+  if (!on) inspector.flush();
+});
+$('msg-status').addEventListener('change', () => inspector.add([]));
+
+// ---------------------------------------------------------------- join card
+function openJoin() { if (!$('join').open) { fillJoin($('join-body')); $('join').showModal(); } }
+$('join-open').addEventListener('click', openJoin);
+$('join-close').addEventListener('click', () => $('join').close());
+$('join').addEventListener('click', e => { if (e.target === $('join')) $('join').close(); }); // click outside the card
+
 // ---------------------------------------------------------------- pages
 // Each page has its own address (#live, #controller, #how, #servos, #messages), so a page can be
 // projected or shared, and Back works. Hidden pages are not drawn.
@@ -473,24 +565,72 @@ function showPage(name, {scroll = true} = {}) {
   if (scroll) window.scrollTo({top: 0});
 }
 function showUnread() { $('unread').hidden = !unread; $('unread').textContent = unread > 99 ? '99+' : String(unread); }
-addEventListener('hashchange', () => showPage(location.hash.slice(1)));
+// #join opens the Join card over the current page (handy to put on a projector).
+function route() {
+  const name = location.hash.slice(1);
+  if (name === 'join') { openJoin(); return; }
+  showPage(name);
+}
+addEventListener('hashchange', route);
 // Keep the side panel just below the top bar, whatever height the top bar wraps to.
 new ResizeObserver(([entry]) => { const h = Math.ceil(entry.borderBoxSize?.[0]?.blockSize ?? entry.target.offsetHeight); requestAnimationFrame(() => document.documentElement.style.setProperty('--topbar-h', `${h}px`)); }).observe(document.querySelector('.topbar'));
 
 // ---------------------------------------------------------------- go
-showPage(location.hash.slice(1), {scroll: false}); buildPad(); fitPad(); buildFlow(); buildServos(); renderPad(view.pad); renderWalk(null); renderChips();
+showPage(location.hash.slice(1), {scroll: false}); if (location.hash === '#join') openJoin(); buildPad(); fitPad(); buildFlow(); buildServos(); renderPad(view.pad); renderWalk(null); renderChips();
 let lastPrint = 0;
 // Redraw only when something changes, so an idle robot costs viewers (phones, Chromebooks) almost nothing.
+let lastSlow = -Infinity, lastChart = -Infinity, lastPowerDraw = -Infinity; // the first frame draws everything
 function frame(now) {
-  const moving = now - scene.t0 <= scene.span + 20;
-  if (moving) {
-    stepScene(now);
-    if (now - lastPrint > 60) { recordFootprints(now); lastPrint = now; }
+  const dt = play.last ? now - play.last : 0; play.last = now;
+  const [lo, hi] = replayRange(now);
+  if (play.mode === 'live') play.t = hi;
+  else if (play.mode === 'replay' && !scrubbing) {
+    play.t += dt * play.speed;
+    if (play.t >= hi) goLive();
+    else if (play.t < lo) { play.t = lo; setMode('paused'); } // slow motion fell 20 s behind: stop rather than pretend
   }
+  // Paused: stays exactly where it is (the timeline keeps those updates). Otherwise: within the replay window.
+  if (play.mode !== 'paused') play.t = clamp(play.t, Math.min(lo, hi), hi);
+  else play.t = Math.min(play.t, hi);
+  const t = play.t;
+  const moved = stepScene(t);
+  if (moved && now - lastPrint > 60) { recordFootprints(now); lastPrint = now; }
   const fading = scene.trails && scene.prints.some(p => now - p.t < 6000);
-  if ((dirty || moving || (fading && now - lastDraw > 100)) && visibleRobotViews().length) { drawScene(now); lastDraw = now; dirty = false; }
-  if ((packets.length || hot.some(t => now - t < 300)) && page === 'how') drawFlow(now);
+  if ((dirty || moved || (fading && now - lastDraw > 100)) && visibleRobotViews().length) { drawScene(now); lastDraw = now; dirty = false; }
+  if ((packets.length || hot.some(h => now - h < 300)) && page === 'how') drawFlow(now);
   else if (page !== 'how') packets.length = 0; // nobody is watching the signal path
+  const live = play.mode === 'live', feet = timeline.feetAt(t);
+  // Gait chart, about 30 times a second while it can change.
+  if (page === 'live' && now - lastChart > 33 && (timeline.frameAt(t)?.walking || !live || dirty || now - lastChart > 500)) {
+    drawGaitChart($('gait-chart'), timeline, t, live ? 'now' : 'here'); lastChart = now;
+  }
+  if (now - lastSlow > 100) {
+    lastSlow = now;
+    const behind = (hi - t) / 1000;
+    $('replay-time').textContent = live ? 'LIVE' : `−${behind.toFixed(1)} s${play.mode === 'paused' ? ' ⏸' : play.speed < 1 ? ` · ${play.speed === 0.5 ? '½' : '¼'}×` : ''}`;
+    $('replay-time').classList.toggle('replaying', !live);
+    if (!scrubbing) $('scrub').value = String(hi > lo ? clamp(Math.round((t - lo) / (hi - lo) * 1000), 0, 1000) : 1000);
+    const down = feet ? feet.filter(Boolean).length : null, walk = timeline.frameAt(t)?.walking;
+    $('gait-summary').textContent = feet === null ? (timeline.why(t) === 'off' ? 'motors off' : 'no recent data')
+      : walk?.blending ? `blending into ${walk.gait}…` : walk ? `${walk.gait} · ${down} feet down` : `standing · ${down} feet down`;
+    if (scene.balance && timeline.frames.length) {
+      const b = balance(scene.pose), label = $('balance-label');
+      label.hidden = false;
+      label.textContent = b.stable ? `Stable · centre ${b.margin.toFixed(0)} mm inside` : 'Tipping risk: centre outside the feet';
+      label.className = `legend balance-label ${b.stable ? 'ok' : 'bad'}`;
+    } else $('balance-label').hidden = true;
+    if (page === 'servos') {
+      renderServos(timeline.anglesAt(t), feet);
+      drawLegInspector($('leg-view'), $('leg-numbers'), {name: LEG_NAMES[ui.leg], xyz: timeline.frames.length ? scene.pose[ui.leg] : null, servo: timeline.anglesAt(t)?.[ui.leg], lifted: !!feet && !feet[ui.leg]});
+    }
+  }
+  if (page === 'live' && (ui.powerDirty || now - lastPowerDraw > 5000)) {
+    const r = drawPower($('power-chart'), ui.power, Date.now() + ui.serverOffset);
+    document.querySelector('.power-now .pv').textContent = r ? r.text.v : '—';
+    document.querySelector('.power-now .pa').textContent = r ? r.text.a : '—';
+    $('power-note').textContent = r?.simulated ? 'simulated (demo)' : 'last 10 minutes';
+    ui.powerDirty = false; lastPowerDraw = now;
+  }
   requestAnimationFrame(frame);
 }
 requestAnimationFrame(frame);

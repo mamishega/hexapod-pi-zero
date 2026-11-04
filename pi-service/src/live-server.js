@@ -4,6 +4,7 @@
 import http from 'node:http';
 import fs from 'node:fs';
 import path from 'node:path';
+import os from 'node:os';
 
 const TYPES = {'.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.svg': 'image/svg+xml', '.ico': 'image/x-icon'};
 const ROBOT_MS = 100;   // at most 10 robot updates a second per viewer
@@ -11,6 +12,10 @@ const PAD_MS = 50;      // at most 20 controller updates a second
 const MAX_VIEWERS = 40; // a classroom; each viewer costs a little CPU on the Pi Zero
 const LOG_KEEP = 30;
 const MAX_BACKLOG = 256 * 1024; // bytes queued for one viewer before it is dropped (sleeping laptop, lost Wi-Fi)
+const POWER_EVERY_MS = 1000, POWER_KEEP = 600; // battery history: one sample a second, 10 minutes
+const MSG_KEEP = 60, MSG_MS = 250;              // message inspector: last 60, sent in batches 4 times a second
+const MSG_TEXT = 260;                           // longest message text shown
+const HOTSPOT_IP = '10.42.0.1';
 
 const round1 = rows => rows?.map(row => row.map(v => Math.round(v * 10) / 10)) ?? null;
 
@@ -27,10 +32,34 @@ export function robotView(snapshot) {
       names: live.names || null, released: live.released || [],
       walking: live.walking ? {gait: live.walking.gait, target: live.walking.target, direction: live.walking.direction,
         stride: live.walking.stride, lift: live.walking.lift, hip_swing: live.walking.hip_swing, period: live.walking.period,
-        stopping: !!live.walking.stopping, blending: !!live.walking.blending} : null,
+        stopping: !!live.walking.stopping, blending: !!live.walking.blending,
+        cycle: Number.isFinite(live.walking.cycle) ? Math.round(live.walking.cycle * 1e4) / 1e4 : null} : null,
     } : null,
   };
 }
+
+// A message to or from the board as short JSON text for the message inspector: numbers rounded,
+// calibration tables left out, long text cut.
+const NOISE = new Set(['calibration', 'offsets', 'joint_limits', 'hard_joint_limits', 'limits', 'names', 'home', 'channels', 'features', 'released', 'reference']);
+export function messageText(value) {
+  const tidy = v => Array.isArray(v) ? v.map(tidy)
+    : v && typeof v === 'object' ? Object.fromEntries(Object.entries(v).filter(([k]) => !NOISE.has(k)).map(([k, x]) => [k, tidy(x)]))
+    : typeof v === 'number' ? Math.round(v * 10) / 10 : v;
+  const text = JSON.stringify(tidy(value ?? null)) ?? 'null';
+  return text.length > MSG_TEXT ? `${text.slice(0, MSG_TEXT - 1)}…` : text;
+}
+
+// KEY=value settings file (the Wi-Fi settings written by deploy/wifi/install-wifi.sh).
+export function readSettings(file, fsModule = fs) {
+  try {
+    return Object.fromEntries(fsModule.readFileSync(file, 'utf8').split('\n').map(l => /^([A-Z_]+)=(.*)$/.exec(l.trim())).filter(Boolean)
+      .map(([, k, v]) => [k, v.replace(/^(["'])(.*)\1$/, '$2')]));
+  } catch { return {}; }
+}
+const ipv4 = () => Object.entries(os.networkInterfaces()).flatMap(([name, list]) => (list || []).filter(a => a.family === 'IPv4' && !a.internal).map(a => ({name, ip: a.address})));
+// The hotspot password is only shown to devices already on the hotspot (they know it), never to
+// devices on another network.
+export const onHotspot = address => /^(::ffff:)?10\.42\.0\.\d+$/.test(address || '') || /^(::1|::ffff:127\.|127\.)/.test(address || '');
 
 // Controller state as the drive loop sees it: standard-layout pad -> sticks and held buttons.
 export function padView(pad, buttons) {
@@ -40,9 +69,11 @@ export function padView(pad, buttons) {
   return {connected: true, name: pad.id, axes: [axis(0), axis(1), axis(2), axis(3)], held};
 }
 
-export function createLiveServer({root, port = 5181, host = '0.0.0.0', log = () => {}, now = Date.now} = {}) {
+export function createLiveServer({root, port = 5181, host = '0.0.0.0', log = () => {}, now = Date.now,
+  wifiConf = '/etc/hexapod/wifi.conf', addresses = ipv4, hostname = os.hostname} = {}) {
   const viewers = new Set();
-  const state = {robot: null, pad: {connected: false}, log: []};
+  const state = {robot: null, pad: {connected: false}, log: [], power: [], messages: []};
+  let lastPower = -Infinity, msgBatch = [], msgTimer = null;
   let padKey = '';
 
   // Writes to every viewer. A viewer that stops reading is dropped, so its queue cannot fill the Pi's memory.
@@ -71,7 +102,39 @@ export function createLiveServer({root, port = 5181, host = '0.0.0.0', log = () 
 
   const api = {
     get viewers() { return viewers.size; },
-    robot: guard(snapshot => { state.robot = robotView(snapshot); if (viewers.size) sendRobot(state.robot); }),
+    robot: guard(snapshot => {
+      state.robot = robotView(snapshot);
+      const p = state.robot.live?.power;
+      if (Number.isFinite(p?.voltage) && now() - lastPower >= POWER_EVERY_MS) {
+        lastPower = now();
+        state.power = [...state.power, {t: lastPower, v: p.voltage, a: Number.isFinite(p.current) ? p.current : null, w: state.robot.live.walking ? 1 : 0, sim: p.simulated ? 1 : 0}].slice(-POWER_KEEP);
+      }
+      if (viewers.size) sendRobot(state.robot);
+    }),
+    // One message to (dir 'out') or from (dir 'in') the board, for the message inspector.
+    message: guard((dir, op, body) => {
+      const entry = {dir, op, text: messageText(body), time: now()};
+      state.messages = [...state.messages, entry].slice(-MSG_KEEP);
+      if (!viewers.size) return;
+      msgBatch.push(entry);
+      if (!msgTimer) msgTimer = setTimeout(guard(() => { msgTimer = null; const batch = msgBatch; msgBatch = []; send('msgs', batch); }), MSG_MS);
+    }),
+    // Records every command the robot sends to the board and the board's reply, without changing them.
+    watchLink: guard(robot => {
+      const wrap = () => {
+        const link = robot.link;
+        if (!link || link.liveViewWatched) return;
+        const send = link.send.bind(link);
+        link.send = (op, args, ...rest) => {
+          api.message('out', op, {op, ...(args || {})});
+          const reply = send(op, args, ...rest);
+          Promise.resolve(reply).then(answer => api.message('in', op, answer), error => api.message('in', op, {error: error?.message || String(error)}));
+          return reply;
+        };
+        link.liveViewWatched = true;
+      };
+      robot.subscribe(guard(wrap)); wrap();
+    }),
     pad: guard((pad, buttons) => {
       const view = padView(pad, buttons), key = JSON.stringify(view);
       if (key === padKey) return;
@@ -98,10 +161,20 @@ export function createLiveServer({root, port = 5181, host = '0.0.0.0', log = () 
     if (url.pathname === '/events') {
       if (viewers.size >= MAX_VIEWERS) { res.writeHead(503, {'Content-Type': 'text/plain'}); res.end('Too many viewers'); return; }
       res.writeHead(200, {'Content-Type': 'text/event-stream', 'Cache-Control': 'no-store', Connection: 'keep-alive', 'X-Accel-Buffering': 'no'});
-      res.write(`retry: 2000\nevent: hello\ndata: ${JSON.stringify({robot: state.robot, pad: state.pad, log: state.log})}\n\n`);
+      res.write(`retry: 2000\nevent: hello\ndata: ${JSON.stringify({robot: state.robot, pad: state.pad, log: state.log, power: state.power, messages: state.messages, serverTime: now()})}\n\n`);
       viewers.add(res);
       req.on('close', () => viewers.delete(res));
       res.on('error', () => viewers.delete(res)); // a lost connection must not crash the service
+      return;
+    }
+    if (url.pathname === '/info') {
+      // How to reach this page (for the Join card): addresses, and the hotspot when it is running.
+      const wifi = readSettings(wifiConf), list = addresses();
+      const hotspot = list.some(a => a.ip === HOTSPOT_IP);
+      const info = {hostname: hostname(), port: server.address()?.port ?? port, addresses: list.map(a => a.ip),
+        hotspot: {active: hotspot, ssid: wifi.HOTSPOT_SSID || null, password: hotspot && onHotspot(req.socket.remoteAddress) ? wifi.HOTSPOT_PASSWORD || null : null}};
+      res.writeHead(200, {'Content-Type': 'application/json', 'Cache-Control': 'no-store'});
+      res.end(req.method === 'HEAD' ? undefined : JSON.stringify(info));
       return;
     }
     // Static files from the page folder only.

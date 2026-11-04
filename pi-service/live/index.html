@@ -26,6 +26,12 @@
   <symbol id="i-bulb" viewBox="0 0 24 24"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.4 1 1.1 1 1.9V16h5v-.2c0-.8.4-1.5 1-1.9A6 6 0 0 0 12 3Z"/></symbol>
   <symbol id="i-wave" viewBox="0 0 24 24"><path d="M2 12c2-4 4-4 6 0s4 4 6 0 4-4 6 0"/></symbol>
   <symbol id="i-wire" viewBox="0 0 24 24"><path d="M3 8h6l2 8h10M3 16h4"/><circle cx="20" cy="16" r="1.5"/></symbol>
+  <symbol id="i-join" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><path d="M14 14h3v3M21 14v.01M14 21h7M17.5 17.5V21"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><path d="M7 5v14l12-7Z"/></symbol>
+  <symbol id="i-pause" viewBox="0 0 24 24"><path d="M8 5v14M16 5v14"/></symbol>
+  <symbol id="i-battery" viewBox="0 0 24 24"><rect x="2.5" y="7" width="17" height="10" rx="2"/><path d="M21.5 10.5v3M6 10v4M9.5 10v4"/></symbol>
+  <symbol id="i-chart" viewBox="0 0 24 24"><path d="M3 6h7M3 12h4M3 18h9M13 6h8M10 12h11M15 18h6"/></symbol>
+  <symbol id="i-leg" viewBox="0 0 24 24"><circle cx="5" cy="7" r="2"/><circle cx="13" cy="5" r="2"/><path d="M6.8 6.6 11.2 5.4M14.5 6.3 19 19M15 19h6"/></symbol>
   <symbol id="i-pulse" viewBox="0 0 24 24"><path d="M2 16h4V8h4v8h4V8h4v8h4"/></symbol>
 </svg>
 
@@ -42,6 +48,7 @@
     <li id="chip-power" data-state="off"><i></i><span>Battery</span><b>—</b></li>
   </ul>
   <div class="tools">
+    <button class="join-btn" id="join-open" type="button" aria-label="Join: how students open this page" title="How students join this page"><svg><use href="#i-join"/></svg><span>Join</span></button>
     <button class="icon-btn" id="theme" type="button" aria-label="Switch light or dark theme" title="Light / dark"><svg><use href="#i-moon"/></svg></button>
     <button class="icon-btn" id="fullscreen" type="button" aria-label="Full screen" title="Full screen (for a projector)"><svg><use href="#i-expand"/></svg></button>
   </div>
@@ -63,6 +70,7 @@
     <section class="page" id="page-live" data-title="Live">
       <header class="page-head"><h2>Live</h2><p>The robot as it moves, and what the last command did.</p></header>
       <div class="grid grid-live">
+        <div class="stack">
         <section class="card" aria-label="The robot right now">
           <header class="card-head">
             <h3><svg class="ico"><use href="#i-robot"/></svg>The robot right now</h3>
@@ -76,11 +84,25 @@
             <div class="stage-bottom">
               <span class="legend"><i class="dot lifted"></i>lifted · swinging</span>
               <span class="legend"><i class="dot planted"></i>on the ground · pushing</span>
-              <button id="trails" class="chip-toggle" aria-pressed="true" title="Show where each foot has been">Footprints</button>
+              <span id="balance-label" class="legend balance-label" hidden></span>
+              <span class="stage-toggles"><button id="balance" class="chip-toggle" aria-pressed="true" title="Shade the area between the feet on the ground, and mark the body's centre">Balance</button><button id="trails" class="chip-toggle" aria-pressed="true" title="Show where each foot has been">Footprints</button></span>
             </div>
           </div>
-          <p class="caption">The grid slides under the robot as it walks. This is the pose the board is <em>commanding</em>: the servos have no position sensors.</p>
+          <div class="transport" role="group" aria-label="Replay">
+            <button id="play" class="icon-btn" type="button" aria-label="Pause" title="Pause (Space)"><svg><use href="#i-pause"/></svg></button>
+            <input id="scrub" type="range" min="0" max="1000" value="1000" step="1" aria-label="Replay position (last 20 seconds)">
+            <span id="replay-time" class="replay-time">LIVE</span>
+            <div class="segmented speed" role="group" aria-label="Replay speed"><button data-speed="1" aria-pressed="true">1×</button><button data-speed="0.5" aria-pressed="false">½×</button><button data-speed="0.25" aria-pressed="false">¼×</button></div>
+            <button id="go-live" class="live-btn" type="button" hidden>● Live</button>
+          </div>
+          <p class="caption">Pause, drag back up to 20 seconds, or play in slow motion. The grid slides under the robot as it walks. This is the pose the board is <em>commanding</em>: the servos have no position sensors.</p>
         </section>
+        <section class="card" aria-label="Gait timing">
+          <header class="card-head"><h3><svg class="ico"><use href="#i-chart"/></svg>Gait timing</h3><span id="gait-summary" class="pill">—</span></header>
+          <canvas id="gait-chart" class="gait-chart" role="img" aria-label="Gait timing chart: for each leg, filled while the foot is on the ground"></canvas>
+          <div class="chart-legend"><span><i class="swatch down"></i>foot on the ground</span><span><i class="swatch air"></i>foot in the air</span><span class="muted">Each row is one leg, newest on the right. Compare the patterns of ripple, wave and tripod (Menu button).</span></div>
+        </section>
+        </div>
         <div class="stack">
           <section class="card" aria-label="What just happened">
             <header class="card-head"><h3><svg class="ico"><use href="#i-spark"/></svg>What just happened</h3></header>
@@ -100,6 +122,12 @@
                 <div><dt>Stride <kbd>←→</kbd></dt><dd id="s-swing">—</dd><small>how far a hip swings</small></div>
               </dl>
             </div>
+          </section>
+          <section class="card" aria-label="Battery">
+            <header class="card-head"><h3><svg class="ico"><use href="#i-battery"/></svg>Battery</h3><span id="power-note" class="meta">last 10 minutes</span></header>
+            <div class="power-now"><div><span class="pv">—</span><small>volts</small></div><div><span class="pa">—</span><small>amps</small></div></div>
+            <svg id="power-chart" class="power-chart" role="img" aria-label="Battery voltage and current over the last 10 minutes"></svg>
+            <div class="chart-legend"><span><i class="swatch volts"></i>voltage</span><span><i class="swatch amps"></i>current</span><span><i class="swatch walk"></i>walking</span></div>
           </section>
         </div>
       </div>
@@ -152,6 +180,17 @@
           <svg id="flow" role="img" aria-label="Signal path: Xbox controller, Bluetooth, Raspberry Pi, UART, Servo 2040, PWM, 18 servos"></svg>
           <div class="flow-legend"><span><i class="dot cmd"></i>command, towards the legs</span><span><i class="dot reply"></i>status reply: pose, angles, battery</span></div>
         </section>
+        <section class="card" aria-label="Message inspector">
+          <header class="card-head">
+            <h3><svg class="ico"><use href="#i-wire"/></svg>Message inspector</h3>
+            <div class="msg-tools">
+              <label class="check"><input type="checkbox" id="msg-status"> status checks <span id="msg-hidden" class="muted"></span></label>
+              <button id="msg-freeze" class="chip-toggle plain" aria-pressed="false" type="button">Freeze</button>
+            </div>
+          </header>
+          <p class="caption">The real messages on the serial wires, newest first. Commands go from the Pi to the board; the board answers each one. Text is JSON, the same format web apps use.</p>
+          <ol class="msgs" id="msgs" aria-live="off"></ol>
+        </section>
         <div class="grid grid-3">
           <section class="card fact"><header class="card-head"><h3><svg class="ico"><use href="#i-wave"/></svg>Bluetooth</h3><span class="meta">controller → Pi</span></header>
             <p>The controller sends the position of both sticks and every button by radio, many times a second. The Pi reads it 50 times a second and decides what the robot should do.</p></section>
@@ -167,6 +206,7 @@
     <section class="page" id="page-servos" data-title="Servo angles" hidden>
       <header class="page-head"><h2>Servo angles</h2><p>Match each leg in the picture to its three joint angles.</p></header>
       <div class="grid grid-servos">
+        <div class="stack">
         <section class="card" aria-label="Robot">
           <header class="card-head">
             <h3><svg class="ico"><use href="#i-robot"/></svg>The robot</h3>
@@ -177,8 +217,18 @@
           <div class="stage"><svg class="robot-view" viewBox="0 0 620 440" role="img" aria-label="Animated hexapod"></svg></div>
           <p class="caption"><strong>Inverse kinematics:</strong> the board knows where each foot should be and calculates the hip, upper-leg and lower-leg angles that put it there, for all six legs every 20 ms.</p>
         </section>
+        <section class="card" aria-label="Leg inspector">
+          <header class="card-head"><h3><svg class="ico"><use href="#i-leg"/></svg>Leg inspector</h3>
+            <div class="segmented legs" role="group" aria-label="Leg">
+              <button data-leg="0" aria-pressed="true">L1</button><button data-leg="1" aria-pressed="false">L2</button><button data-leg="2" aria-pressed="false">L3</button><button data-leg="3" aria-pressed="false">R1</button><button data-leg="4" aria-pressed="false">R2</button><button data-leg="5" aria-pressed="false">R3</button>
+            </div>
+          </header>
+          <svg id="leg-view" class="leg-view" viewBox="0 0 360 230" role="img" aria-label="Side view of the selected leg with its joint angles"></svg>
+          <dl class="leg-numbers" id="leg-numbers"></dl>
+        </section>
+        </div>
         <section class="card" aria-label="18 servo angles">
-          <header class="card-head"><h3><svg class="ico"><use href="#i-gauge"/></svg>18 servo angles</h3><span class="meta">6 legs × 3 joints</span></header>
+          <header class="card-head"><h3><svg class="ico"><use href="#i-gauge"/></svg>18 servo angles</h3><span class="meta">tap a leg to inspect it</span></header>
           <div class="servos" id="servos"></div>
         </section>
       </div>
@@ -194,6 +244,10 @@
     </section>
   </main>
 </div>
+<dialog id="join" class="join" aria-labelledby="join-title">
+  <header class="card-head"><h3 id="join-title"><svg class="ico"><use href="#i-join"/></svg>Join the Live View</h3><button class="icon-btn" id="join-close" type="button" aria-label="Close">✕</button></header>
+  <div id="join-body"></div>
+</dialog>
 <script type="module" src="app.js"></script>
 </body>
 </html>
