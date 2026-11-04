@@ -1,0 +1,8 @@
+# Dependencies and build tools (reinstalled with npm install)
+node_modules/
+# Mac and Office clutter
+.DS_Store
+~$*
+# Written on the Pi by `npm run controller-setup` (one per controller)
+pi-service/controller-map.json
+pi-service/controller-map.json.bak

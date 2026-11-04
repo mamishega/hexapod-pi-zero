@@ -1,0 +1,10 @@
+[Unit]
+Description=Check the Hexapod Wi-Fi every minute (starts the hotspot when no saved network is in range)
+
+[Timer]
+OnBootSec=45s
+OnUnitActiveSec=60s
+AccuracySec=5s
+
+[Install]
+WantedBy=timers.target

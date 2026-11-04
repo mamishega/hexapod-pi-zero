@@ -1,0 +1,122 @@
+#!/usr/bin/env bash
+# Hexapod Wi-Fi: join a saved network (station mode) or, when none is in range, run the
+# robot's own Wi-Fi hotspot (access point mode) so laptops and phones can still reach it.
+# The Pi Zero 2 W does one or the other, not both.
+#
+#   hexapod-wifi status            show the mode, network, address and Live View link
+#   sudo hexapod-wifi auto         saved network if available, otherwise hotspot (default)
+#   sudo hexapod-wifi hotspot      always run the hotspot (classroom with no network)
+#   sudo hexapod-wifi station      never run the hotspot; only join saved networks
+#   sudo hexapod-wifi reconnect    leave the hotspot now and try the saved networks
+#   sudo hexapod-wifi test-hotspot [minutes]   hotspot now, back to auto after N minutes (default 5)
+#   hexapod-wifi check             run by hexapod-wifi.timer every minute
+#
+# Settings: /etc/hexapod/wifi.conf (MODE, HOTSPOT_SSID, HOTSPOT_PASSWORD, RETRY_MINUTES).
+set -uo pipefail
+
+CONF=/etc/hexapod/wifi.conf
+STATE=/run/hexapod-wifi
+HOTSPOT=Hexapod-Hotspot          # NetworkManager connection name
+IFACE=wlan0
+HOTSPOT_IP=10.42.0.1
+MODE=auto; HOTSPOT_SSID=Hexapod; HOTSPOT_PASSWORD=; RETRY_MINUTES=10; DOWN_SECONDS=30
+[ -r "$CONF" ] && . "$CONF"
+
+say() { echo "hexapod-wifi: $*"; }
+need_root() { [ "$(id -u)" = 0 ] || { echo "Run with sudo: sudo hexapod-wifi $1" >&2; exit 1; }; }
+now() { date +%s; }
+# NAME is printed last and unescaped, so names containing ':' are read correctly.
+# wifi_on_iface [activated]: the Wi-Fi connection on wlan0 (only a fully connected one with "activated").
+wifi_on_iface() {
+  nmcli -t --escape no -f TYPE,DEVICE,STATE,NAME con show --active | awk -F: -v d="$IFACE" -v want="${1:-}" '
+    $1=="802-11-wireless" && $2==d && (want=="" || $3==want) { sub(/^[^:]*:[^:]*:[^:]*:/, ""); print; exit }'
+}
+active_wifi() { wifi_on_iface activated; }
+# Saved station profiles (not the hotspot) that may connect automatically, highest priority first.
+stations() {
+  nmcli -t --escape no -f TYPE,AUTOCONNECT,AUTOCONNECT-PRIORITY,NAME con show | awk -F: -v h="$HOTSPOT" '
+    $1=="802-11-wireless" && $2=="yes" { p=$3; sub(/^[^:]*:[^:]*:[^:]*:/, ""); if ($0 != h) print p ":" $0 }' | sort -t: -k1,1nr | cut -d: -f2-
+}
+# One change at a time: the every-minute check, a manual command and the end of a test can overlap.
+lock() { exec 9>/run/hexapod-wifi.lock; flock -w 120 9 || { say "busy: another hexapod-wifi command is running"; exit 1; }; }
+clients() { iw dev "$IFACE" station dump 2>/dev/null | grep -c '^Station' || true; }
+address() { ip -4 -o addr show "$IFACE" 2>/dev/null | awk '{print $4}' | cut -d/ -f1 | head -1; }
+
+hotspot_up() {
+  [ "$(wifi_on_iface)" = "$HOTSPOT" ] && return 0
+  say "starting the hotspot \"$HOTSPOT_SSID\""
+  nmcli -w 30 con up "$HOTSPOT" >/dev/null && { date +%s > "$STATE/last-try"; return 0; }
+  say "could not start the hotspot"; return 1
+}
+# Try each saved network once. Returns 0 when one connects.
+try_stations() {
+  date +%s > "$STATE/last-try"
+  [ "$(wifi_on_iface)" = "$HOTSPOT" ] && nmcli con down "$HOTSPOT" >/dev/null 2>&1
+  local name
+  while IFS= read -r name; do
+    [ -n "$name" ] || continue
+    say "trying saved network \"$name\""
+    if nmcli -w 25 con up "$name" >/dev/null 2>&1; then say "connected to \"$name\""; return 0; fi
+  done < <(stations)
+  return 1
+}
+set_mode() {
+  sed -i "s/^MODE=.*/MODE=$1/" "$CONF" 2>/dev/null
+  grep -q '^MODE=' "$CONF" 2>/dev/null || echo "MODE=$1" >> "$CONF"
+  MODE=$1; say "mode set to $1"
+}
+
+check() {
+  mkdir -p "$STATE"
+  # During test-hotspot, behave as auto so the test hotspot stays up while someone is connected.
+  systemctl is-active --quiet hexapod-wifi-revert.timer && MODE=auto
+  local active current; active=$(active_wifi); current=$(wifi_on_iface)
+  case "$MODE" in
+    hotspot) hotspot_up; return ;;
+    station) [ "$current" = "$HOTSPOT" ] && nmcli con down "$HOTSPOT" >/dev/null 2>&1; return 0 ;;
+  esac
+  if [ -n "$active" ] && [ "$active" != "$HOTSPOT" ]; then rm -f "$STATE/down-since"; return 0; fi   # on a saved network
+  if [ "$current" != "$HOTSPOT" ]; then
+    # Not connected (or still trying, perhaps forever with a changed router password):
+    # give NetworkManager DOWN_SECONDS to reach a saved network first.
+    [ -f "$STATE/down-since" ] || { now > "$STATE/down-since"; return 0; }
+    [ $(( $(now) - $(cat "$STATE/down-since") )) -ge "$DOWN_SECONDS" ] || return 0
+    rm -f "$STATE/down-since"; hotspot_up; return
+  fi
+  # Hotspot running: now and then, if nobody is connected, look for a saved network again.
+  [ "$(clients)" -eq 0 ] || return 0
+  local last=0; [ -f "$STATE/last-try" ] && last=$(cat "$STATE/last-try")
+  [ $(( $(now) - last )) -ge $(( RETRY_MINUTES * 60 )) ] || return 0
+  try_stations || hotspot_up
+}
+
+status() {
+  local active ip; active=$(active_wifi); ip=$(address)
+  echo "Mode:       $MODE   (change with: sudo hexapod-wifi auto | hotspot | station)"
+  if [ "$active" = "$HOTSPOT" ]; then
+    echo "Wi-Fi:      HOTSPOT \"$HOTSPOT_SSID\"   password: ${HOTSPOT_PASSWORD:-?}   devices connected: $(clients)"
+  elif [ -n "$active" ]; then echo "Wi-Fi:      joined \"$active\""
+  else echo "Wi-Fi:      not connected"; fi
+  echo "Address:    ${ip:-none}"
+  [ -n "$ip" ] && echo "Live View:  http://$ip:5181   (or http://$(hostname).local:5181)"
+  echo "Saved networks: $(stations | paste -sd, - | sed 's/,/, /g')"
+}
+
+case "${1:-status}" in
+  status) status ;;
+  check) lock; check ;;
+  auto|hotspot|station) need_root "$1"; lock; mkdir -p "$STATE"; set_mode "$1"; rm -f "$STATE/last-try"
+    if [ "$1" = auto ] && [ "$(wifi_on_iface)" = "$HOTSPOT" ]; then try_stations || hotspot_up; else check; fi
+    status ;;
+  reconnect) need_root reconnect; lock; mkdir -p "$STATE"; try_stations || { [ "$MODE" = station ] || hotspot_up; }; status ;;
+  test-hotspot) need_root test-hotspot; lock; mkdir -p "$STATE"; minutes=${2:-5}
+    [[ "$minutes" =~ ^[0-9]+$ ]] && [ "$minutes" -ge 1 ] || { echo "Minutes must be a whole number, e.g. 5" >&2; exit 1; }
+    # Afterwards: back to the saved network, and to the mode set before the test.
+    [ "$MODE" = hotspot ] && after=hotspot || after=reconnect   # reconnect never starts the hotspot in station mode
+    systemctl stop hexapod-wifi-revert.timer 2>/dev/null
+    systemd-run --quiet --unit hexapod-wifi-revert --on-active="${minutes}min" /usr/local/bin/hexapod-wifi "$after"
+    say "hotspot for $minutes minutes, then back (cancel: sudo systemctl stop hexapod-wifi-revert.timer)"
+    MODE=auto   # this run only: the file keeps the original mode; the timer keeps the hotspot while anyone is connected
+    hotspot_up; status ;;
+  *) sed -n '2,16p' "$0" | sed 's/^# \{0,1\}//'; exit 1 ;;
+esac

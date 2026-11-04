@@ -1,0 +1,17 @@
+[Unit]
+Description=Hexapod driving service (Xbox controller -> Servo 2040 over UART)
+After=bluetooth.target
+Wants=bluetooth.target
+
+[Service]
+Type=simple
+User=__USER__
+WorkingDirectory=__DIR__
+ExecStart=__NODE__ __DIR__/src/main.js
+Restart=always
+RestartSec=2
+# Give the walk time to finish its step on stop (see shutdown() in main.js).
+TimeoutStopSec=6
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,22 @@
+{
+  "name": "hexapod-pi-service",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Drives the hexapod from an Xbox controller on a Raspberry Pi Zero 2 W (UART link to the Servo 2040)",
+  "type": "module",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "start": "node src/main.js",
+    "test": "node --test tests/*.test.mjs",
+    "link-test": "node tools/link-test.js",
+    "controller-setup": "node tools/controller-setup.js",
+    "controller-test": "node tools/controller-test.js",
+    "sync": "bash scripts/sync-shared.sh",
+    "live-demo": "node tools/live-demo.js"
+  },
+  "dependencies": {
+    "serialport": "12.0.0"
+  }
+}

@@ -1,0 +1,158 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1700 1240" width="1700" height="1240" font-family="Helvetica, Arial, sans-serif">
+<rect width="1700" height="1240" fill="#ffffff"/>
+<text x="40" y="52" font-size="30" font-weight="bold" fill="#111" text-anchor="start">Hexapod — Raspberry Pi Zero 2 W wiring schematic</text>
+<text x="40" y="82" font-size="16" font-weight="normal" fill="#5f6f75" text-anchor="start">Xbox controller (Bluetooth) → Pi Zero 2 W → UART on the Servo 2040 SDA/SCL pins → 18 servos</text>
+<rect x="470" y="120" width="250" height="92" rx="10" fill="#f4f7f8" stroke="#37474f" stroke-width="2"/>
+<text x="484" y="148" font-size="19" font-weight="bold" fill="#111" text-anchor="start">Xbox controller</text>
+<text x="484" y="172" font-size="14" font-weight="normal" fill="#5f6f75" text-anchor="start">Series X|S recommended</text>
+<rect x="1330" y="120" width="330" height="92" rx="10" fill="#f4f7f8" stroke="#37474f" stroke-width="2" stroke-dasharray="8 6"/>
+<text x="1344" y="148" font-size="19" font-weight="bold" fill="#111" text-anchor="start">Phone / laptop (optional)</text>
+<text x="1344" y="172" font-size="14" font-weight="normal" fill="#5f6f75" text-anchor="start">Browser: http://hexapod.local:5181</text>
+<rect x="860" y="260" width="400" height="270" rx="10" fill="#eef7f5" stroke="#0d7a69" stroke-width="2"/>
+<text x="874" y="288" font-size="21" font-weight="bold" fill="#111" text-anchor="start">Raspberry Pi Zero 2 W</text>
+<text x="874" y="312" font-size="14" font-weight="normal" fill="#5f6f75" text-anchor="start">Raspberry Pi OS Lite (64-bit)</text>
+<text x="874" y="332" font-size="14" font-weight="normal" fill="#5f6f75" text-anchor="start">Headless driving service (Node.js)</text>
+<text x="874" y="352" font-size="14" font-weight="normal" fill="#5f6f75" text-anchor="start">Bluetooth + 2.4 GHz Wi-Fi</text>
+<text x="874" y="372" font-size="14" font-weight="normal" fill="#5f6f75" text-anchor="start">config.txt: enable_uart=1</text>
+<rect x="818" y="436" width="84" height="60" rx="4" fill="#fff" stroke="#e07b00" stroke-width="2"/>
+<text x="860" y="461" font-size="13" font-weight="bold" fill="#e07b00" text-anchor="middle">PWR IN</text>
+<text x="860" y="479" font-size="11" font-weight="bold" fill="#222222" text-anchor="middle">5 V + GND</text>
+<text x="910" y="470" font-size="13" font-weight="normal" fill="#5f6f75" text-anchor="start">micro-USB</text>
+<rect x="908.0" y="517" width="74" height="26" rx="4" fill="#fff" stroke="#222222" stroke-width="2"/>
+<text x="945" y="535" font-size="13" font-weight="bold" fill="#222222" text-anchor="middle">Pin 6</text>
+<rect x="1003.0" y="517" width="74" height="26" rx="4" fill="#fff" stroke="#1565c0" stroke-width="2"/>
+<text x="1040" y="535" font-size="13" font-weight="bold" fill="#1565c0" text-anchor="middle">Pin 8</text>
+<rect x="1098.0" y="517" width="74" height="26" rx="4" fill="#fff" stroke="#2e7d32" stroke-width="2"/>
+<text x="1135" y="535" font-size="13" font-weight="bold" fill="#2e7d32" text-anchor="middle">Pin 10</text>
+<rect x="1195.0" y="517" width="60" height="26" rx="4" fill="#fff" stroke="#5f6f75" stroke-width="2"/>
+<text x="1225" y="535" font-size="13" font-weight="bold" fill="#5f6f75" text-anchor="middle">Pin 1</text>
+<text x="945" y="508" font-size="12" font-weight="bold" fill="#222222" text-anchor="middle">GND</text>
+<text x="1040" y="508" font-size="12" font-weight="bold" fill="#1565c0" text-anchor="middle">GPIO14 TXD</text>
+<text x="1135" y="508" font-size="12" font-weight="bold" fill="#2e7d32" text-anchor="middle">GPIO15 RXD</text>
+<text x="1225" y="508" font-size="12" font-weight="bold" fill="#5f6f75" text-anchor="middle">3V3</text>
+<rect x="860" y="680" width="400" height="300" rx="10" fill="#f3f1fb" stroke="#5e35b1" stroke-width="2"/>
+<text x="874" y="766" font-size="21" font-weight="bold" fill="#111" text-anchor="start">Pimoroni Servo 2040</text>
+<text x="874" y="790" font-size="14" font-weight="normal" fill="#5f6f75" text-anchor="start">RP2040 · MicroPython</text>
+<text x="874" y="810" font-size="14" font-weight="normal" fill="#5f6f75" text-anchor="start">motion_bridge.py (listens on USB + UART)</text>
+<text x="874" y="830" font-size="14" font-weight="normal" fill="#5f6f75" text-anchor="start">3-second watchdog: motors off if</text>
+<text x="874" y="850" font-size="14" font-weight="normal" fill="#5f6f75" text-anchor="start">the Pi stops talking</text>
+<text x="905" y="658" font-size="13" font-weight="bold" fill="#5e35b1" text-anchor="end">Qw/ST connector</text>
+<rect x="908.0" y="667" width="74" height="26" rx="4" fill="#fff" stroke="#222222" stroke-width="2"/>
+<text x="945" y="685" font-size="13" font-weight="bold" fill="#222222" text-anchor="middle">GND</text>
+<rect x="1003.0" y="667" width="74" height="26" rx="4" fill="#fff" stroke="#1565c0" stroke-width="2"/>
+<text x="1040" y="685" font-size="13" font-weight="bold" fill="#1565c0" text-anchor="middle">SCL</text>
+<rect x="1098.0" y="667" width="74" height="26" rx="4" fill="#fff" stroke="#2e7d32" stroke-width="2"/>
+<text x="1135" y="685" font-size="13" font-weight="bold" fill="#2e7d32" text-anchor="middle">SDA</text>
+<rect x="1195.0" y="667" width="60" height="26" rx="4" fill="#fff" stroke="#5f6f75" stroke-width="2"/>
+<text x="1225" y="685" font-size="13" font-weight="bold" fill="#5f6f75" text-anchor="middle">3V3</text>
+<text x="1040" y="714" font-size="12" font-weight="bold" fill="#1565c0" text-anchor="middle">GP21 = RX</text>
+<text x="1135" y="714" font-size="12" font-weight="bold" fill="#2e7d32" text-anchor="middle">GP20 = TX</text>
+<rect x="818.0" y="887" width="84" height="26" rx="4" fill="#fff" stroke="#c62828" stroke-width="2"/>
+<text x="860" y="905" font-size="13" font-weight="bold" fill="#c62828" text-anchor="middle">V+  V−</text>
+<text x="910" y="905" font-size="13" font-weight="normal" fill="#5f6f75" text-anchor="start">servo power terminal</text>
+<rect x="1023.0" y="967" width="74" height="26" rx="4" fill="#fff" stroke="#5f6f75" stroke-width="2"/>
+<text x="1060" y="985" font-size="13" font-weight="bold" fill="#5f6f75" text-anchor="middle">USB-C</text>
+<rect x="1210.0" y="817" width="100" height="26" rx="4" fill="#fff" stroke="#5e35b1" stroke-width="2"/>
+<text x="1260" y="835" font-size="13" font-weight="bold" fill="#5e35b1" text-anchor="middle">Servo 1–18</text>
+<polyline points="945,543 945,667" fill="none" stroke="#222222" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline points="1040,543 1040,667" fill="none" stroke="#1565c0" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline points="1135,543 1135,667" fill="none" stroke="#2e7d32" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="935" y="610.0" font-size="13" font-weight="bold" fill="#222222" text-anchor="end">GND ↔ GND</text>
+<text x="1048" y="585.0" font-size="13" font-weight="bold" fill="#1565c0" text-anchor="start">TX → RX</text>
+<text x="1143" y="630.0" font-size="13" font-weight="bold" fill="#2e7d32" text-anchor="start">RX ← TX</text>
+<line x1="1225" y1="553" x2="1225" y2="567" stroke="#5f6f75" stroke-width="3"/>
+<line x1="1225" y1="657" x2="1225" y2="643" stroke="#5f6f75" stroke-width="3"/>
+<g stroke="#c62828" stroke-width="4"><line x1="1213" y1="593.0" x2="1237" y2="617.0"/><line x1="1213" y1="617.0" x2="1237" y2="593.0"/></g>
+<text x="1247" y="610.0" font-size="13" font-weight="bold" fill="#c62828" text-anchor="start">NOT connected</text>
+<rect x="40" y="690" width="230" height="130" rx="10" fill="#fff4f2" stroke="#c62828" stroke-width="2"/>
+<text x="54" y="718" font-size="19" font-weight="bold" fill="#111" text-anchor="start">Battery pack</text>
+<text x="54" y="742" font-size="14" font-weight="normal" fill="#5f6f75" text-anchor="start">Servo supply: the voltage</text>
+<text x="54" y="762" font-size="14" font-weight="normal" fill="#5f6f75" text-anchor="start">your servos are rated for</text>
+<text x="258" y="730" font-size="18" font-weight="bold" fill="#c62828" text-anchor="end">+</text>
+<text x="258" y="800" font-size="20" font-weight="bold" fill="#222222" text-anchor="end">−</text>
+<rect x="330" y="696" width="170" height="64" rx="10" fill="#fff4f2" stroke="#c62828" stroke-width="2"/>
+<text x="344" y="724" font-size="17" font-weight="bold" fill="#111" text-anchor="start">Main switch</text>
+<text x="344" y="748" font-size="14" font-weight="normal" fill="#5f6f75" text-anchor="start">+ fuse, on the + wire</text>
+<polyline points="270,725 330,725" fill="none" stroke="#c62828" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline points="500,725 790,725 790,893 818,893" fill="none" stroke="#c62828" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline points="270,795 770,795 770,909 818,909" fill="none" stroke="#222222" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="640" y="715" font-size="13" font-weight="bold" fill="#c62828" text-anchor="start">servo power +</text>
+<text x="640" y="815" font-size="13" font-weight="bold" fill="#222222" text-anchor="start">ground (−)</text>
+<polyline points="560,725 560,490" fill="none" stroke="#c62828" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>
+<circle cx="560" cy="725" r="6" fill="#c62828"/>
+<text x="568" y="600" font-size="13" font-weight="bold" fill="#c62828" text-anchor="start">IN +</text>
+<path d="M610,795 L610,734 A9,9 0 0 1 610,716 L610,490" fill="none" stroke="#222222" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>
+<circle cx="610" cy="795" r="6" fill="#222222"/>
+<text x="618" y="640" font-size="13" font-weight="bold" fill="#222222" text-anchor="start">IN −</text>
+<rect x="470" y="380" width="250" height="110" rx="10" fill="#fff8ec" stroke="#e07b00" stroke-width="2"/>
+<text x="484" y="408" font-size="19" font-weight="bold" fill="#111" text-anchor="start">5 V buck converter</text>
+<text x="484" y="432" font-size="14" font-weight="normal" fill="#5f6f75" text-anchor="start">≥ 2 A, for the Pi only</text>
+<text x="484" y="452" font-size="14" font-weight="normal" fill="#5f6f75" text-anchor="start">OUT → micro-USB lead</text>
+<text x="714" y="446" font-size="11" font-weight="bold" fill="#e07b00" text-anchor="end">OUT +</text>
+<text x="714" y="484" font-size="11" font-weight="bold" fill="#222222" text-anchor="end">OUT −</text>
+<polyline points="720,450 818,450" fill="none" stroke="#e07b00" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline points="720,482 818,482" fill="none" stroke="#222222" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="740" y="441" font-size="13" font-weight="bold" fill="#e07b00" text-anchor="start">5 V</text>
+<text x="740" y="500" font-size="13" font-weight="bold" fill="#222222" text-anchor="start">GND</text>
+<polyline points="720,166 900,166 900,260" fill="none" stroke="#0d7a69" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" stroke-dasharray="10 7"/>
+<text x="745" y="156" font-size="13" font-weight="bold" fill="#0d7a69" text-anchor="start">Bluetooth</text>
+<polyline points="1330,166 1200,166 1200,260" fill="none" stroke="#0d7a69" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" stroke-dasharray="10 7"/>
+<text x="1210" y="156" font-size="13" font-weight="bold" fill="#0d7a69" text-anchor="start">Wi-Fi (planned)</text>
+<rect x="40" y="880" width="330" height="86" rx="10" fill="#f4f7f8" stroke="#37474f" stroke-width="2" stroke-dasharray="8 6"/>
+<text x="54" y="908" font-size="19" font-weight="bold" fill="#111" text-anchor="start">Laptop (optional)</text>
+<text x="54" y="932" font-size="14" font-weight="normal" fill="#5f6f75" text-anchor="start">Thonny / Motion Studio over USB-C</text>
+<polyline points="1060,993 1060,1005 205,1005 205,966" fill="none" stroke="#5f6f75" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" stroke-dasharray="10 7"/>
+<text x="1380" y="640" font-size="15" font-weight="bold" fill="#111" text-anchor="start">Servo outputs (hip, upper leg, lower leg)</text>
+<rect x="1380" y="660" width="280" height="46" rx="8" fill="#f3f1fb" stroke="#5e35b1" stroke-width="1.5"/>
+<text x="1394" y="689" font-size="15" font-weight="bold" fill="#111" text-anchor="start">Leg L1</text>
+<text x="1475" y="689" font-size="14" font-weight="normal" fill="#5f6f75" text-anchor="start">outputs 1, 2, 3</text>
+<rect x="1380" y="718" width="280" height="46" rx="8" fill="#f3f1fb" stroke="#5e35b1" stroke-width="1.5"/>
+<text x="1394" y="747" font-size="15" font-weight="bold" fill="#111" text-anchor="start">Leg L2</text>
+<text x="1475" y="747" font-size="14" font-weight="normal" fill="#5f6f75" text-anchor="start">outputs 4, 5, 6</text>
+<rect x="1380" y="776" width="280" height="46" rx="8" fill="#f3f1fb" stroke="#5e35b1" stroke-width="1.5"/>
+<text x="1394" y="805" font-size="15" font-weight="bold" fill="#111" text-anchor="start">Leg L3</text>
+<text x="1475" y="805" font-size="14" font-weight="normal" fill="#5f6f75" text-anchor="start">outputs 7, 8, 9</text>
+<rect x="1380" y="834" width="280" height="46" rx="8" fill="#f3f1fb" stroke="#5e35b1" stroke-width="1.5"/>
+<text x="1394" y="863" font-size="15" font-weight="bold" fill="#111" text-anchor="start">Leg R1</text>
+<text x="1475" y="863" font-size="14" font-weight="normal" fill="#5f6f75" text-anchor="start">outputs 10, 11, 12</text>
+<rect x="1380" y="892" width="280" height="46" rx="8" fill="#f3f1fb" stroke="#5e35b1" stroke-width="1.5"/>
+<text x="1394" y="921" font-size="15" font-weight="bold" fill="#111" text-anchor="start">Leg R2</text>
+<text x="1475" y="921" font-size="14" font-weight="normal" fill="#5f6f75" text-anchor="start">outputs 13, 14, 15</text>
+<rect x="1380" y="950" width="280" height="46" rx="8" fill="#f3f1fb" stroke="#5e35b1" stroke-width="1.5"/>
+<text x="1394" y="979" font-size="15" font-weight="bold" fill="#111" text-anchor="start">Leg R3</text>
+<text x="1475" y="979" font-size="14" font-weight="normal" fill="#5f6f75" text-anchor="start">outputs 16, 17, 18</text>
+<polyline points="1310,830 1360,830" fill="none" stroke="#5e35b1" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline points="1360,683 1360,973" fill="none" stroke="#5e35b1" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline points="1360,683 1380,683" fill="none" stroke="#5e35b1" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline points="1360,741 1380,741" fill="none" stroke="#5e35b1" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline points="1360,799 1380,799" fill="none" stroke="#5e35b1" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline points="1360,857 1380,857" fill="none" stroke="#5e35b1" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline points="1360,915 1380,915" fill="none" stroke="#5e35b1" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline points="1360,973 1380,973" fill="none" stroke="#5e35b1" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="40" y="1036" font-size="17" font-weight="bold" fill="#c62828" text-anchor="start">Before wiring</text>
+<text x="40" y="1062" font-size="14" font-weight="normal" fill="#111" text-anchor="start">1. VERIFY on the Servo 2040 pinout that SDA = GP20 and SCL = GP21 (UART1 TX/RX).</text>
+<text x="40" y="1084" font-size="14" font-weight="normal" fill="#111" text-anchor="start">2. Cross the wires: Pi TX → Servo RX, Pi RX ← Servo TX. Join GND. Do NOT join 3V3.</text>
+<text x="40" y="1106" font-size="14" font-weight="normal" fill="#111" text-anchor="start">3. Both boards use 3.3 V logic: no level shifter. Keep UART wires under 20–30 cm.</text>
+<text x="40" y="1128" font-size="14" font-weight="normal" fill="#111" text-anchor="start">4. Power the Pi from its own 5 V regulator (5 V and GND), never from the servo rail directly.</text>
+<text x="40" y="1150" font-size="14" font-weight="normal" fill="#111" text-anchor="start">5. Common ground: battery −, buck converter, Pi and Servo 2040 GND are all joined.</text>
+<text x="40" y="1172" font-size="14" font-weight="normal" fill="#111" text-anchor="start">6. Switch the servo power off before connecting or disconnecting anything.</text>
+<text x="40" y="1211" font-size="15" font-weight="bold" fill="#111" text-anchor="start">Legend</text>
+<polyline points="130,1206 160,1206" fill="none" stroke="#c62828" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="168" y="1211" font-size="12" font-weight="normal" fill="#111" text-anchor="start">Battery / servo power +</text>
+<polyline points="335,1206 365,1206" fill="none" stroke="#222222" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="373" y="1211" font-size="12" font-weight="normal" fill="#111" text-anchor="start">Ground (−)</text>
+<polyline points="540,1206 570,1206" fill="none" stroke="#e07b00" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="578" y="1211" font-size="12" font-weight="normal" fill="#111" text-anchor="start">5 V for the Pi</text>
+<polyline points="745,1206 775,1206" fill="none" stroke="#1565c0" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="783" y="1211" font-size="12" font-weight="normal" fill="#111" text-anchor="start">UART: Pi → Servo 2040</text>
+<polyline points="950,1206 980,1206" fill="none" stroke="#2e7d32" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="988" y="1211" font-size="12" font-weight="normal" fill="#111" text-anchor="start">UART: Servo 2040 → Pi</text>
+<polyline points="1155,1206 1185,1206" fill="none" stroke="#0d7a69" stroke-width="4" stroke-linejoin="round" stroke-linecap="round" stroke-dasharray="10 7"/>
+<text x="1193" y="1211" font-size="12" font-weight="normal" fill="#111" text-anchor="start">Wireless</text>
+<rect x="1380" y="1050" width="280" height="160" rx="8" fill="none" stroke="#37474f" stroke-width="1.5"/>
+<text x="1396" y="1078" font-size="16" font-weight="bold" fill="#111" text-anchor="start">Hexapod Pi Zero 2 W</text>
+<text x="1396" y="1102" font-size="13" font-weight="normal" fill="#5f6f75" text-anchor="start">Wiring schematic · Rev B</text>
+<text x="1396" y="1124" font-size="13" font-weight="normal" fill="#5f6f75" text-anchor="start">4 November 2026</text>
+<text x="1396" y="1156" font-size="13" font-weight="bold" fill="#c62828" text-anchor="start">Status: planned, not yet built</text>
+<text x="1396" y="1180" font-size="13" font-weight="normal" fill="#5f6f75" text-anchor="start">Pin labels to be verified</text>
+</svg>

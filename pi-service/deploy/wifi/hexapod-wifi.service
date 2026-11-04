@@ -1,0 +1,8 @@
+[Unit]
+Description=Hexapod Wi-Fi: saved network, or the robot's own hotspot when none is in range
+After=NetworkManager.service
+Wants=NetworkManager.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/hexapod-wifi check
