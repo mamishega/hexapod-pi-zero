@@ -12,13 +12,14 @@ module.exports = {
     title: 'Hexapod Pi Zero 2 W',
     subtitle: 'User Manual',
     docNo: 'HXP-UM-001',
-    revision: 'I',
+    revision: 'J',
     date: '5 November 2026',
     status: 'Draft for review',
     scope: 'Raspberry Pi Zero 2 W version of the hexapod walking robot',
   },
 
   revisions: [
+    ['J', '5 November 2026', 'Pi IP address on the Robocop network updated to 10.52.126.57 (Sections 6.2, 8.1 and 8.2).'],
     ['I', '5 November 2026', 'The robot\u2019s work Wi-Fi network (access point) is **Robocop** (Sections 6.1 and 8.1\u20138.2).'],
     ['H', '5 November 2026', 'Wiring schematic Rev C: RPLIDAR C1 360\u00b0 laser scanner (planned) on a USB hub at the Pi\u2019s USB port, with the Servo 2040 power lead. Pi supply raised to 3 A (Sections 5.2, 5.4 and 5.5).'],
     ['G', '4 November 2026', 'Live View: gait timing chart, pause / slow motion / replay, balance view, leg inspector, battery graph, message inspector and Join screen with QR codes (Section 8.1).'],
@@ -230,7 +231,7 @@ module.exports = {
           {steps: [
             'Insert the card into the Pi and apply power. The first start-up takes 2–3 minutes.',
             {text: 'On the computer, open a terminal and log in as **kangan**. Type the password when asked (nothing is shown while you type):', code: ['ssh kangan@hexapod.local']},
-            {text: 'If `hexapod.local` cannot be found, use the Pi’s IP address instead. Find it in the router’s list of connected devices (the Pi is named **hexapod**). For example:', code: ['ssh kangan@192.168.20.28']},
+            {text: 'If `hexapod.local` cannot be found, use the Pi’s IP address instead. Find it in the router’s list of connected devices (the Pi is named **hexapod**). For example:', code: ['ssh kangan@10.52.126.57']},
             {text: 'Update the system, then restart and log in again:', code: ['sudo apt update && sudo apt full-upgrade -y', 'sudo reboot']},
             {text: 'Install Node.js and check the version:', code: ['sudo apt install -y nodejs npm', 'node --version']},
           ]},
@@ -336,7 +337,7 @@ module.exports = {
           {p: 'The Pi serves a **Live View** web page that shows, as it happens, how the robot moves and how a command travels from the controller to the servos. It is designed for showing students how the robot works. It starts automatically with the driving service; nothing needs to be installed on the viewing devices.'},
           {steps: [
             'Connect the phone, tablet or laptop to the **same Wi-Fi network** as the robot: at work this is **Robocop**.',
-            {text: 'Open a web browser (Chrome, Edge, Safari or Firefox) and go to the Pi’s address on port 5181. If `hexapod.local` is not found, use the Pi’s IP address instead (192.168.20.28 when this manual was written; check the router if it has changed). In offline mode (Section 8.2) it is always 10.42.0.1:', code: ['http://hexapod.local:5181', 'http://192.168.20.28:5181', 'http://10.42.0.1:5181']},
+            {text: 'Open a web browser (Chrome, Edge, Safari or Firefox) and go to the Pi’s address on port 5181. If `hexapod.local` is not found, use the Pi’s IP address instead (10.52.126.57 on the Robocop network when this manual was written; check the router if it has changed). In offline mode (Section 8.2) it is always 10.42.0.1:', code: ['http://hexapod.local:5181', 'http://10.52.126.57:5181', 'http://10.42.0.1:5181']},
             'Drive the robot with the Xbox controller as usual. The page updates on every viewer at the same time.',
           ]},
           {p: 'The page is split into five pages. On a laptop or larger screen they are listed in a side panel on the left; on a tablet or phone they are in a menu along the top. Each page has its own address (for example `http://hexapod.local:5181/#servos`), so one page can be projected or shared.'},
@@ -356,7 +357,7 @@ module.exports = {
         {id: 'offline', title: 'Offline mode: the robot’s own Wi-Fi', blocks: [
           {p: 'Where there is no Wi-Fi network, or the robot is away from its saved network, the Pi runs its **own Wi-Fi network (a hotspot)**. Laptops, tablets and phones join it directly, so the Live View and remote login still work with no router and no internet.'},
           {table: {caption: 'Wi-Fi modes', head: ['Mode', 'What the Pi does', 'Address of the Pi'], widths: [1900, 4626, 2500], rows: [
-            ['**Station** (normal)', 'Joins a saved Wi-Fi network, like any other device. At work this is the **Robocop** access point.', 'Given by the router, for example 192.168.20.28'],
+            ['**Station** (normal)', 'Joins a saved Wi-Fi network, like any other device. At work this is the **Robocop** access point.', 'Given by the router: 10.52.126.57 on Robocop when this manual was written'],
             ['**Hotspot** (access point)', 'Runs its own network called **Hexapod-6607** (the last four characters of the Pi’s Wi-Fi address). Gives each device that joins an address.', 'Always **10.42.0.1**'],
           ]}},
           {p: 'The Pi Zero 2 W does one or the other, not both. By default it chooses automatically (**auto** mode):'},
