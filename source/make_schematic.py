@@ -2,7 +2,8 @@
 import sys
 from pathlib import Path
 
-W, H = 1700, 1240
+W, H = 1700, 1270
+USB, LIDAR = '#6d4c41', '#00838f'
 RED, BLACK, ORANGE = '#c62828', '#222222', '#e07b00'
 TX, RX = '#1565c0', '#2e7d32'
 ACCENT, MUTED, BOX = '#0d7a69', '#5f6f75', '#f4f7f8'
@@ -48,7 +49,7 @@ add(f'<rect width="{W}" height="{H}" fill="#ffffff"/>')
 
 # ---------- Title ----------
 text(40, 52, 'Hexapod — Raspberry Pi Zero 2 W wiring schematic', 30, 'bold')
-text(40, 82, 'Xbox controller (Bluetooth) → Pi Zero 2 W → UART on the Servo 2040 SDA/SCL pins → 18 servos', 16, fill=MUTED)
+text(40, 82, 'Xbox controller (Bluetooth) → Pi Zero 2 W → UART on the Servo 2040 SDA/SCL pins → 18 servos · RPLIDAR C1 on USB (planned)', 16, fill=MUTED)
 
 # ---------- Wireless devices ----------
 box(470, 120, 250, 92, 'Xbox controller', ['Series X|S recommended'])
@@ -56,7 +57,7 @@ box(1330, 120, 330, 92, 'Phone / laptop (optional)', ['Browser: http://hexapod.l
 
 # ---------- Raspberry Pi ----------
 PX, PY, PW, PH = 860, 260, 400, 270
-box(PX, PY, PW, PH, 'Raspberry Pi Zero 2 W', ['Raspberry Pi OS Lite (64-bit)', 'Headless driving service (Node.js)', 'Bluetooth + 2.4 GHz Wi-Fi', 'config.txt: enable_uart=1'], fill='#eef7f5', stroke=ACCENT, title_size=21)
+box(PX, PY, PW, PH, 'Raspberry Pi Zero 2 W', ['Raspberry Pi OS Lite (64-bit)', 'Headless driving service (Node.js)', 'Bluetooth + 2.4 GHz Wi-Fi', 'config.txt: enable_uart=1', 'Live View on port 5181'], fill='#eef7f5', stroke=ACCENT, title_size=21)
 # PWR IN micro-USB on the left edge
 add(f'<rect x="{PX - 42}" y="436" width="84" height="60" rx="4" fill="#fff" stroke="{ORANGE}" stroke-width="2"/>')
 text(PX, 461, 'PWR IN', 13, 'bold', ORANGE, 'middle')
@@ -72,6 +73,19 @@ text(G['gnd'], PY + PH - 22, 'GND', 12, 'bold', BLACK, 'middle')
 text(G['tx'], PY + PH - 22, 'GPIO14 TXD', 12, 'bold', TX, 'middle')
 text(G['rx'], PY + PH - 22, 'GPIO15 RXD', 12, 'bold', RX, 'middle')
 text(G['v33'], PY + PH - 22, '3V3', 12, 'bold', MUTED, 'middle')
+
+# USB (data) port on the right edge -> USB hub
+pin(PX + PW, 455, 'USB', USB, w=60)
+text(PX + PW - 38, 460, 'micro-USB (OTG)', 13, fill=MUTED, anchor='end')
+box(1330, 420, 330, 96, 'USB hub (micro-USB OTG)', ['2 or more ports', 'Pi\u2019s inner USB port, not PWR IN'], fill='#f7f2ef', stroke=USB, title_size=17)
+wire([(PX + PW + 30, 455), (1330, 455)], USB, 4)
+# RPLIDAR C1 above the hub
+box(1330, 236, 330, 150, 'RPLIDAR C1 (planned)', ['360° DTOF laser scanner · 12 m · IP54', '5 V, about 230 mA', 'UART 460 800 baud, 3.3 V logic', '→ USB adapter board (in the kit)'], fill='#e9f6f7', stroke=LIDAR, title_size=18)
+wire([(1495, 420), (1495, 386)], USB, 4)
+tag(1505, 408, 'USB adapter lead', USB)
+# Hub -> Servo 2040 USB-C (power for its processor), round the right-hand side
+wire([(1660, 490), (1682, 490), (1682, 1025), (1060, 1025), (1060, 993)], USB, 4)
+tag(1100, 1018, 'USB power for the Servo 2040 processor (power-only lead is fine)', USB)
 
 # ---------- Servo 2040 ----------
 SX, SY, SW, SH = 860, 680, 400, 300
@@ -129,7 +143,7 @@ add(f'<path d="M{HX},{GND_Y} L{HX},{POS + HR} A{HR},{HR} 0 0 1 {HX},{POS - HR} L
 dot(HX, GND_Y, BLACK)
 tag(618, 640, 'IN −', BLACK)
 # buck converter -> Pi PWR IN: 5 V and GND (a micro-USB lead carries both)
-box(470, 380, 250, 110, '5 V buck converter', ['≥ 2 A, for the Pi only', 'OUT → micro-USB lead'], fill='#fff8ec', stroke=ORANGE)
+box(470, 380, 250, 110, '5 V buck converter', ['≥ 3 A: Pi, hub, LiDAR, board logic', 'OUT → micro-USB lead'], fill='#fff8ec', stroke=ORANGE)
 text(714, 446, 'OUT +', 11, 'bold', ORANGE, 'end')
 text(714, 484, 'OUT −', 11, 'bold', BLACK, 'end')
 wire([(720, 450), (PX - 42, 450)], ORANGE, 5)
@@ -141,16 +155,15 @@ tag(740, 500, 'GND', BLACK)
 wire([(720, 166), (900, 166), (900, PY)], ACCENT, 3, True)
 tag(745, 156, 'Bluetooth', ACCENT)
 wire([(1330, 166), (1200, 166), (1200, PY)], ACCENT, 3, True)
-tag(1210, 156, 'Wi-Fi (planned)', ACCENT)
+tag(1210, 156, 'Wi-Fi (Live View)', ACCENT)
 
 # ---------- Optional laptop on USB-C ----------
-box(40, 880, 330, 86, 'Laptop (optional)', ['Thonny / Motion Studio over USB-C'], dash=True)
-wire([(1060, SY + SH + 13), (1060, 1005), (205, 1005), (205, 966)], MUTED, 3, True)
+box(40, 880, 330, 86, 'Laptop (optional)', ['Thonny / Motion Studio: plug into the', 'Servo 2040 USB-C instead of the hub lead'], dash=True)
 
 # ---------- Servos ----------
 legs = [('L1', 1), ('L2', 4), ('L3', 7), ('R1', 10), ('R2', 13), ('R3', 16)]
 LX = 1380
-text(LX, 640, 'Servo outputs (hip, upper leg, lower leg)', 15, 'bold')
+text(LX, 640, 'Servo outputs (hip, upper, lower)', 15, 'bold')
 for i, (name, first) in enumerate(legs):
     y = 660 + i * 58
     add(f'<rect x="{LX}" y="{y}" width="280" height="46" rx="8" fill="#f3f1fb" stroke="#5e35b1" stroke-width="1.5"/>')
@@ -171,17 +184,18 @@ notes = [
     '4. Power the Pi from its own 5 V regulator (5 V and GND), never from the servo rail directly.',
     '5. Common ground: battery −, buck converter, Pi and Servo 2040 GND are all joined.',
     '6. Switch the servo power off before connecting or disconnecting anything.',
+    '7. RPLIDAR C1: connect through its USB adapter and the hub. The Pi\u2019s GPIO UART is used by the Servo 2040 and its other UART by Bluetooth.',
 ]
 for i, n in enumerate(notes):
     text(40, NY + 26 + i * 22, n, 14)
 
 # legend
-LY = 1206
+LY = 1240
 text(40, LY + 5, 'Legend', 15, 'bold')
 items = [(RED, 'Battery / servo power +', False), (BLACK, 'Ground (−)', False), (ORANGE, '5 V for the Pi', False),
-         (TX, 'UART: Pi → Servo 2040', False), (RX, 'UART: Servo 2040 → Pi', False), (ACCENT, 'Wireless', True)]
+         (TX, 'UART: Pi → Servo 2040', False), (RX, 'UART: Servo 2040 → Pi', False), (ACCENT, 'Wireless', True), (USB, 'USB (hub, LiDAR, board power)', False)]
 for i, (c, label, dash) in enumerate(items):
-    x = 130 + i * 205
+    x = 110 + i * 200
     y = LY + 5
     wire([(x, y - 5), (x + 30, y - 5)], c, 4, dash)
     text(x + 38, y, label, 12)
@@ -189,10 +203,10 @@ for i, (c, label, dash) in enumerate(items):
 # title block
 add(f'<rect x="1380" y="1050" width="280" height="160" rx="8" fill="none" stroke="#37474f" stroke-width="1.5"/>')
 text(1396, 1078, 'Hexapod Pi Zero 2 W', 16, 'bold')
-text(1396, 1102, 'Wiring schematic · Rev B', 13, fill=MUTED)
-text(1396, 1124, '4 November 2026', 13, fill=MUTED)
-text(1396, 1156, 'Status: planned, not yet built', 13, 'bold', RED)
-text(1396, 1180, 'Pin labels to be verified', 13, fill=MUTED)
+text(1396, 1102, 'Wiring schematic · Rev C', 13, fill=MUTED)
+text(1396, 1124, '5 November 2026', 13, fill=MUTED)
+text(1396, 1156, 'Built and tested; LiDAR planned', 13, 'bold', RED)
+text(1396, 1180, 'LiDAR: check pinout on its datasheet', 13, fill=MUTED)
 add('</svg>')
 
 svg = '\n'.join(out)

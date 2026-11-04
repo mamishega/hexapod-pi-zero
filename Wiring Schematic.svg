@@ -1,7 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1700 1240" width="1700" height="1240" font-family="Helvetica, Arial, sans-serif">
-<rect width="1700" height="1240" fill="#ffffff"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1700 1270" width="1700" height="1270" font-family="Helvetica, Arial, sans-serif">
+<rect width="1700" height="1270" fill="#ffffff"/>
 <text x="40" y="52" font-size="30" font-weight="bold" fill="#111" text-anchor="start">Hexapod — Raspberry Pi Zero 2 W wiring schematic</text>
-<text x="40" y="82" font-size="16" font-weight="normal" fill="#5f6f75" text-anchor="start">Xbox controller (Bluetooth) → Pi Zero 2 W → UART on the Servo 2040 SDA/SCL pins → 18 servos</text>
+<text x="40" y="82" font-size="16" font-weight="normal" fill="#5f6f75" text-anchor="start">Xbox controller (Bluetooth) → Pi Zero 2 W → UART on the Servo 2040 SDA/SCL pins → 18 servos · RPLIDAR C1 on USB (planned)</text>
 <rect x="470" y="120" width="250" height="92" rx="10" fill="#f4f7f8" stroke="#37474f" stroke-width="2"/>
 <text x="484" y="148" font-size="19" font-weight="bold" fill="#111" text-anchor="start">Xbox controller</text>
 <text x="484" y="172" font-size="14" font-weight="normal" fill="#5f6f75" text-anchor="start">Series X|S recommended</text>
@@ -14,6 +14,7 @@
 <text x="874" y="332" font-size="14" font-weight="normal" fill="#5f6f75" text-anchor="start">Headless driving service (Node.js)</text>
 <text x="874" y="352" font-size="14" font-weight="normal" fill="#5f6f75" text-anchor="start">Bluetooth + 2.4 GHz Wi-Fi</text>
 <text x="874" y="372" font-size="14" font-weight="normal" fill="#5f6f75" text-anchor="start">config.txt: enable_uart=1</text>
+<text x="874" y="392" font-size="14" font-weight="normal" fill="#5f6f75" text-anchor="start">Live View on port 5181</text>
 <rect x="818" y="436" width="84" height="60" rx="4" fill="#fff" stroke="#e07b00" stroke-width="2"/>
 <text x="860" y="461" font-size="13" font-weight="bold" fill="#e07b00" text-anchor="middle">PWR IN</text>
 <text x="860" y="479" font-size="11" font-weight="bold" fill="#222222" text-anchor="middle">5 V + GND</text>
@@ -30,6 +31,24 @@
 <text x="1040" y="508" font-size="12" font-weight="bold" fill="#1565c0" text-anchor="middle">GPIO14 TXD</text>
 <text x="1135" y="508" font-size="12" font-weight="bold" fill="#2e7d32" text-anchor="middle">GPIO15 RXD</text>
 <text x="1225" y="508" font-size="12" font-weight="bold" fill="#5f6f75" text-anchor="middle">3V3</text>
+<rect x="1230.0" y="442" width="60" height="26" rx="4" fill="#fff" stroke="#6d4c41" stroke-width="2"/>
+<text x="1260" y="460" font-size="13" font-weight="bold" fill="#6d4c41" text-anchor="middle">USB</text>
+<text x="1222" y="460" font-size="13" font-weight="normal" fill="#5f6f75" text-anchor="end">micro-USB (OTG)</text>
+<rect x="1330" y="420" width="330" height="96" rx="10" fill="#f7f2ef" stroke="#6d4c41" stroke-width="2"/>
+<text x="1344" y="448" font-size="17" font-weight="bold" fill="#111" text-anchor="start">USB hub (micro-USB OTG)</text>
+<text x="1344" y="472" font-size="14" font-weight="normal" fill="#5f6f75" text-anchor="start">2 or more ports</text>
+<text x="1344" y="492" font-size="14" font-weight="normal" fill="#5f6f75" text-anchor="start">Pi’s inner USB port, not PWR IN</text>
+<polyline points="1290,455 1330,455" fill="none" stroke="#6d4c41" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>
+<rect x="1330" y="236" width="330" height="150" rx="10" fill="#e9f6f7" stroke="#00838f" stroke-width="2"/>
+<text x="1344" y="264" font-size="18" font-weight="bold" fill="#111" text-anchor="start">RPLIDAR C1 (planned)</text>
+<text x="1344" y="288" font-size="14" font-weight="normal" fill="#5f6f75" text-anchor="start">360° DTOF laser scanner · 12 m · IP54</text>
+<text x="1344" y="308" font-size="14" font-weight="normal" fill="#5f6f75" text-anchor="start">5 V, about 230 mA</text>
+<text x="1344" y="328" font-size="14" font-weight="normal" fill="#5f6f75" text-anchor="start">UART 460 800 baud, 3.3 V logic</text>
+<text x="1344" y="348" font-size="14" font-weight="normal" fill="#5f6f75" text-anchor="start">→ USB adapter board (in the kit)</text>
+<polyline points="1495,420 1495,386" fill="none" stroke="#6d4c41" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="1505" y="408" font-size="13" font-weight="bold" fill="#6d4c41" text-anchor="start">USB adapter lead</text>
+<polyline points="1660,490 1682,490 1682,1025 1060,1025 1060,993" fill="none" stroke="#6d4c41" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="1100" y="1018" font-size="13" font-weight="bold" fill="#6d4c41" text-anchor="start">USB power for the Servo 2040 processor (power-only lead is fine)</text>
 <rect x="860" y="680" width="400" height="300" rx="10" fill="#f3f1fb" stroke="#5e35b1" stroke-width="2"/>
 <text x="874" y="766" font-size="21" font-weight="bold" fill="#111" text-anchor="start">Pimoroni Servo 2040</text>
 <text x="874" y="790" font-size="14" font-weight="normal" fill="#5f6f75" text-anchor="start">RP2040 · MicroPython</text>
@@ -86,7 +105,7 @@
 <text x="618" y="640" font-size="13" font-weight="bold" fill="#222222" text-anchor="start">IN −</text>
 <rect x="470" y="380" width="250" height="110" rx="10" fill="#fff8ec" stroke="#e07b00" stroke-width="2"/>
 <text x="484" y="408" font-size="19" font-weight="bold" fill="#111" text-anchor="start">5 V buck converter</text>
-<text x="484" y="432" font-size="14" font-weight="normal" fill="#5f6f75" text-anchor="start">≥ 2 A, for the Pi only</text>
+<text x="484" y="432" font-size="14" font-weight="normal" fill="#5f6f75" text-anchor="start">≥ 3 A: Pi, hub, LiDAR, board logic</text>
 <text x="484" y="452" font-size="14" font-weight="normal" fill="#5f6f75" text-anchor="start">OUT → micro-USB lead</text>
 <text x="714" y="446" font-size="11" font-weight="bold" fill="#e07b00" text-anchor="end">OUT +</text>
 <text x="714" y="484" font-size="11" font-weight="bold" fill="#222222" text-anchor="end">OUT −</text>
@@ -97,12 +116,12 @@
 <polyline points="720,166 900,166 900,260" fill="none" stroke="#0d7a69" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" stroke-dasharray="10 7"/>
 <text x="745" y="156" font-size="13" font-weight="bold" fill="#0d7a69" text-anchor="start">Bluetooth</text>
 <polyline points="1330,166 1200,166 1200,260" fill="none" stroke="#0d7a69" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" stroke-dasharray="10 7"/>
-<text x="1210" y="156" font-size="13" font-weight="bold" fill="#0d7a69" text-anchor="start">Wi-Fi (planned)</text>
+<text x="1210" y="156" font-size="13" font-weight="bold" fill="#0d7a69" text-anchor="start">Wi-Fi (Live View)</text>
 <rect x="40" y="880" width="330" height="86" rx="10" fill="#f4f7f8" stroke="#37474f" stroke-width="2" stroke-dasharray="8 6"/>
 <text x="54" y="908" font-size="19" font-weight="bold" fill="#111" text-anchor="start">Laptop (optional)</text>
-<text x="54" y="932" font-size="14" font-weight="normal" fill="#5f6f75" text-anchor="start">Thonny / Motion Studio over USB-C</text>
-<polyline points="1060,993 1060,1005 205,1005 205,966" fill="none" stroke="#5f6f75" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" stroke-dasharray="10 7"/>
-<text x="1380" y="640" font-size="15" font-weight="bold" fill="#111" text-anchor="start">Servo outputs (hip, upper leg, lower leg)</text>
+<text x="54" y="932" font-size="14" font-weight="normal" fill="#5f6f75" text-anchor="start">Thonny / Motion Studio: plug into the</text>
+<text x="54" y="952" font-size="14" font-weight="normal" fill="#5f6f75" text-anchor="start">Servo 2040 USB-C instead of the hub lead</text>
+<text x="1380" y="640" font-size="15" font-weight="bold" fill="#111" text-anchor="start">Servo outputs (hip, upper, lower)</text>
 <rect x="1380" y="660" width="280" height="46" rx="8" fill="#f3f1fb" stroke="#5e35b1" stroke-width="1.5"/>
 <text x="1394" y="689" font-size="15" font-weight="bold" fill="#111" text-anchor="start">Leg L1</text>
 <text x="1475" y="689" font-size="14" font-weight="normal" fill="#5f6f75" text-anchor="start">outputs 1, 2, 3</text>
@@ -136,23 +155,26 @@
 <text x="40" y="1128" font-size="14" font-weight="normal" fill="#111" text-anchor="start">4. Power the Pi from its own 5 V regulator (5 V and GND), never from the servo rail directly.</text>
 <text x="40" y="1150" font-size="14" font-weight="normal" fill="#111" text-anchor="start">5. Common ground: battery −, buck converter, Pi and Servo 2040 GND are all joined.</text>
 <text x="40" y="1172" font-size="14" font-weight="normal" fill="#111" text-anchor="start">6. Switch the servo power off before connecting or disconnecting anything.</text>
-<text x="40" y="1211" font-size="15" font-weight="bold" fill="#111" text-anchor="start">Legend</text>
-<polyline points="130,1206 160,1206" fill="none" stroke="#c62828" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>
-<text x="168" y="1211" font-size="12" font-weight="normal" fill="#111" text-anchor="start">Battery / servo power +</text>
-<polyline points="335,1206 365,1206" fill="none" stroke="#222222" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>
-<text x="373" y="1211" font-size="12" font-weight="normal" fill="#111" text-anchor="start">Ground (−)</text>
-<polyline points="540,1206 570,1206" fill="none" stroke="#e07b00" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>
-<text x="578" y="1211" font-size="12" font-weight="normal" fill="#111" text-anchor="start">5 V for the Pi</text>
-<polyline points="745,1206 775,1206" fill="none" stroke="#1565c0" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>
-<text x="783" y="1211" font-size="12" font-weight="normal" fill="#111" text-anchor="start">UART: Pi → Servo 2040</text>
-<polyline points="950,1206 980,1206" fill="none" stroke="#2e7d32" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>
-<text x="988" y="1211" font-size="12" font-weight="normal" fill="#111" text-anchor="start">UART: Servo 2040 → Pi</text>
-<polyline points="1155,1206 1185,1206" fill="none" stroke="#0d7a69" stroke-width="4" stroke-linejoin="round" stroke-linecap="round" stroke-dasharray="10 7"/>
-<text x="1193" y="1211" font-size="12" font-weight="normal" fill="#111" text-anchor="start">Wireless</text>
+<text x="40" y="1194" font-size="14" font-weight="normal" fill="#111" text-anchor="start">7. RPLIDAR C1: connect through its USB adapter and the hub. The Pi’s GPIO UART is used by the Servo 2040 and its other UART by Bluetooth.</text>
+<text x="40" y="1245" font-size="15" font-weight="bold" fill="#111" text-anchor="start">Legend</text>
+<polyline points="110,1240 140,1240" fill="none" stroke="#c62828" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="148" y="1245" font-size="12" font-weight="normal" fill="#111" text-anchor="start">Battery / servo power +</text>
+<polyline points="310,1240 340,1240" fill="none" stroke="#222222" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="348" y="1245" font-size="12" font-weight="normal" fill="#111" text-anchor="start">Ground (−)</text>
+<polyline points="510,1240 540,1240" fill="none" stroke="#e07b00" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="548" y="1245" font-size="12" font-weight="normal" fill="#111" text-anchor="start">5 V for the Pi</text>
+<polyline points="710,1240 740,1240" fill="none" stroke="#1565c0" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="748" y="1245" font-size="12" font-weight="normal" fill="#111" text-anchor="start">UART: Pi → Servo 2040</text>
+<polyline points="910,1240 940,1240" fill="none" stroke="#2e7d32" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="948" y="1245" font-size="12" font-weight="normal" fill="#111" text-anchor="start">UART: Servo 2040 → Pi</text>
+<polyline points="1110,1240 1140,1240" fill="none" stroke="#0d7a69" stroke-width="4" stroke-linejoin="round" stroke-linecap="round" stroke-dasharray="10 7"/>
+<text x="1148" y="1245" font-size="12" font-weight="normal" fill="#111" text-anchor="start">Wireless</text>
+<polyline points="1310,1240 1340,1240" fill="none" stroke="#6d4c41" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="1348" y="1245" font-size="12" font-weight="normal" fill="#111" text-anchor="start">USB (hub, LiDAR, board power)</text>
 <rect x="1380" y="1050" width="280" height="160" rx="8" fill="none" stroke="#37474f" stroke-width="1.5"/>
 <text x="1396" y="1078" font-size="16" font-weight="bold" fill="#111" text-anchor="start">Hexapod Pi Zero 2 W</text>
-<text x="1396" y="1102" font-size="13" font-weight="normal" fill="#5f6f75" text-anchor="start">Wiring schematic · Rev B</text>
-<text x="1396" y="1124" font-size="13" font-weight="normal" fill="#5f6f75" text-anchor="start">4 November 2026</text>
-<text x="1396" y="1156" font-size="13" font-weight="bold" fill="#c62828" text-anchor="start">Status: planned, not yet built</text>
-<text x="1396" y="1180" font-size="13" font-weight="normal" fill="#5f6f75" text-anchor="start">Pin labels to be verified</text>
+<text x="1396" y="1102" font-size="13" font-weight="normal" fill="#5f6f75" text-anchor="start">Wiring schematic · Rev C</text>
+<text x="1396" y="1124" font-size="13" font-weight="normal" fill="#5f6f75" text-anchor="start">5 November 2026</text>
+<text x="1396" y="1156" font-size="13" font-weight="bold" fill="#c62828" text-anchor="start">Built and tested; LiDAR planned</text>
+<text x="1396" y="1180" font-size="13" font-weight="normal" fill="#5f6f75" text-anchor="start">LiDAR: check pinout on its datasheet</text>
 </svg>
