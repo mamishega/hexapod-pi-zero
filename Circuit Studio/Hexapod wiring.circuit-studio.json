@@ -1,0 +1,3178 @@
+{
+  "format": "iot-circuit-studio",
+  "version": 1,
+  "name": "Hexapod Pi Zero 2 W wiring",
+  "created": "2026-11-04T19:36:13.689Z",
+  "updated": "2026-11-04T19:36:13.689Z",
+  "boardId": "pi-zero-2w",
+  "components": [
+    {
+      "id": "U1",
+      "type": "board",
+      "x": 620,
+      "y": 60,
+      "rot": 0,
+      "label": "PI ZERO 2 W",
+      "props": {},
+      "boardId": "pi-zero-2w"
+    },
+    {
+      "id": "U2",
+      "type": "custom-hexapod-servo2040",
+      "x": 1180,
+      "y": 60,
+      "rot": 0,
+      "label": "SERVO2040",
+      "props": {}
+    },
+    {
+      "id": "BT1",
+      "type": "custom-hexapod-battery",
+      "x": 40,
+      "y": 80,
+      "rot": 0,
+      "label": "BATTERY",
+      "props": {}
+    },
+    {
+      "id": "SW1",
+      "type": "custom-hexapod-switch",
+      "x": 260,
+      "y": 60,
+      "rot": 0,
+      "label": "SWITCH",
+      "props": {}
+    },
+    {
+      "id": "PS1",
+      "type": "custom-hexapod-buck",
+      "x": 260,
+      "y": 260,
+      "rot": 0,
+      "label": "BUCK5V",
+      "props": {}
+    },
+    {
+      "id": "G1",
+      "type": "gnd",
+      "x": 80,
+      "y": 180,
+      "rot": 0,
+      "label": "GND",
+      "props": {}
+    },
+    {
+      "id": "NL2",
+      "type": "netlabel",
+      "x": 480,
+      "y": 60,
+      "rot": 0,
+      "label": "V_SERVO",
+      "props": {
+        "net": "V_SERVO"
+      }
+    },
+    {
+      "id": "NL3",
+      "type": "netlabel",
+      "x": 480,
+      "y": 260,
+      "rot": 0,
+      "label": "V_SERVO",
+      "props": {
+        "net": "V_SERVO"
+      }
+    },
+    {
+      "id": "G4",
+      "type": "gnd",
+      "x": 220,
+      "y": 380,
+      "rot": 0,
+      "label": "GND",
+      "props": {}
+    },
+    {
+      "id": "V5",
+      "type": "vcc5v",
+      "x": 480,
+      "y": 300,
+      "rot": 0,
+      "label": "5V",
+      "props": {}
+    },
+    {
+      "id": "G6",
+      "type": "gnd",
+      "x": 480,
+      "y": 400,
+      "rot": 0,
+      "label": "GND",
+      "props": {}
+    },
+    {
+      "id": "NL7",
+      "type": "netlabel",
+      "x": 1050,
+      "y": 550,
+      "rot": 180,
+      "label": "V_SERVO",
+      "props": {
+        "net": "V_SERVO"
+      }
+    },
+    {
+      "id": "G8",
+      "type": "gnd",
+      "x": 1100,
+      "y": 640,
+      "rot": 0,
+      "label": "GND",
+      "props": {}
+    },
+    {
+      "id": "HUB1",
+      "type": "custom-hexapod-usb-hub",
+      "x": 260,
+      "y": 520,
+      "rot": 0,
+      "label": "USBHUB",
+      "props": {}
+    },
+    {
+      "id": "V9",
+      "type": "vcc5v",
+      "x": 120,
+      "y": 460,
+      "rot": 0,
+      "label": "5V",
+      "props": {}
+    },
+    {
+      "id": "G10",
+      "type": "gnd",
+      "x": 160,
+      "y": 600,
+      "rot": 0,
+      "label": "GND",
+      "props": {}
+    },
+    {
+      "id": "V11",
+      "type": "vcc5v",
+      "x": 500,
+      "y": 480,
+      "rot": 0,
+      "label": "5V",
+      "props": {}
+    },
+    {
+      "id": "G12",
+      "type": "gnd",
+      "x": 500,
+      "y": 600,
+      "rot": 0,
+      "label": "GND",
+      "props": {}
+    },
+    {
+      "id": "V13",
+      "type": "vcc5v",
+      "x": 1060,
+      "y": 520,
+      "rot": 0,
+      "label": "5V",
+      "props": {}
+    },
+    {
+      "id": "G14",
+      "type": "gnd",
+      "x": 1040,
+      "y": 640,
+      "rot": 0,
+      "label": "GND",
+      "props": {}
+    },
+    {
+      "id": "UA1",
+      "type": "custom-hexapod-lidar-usb",
+      "x": 620,
+      "y": 700,
+      "rot": 0,
+      "label": "LIDARUSB",
+      "props": {}
+    },
+    {
+      "id": "V15",
+      "type": "vcc5v",
+      "x": 580,
+      "y": 660,
+      "rot": 0,
+      "label": "5V",
+      "props": {}
+    },
+    {
+      "id": "G16",
+      "type": "gnd",
+      "x": 560,
+      "y": 800,
+      "rot": 0,
+      "label": "GND",
+      "props": {}
+    },
+    {
+      "id": "LD1",
+      "type": "custom-hexapod-rplidar-c1",
+      "x": 940,
+      "y": 720,
+      "rot": 0,
+      "label": "LIDAR",
+      "props": {}
+    },
+    {
+      "id": "G17",
+      "type": "gnd",
+      "x": 900,
+      "y": 880,
+      "rot": 0,
+      "label": "GND",
+      "props": {}
+    },
+    {
+      "id": "V18",
+      "type": "vcc5v",
+      "x": 880,
+      "y": 680,
+      "rot": 0,
+      "label": "5V",
+      "props": {}
+    },
+    {
+      "id": "NL19",
+      "type": "netlabel",
+      "x": 1050,
+      "y": 150,
+      "rot": 180,
+      "label": "S1",
+      "props": {
+        "net": "S1"
+      }
+    },
+    {
+      "id": "M1",
+      "type": "custom-hexapod-servo",
+      "x": 1660,
+      "y": 60,
+      "rot": 0,
+      "label": "L1_HIP",
+      "props": {}
+    },
+    {
+      "id": "NL20",
+      "type": "netlabel",
+      "x": 1530,
+      "y": 70,
+      "rot": 180,
+      "label": "S1",
+      "props": {
+        "net": "S1"
+      }
+    },
+    {
+      "id": "NL21",
+      "type": "netlabel",
+      "x": 1530,
+      "y": 90,
+      "rot": 180,
+      "label": "V_SERVO",
+      "props": {
+        "net": "V_SERVO"
+      }
+    },
+    {
+      "id": "G22",
+      "type": "gnd",
+      "x": 1600,
+      "y": 140,
+      "rot": 0,
+      "label": "GND",
+      "props": {}
+    },
+    {
+      "id": "NL23",
+      "type": "netlabel",
+      "x": 1050,
+      "y": 170,
+      "rot": 180,
+      "label": "S2",
+      "props": {
+        "net": "S2"
+      }
+    },
+    {
+      "id": "M2",
+      "type": "custom-hexapod-servo",
+      "x": 1980,
+      "y": 60,
+      "rot": 0,
+      "label": "L1_UP",
+      "props": {}
+    },
+    {
+      "id": "NL24",
+      "type": "netlabel",
+      "x": 1850,
+      "y": 70,
+      "rot": 180,
+      "label": "S2",
+      "props": {
+        "net": "S2"
+      }
+    },
+    {
+      "id": "NL25",
+      "type": "netlabel",
+      "x": 1850,
+      "y": 90,
+      "rot": 180,
+      "label": "V_SERVO",
+      "props": {
+        "net": "V_SERVO"
+      }
+    },
+    {
+      "id": "G26",
+      "type": "gnd",
+      "x": 1920,
+      "y": 140,
+      "rot": 0,
+      "label": "GND",
+      "props": {}
+    },
+    {
+      "id": "NL27",
+      "type": "netlabel",
+      "x": 1050,
+      "y": 190,
+      "rot": 180,
+      "label": "S3",
+      "props": {
+        "net": "S3"
+      }
+    },
+    {
+      "id": "M3",
+      "type": "custom-hexapod-servo",
+      "x": 2300,
+      "y": 60,
+      "rot": 0,
+      "label": "L1_LOW",
+      "props": {}
+    },
+    {
+      "id": "NL28",
+      "type": "netlabel",
+      "x": 2170,
+      "y": 70,
+      "rot": 180,
+      "label": "S3",
+      "props": {
+        "net": "S3"
+      }
+    },
+    {
+      "id": "NL29",
+      "type": "netlabel",
+      "x": 2170,
+      "y": 90,
+      "rot": 180,
+      "label": "V_SERVO",
+      "props": {
+        "net": "V_SERVO"
+      }
+    },
+    {
+      "id": "G30",
+      "type": "gnd",
+      "x": 2240,
+      "y": 140,
+      "rot": 0,
+      "label": "GND",
+      "props": {}
+    },
+    {
+      "id": "NL31",
+      "type": "netlabel",
+      "x": 1050,
+      "y": 210,
+      "rot": 180,
+      "label": "S4",
+      "props": {
+        "net": "S4"
+      }
+    },
+    {
+      "id": "M4",
+      "type": "custom-hexapod-servo",
+      "x": 1660,
+      "y": 200,
+      "rot": 0,
+      "label": "L2_HIP",
+      "props": {}
+    },
+    {
+      "id": "NL32",
+      "type": "netlabel",
+      "x": 1530,
+      "y": 210,
+      "rot": 180,
+      "label": "S4",
+      "props": {
+        "net": "S4"
+      }
+    },
+    {
+      "id": "NL33",
+      "type": "netlabel",
+      "x": 1530,
+      "y": 230,
+      "rot": 180,
+      "label": "V_SERVO",
+      "props": {
+        "net": "V_SERVO"
+      }
+    },
+    {
+      "id": "G34",
+      "type": "gnd",
+      "x": 1600,
+      "y": 280,
+      "rot": 0,
+      "label": "GND",
+      "props": {}
+    },
+    {
+      "id": "NL35",
+      "type": "netlabel",
+      "x": 1050,
+      "y": 230,
+      "rot": 180,
+      "label": "S5",
+      "props": {
+        "net": "S5"
+      }
+    },
+    {
+      "id": "M5",
+      "type": "custom-hexapod-servo",
+      "x": 1980,
+      "y": 200,
+      "rot": 0,
+      "label": "L2_UP",
+      "props": {}
+    },
+    {
+      "id": "NL36",
+      "type": "netlabel",
+      "x": 1850,
+      "y": 210,
+      "rot": 180,
+      "label": "S5",
+      "props": {
+        "net": "S5"
+      }
+    },
+    {
+      "id": "NL37",
+      "type": "netlabel",
+      "x": 1850,
+      "y": 230,
+      "rot": 180,
+      "label": "V_SERVO",
+      "props": {
+        "net": "V_SERVO"
+      }
+    },
+    {
+      "id": "G38",
+      "type": "gnd",
+      "x": 1920,
+      "y": 280,
+      "rot": 0,
+      "label": "GND",
+      "props": {}
+    },
+    {
+      "id": "NL39",
+      "type": "netlabel",
+      "x": 1050,
+      "y": 250,
+      "rot": 180,
+      "label": "S6",
+      "props": {
+        "net": "S6"
+      }
+    },
+    {
+      "id": "M6",
+      "type": "custom-hexapod-servo",
+      "x": 2300,
+      "y": 200,
+      "rot": 0,
+      "label": "L2_LOW",
+      "props": {}
+    },
+    {
+      "id": "NL40",
+      "type": "netlabel",
+      "x": 2170,
+      "y": 210,
+      "rot": 180,
+      "label": "S6",
+      "props": {
+        "net": "S6"
+      }
+    },
+    {
+      "id": "NL41",
+      "type": "netlabel",
+      "x": 2170,
+      "y": 230,
+      "rot": 180,
+      "label": "V_SERVO",
+      "props": {
+        "net": "V_SERVO"
+      }
+    },
+    {
+      "id": "G42",
+      "type": "gnd",
+      "x": 2240,
+      "y": 280,
+      "rot": 0,
+      "label": "GND",
+      "props": {}
+    },
+    {
+      "id": "NL43",
+      "type": "netlabel",
+      "x": 1050,
+      "y": 270,
+      "rot": 180,
+      "label": "S7",
+      "props": {
+        "net": "S7"
+      }
+    },
+    {
+      "id": "M7",
+      "type": "custom-hexapod-servo",
+      "x": 1660,
+      "y": 340,
+      "rot": 0,
+      "label": "L3_HIP",
+      "props": {}
+    },
+    {
+      "id": "NL44",
+      "type": "netlabel",
+      "x": 1530,
+      "y": 350,
+      "rot": 180,
+      "label": "S7",
+      "props": {
+        "net": "S7"
+      }
+    },
+    {
+      "id": "NL45",
+      "type": "netlabel",
+      "x": 1530,
+      "y": 370,
+      "rot": 180,
+      "label": "V_SERVO",
+      "props": {
+        "net": "V_SERVO"
+      }
+    },
+    {
+      "id": "G46",
+      "type": "gnd",
+      "x": 1600,
+      "y": 420,
+      "rot": 0,
+      "label": "GND",
+      "props": {}
+    },
+    {
+      "id": "NL47",
+      "type": "netlabel",
+      "x": 1050,
+      "y": 290,
+      "rot": 180,
+      "label": "S8",
+      "props": {
+        "net": "S8"
+      }
+    },
+    {
+      "id": "M8",
+      "type": "custom-hexapod-servo",
+      "x": 1980,
+      "y": 340,
+      "rot": 0,
+      "label": "L3_UP",
+      "props": {}
+    },
+    {
+      "id": "NL48",
+      "type": "netlabel",
+      "x": 1850,
+      "y": 350,
+      "rot": 180,
+      "label": "S8",
+      "props": {
+        "net": "S8"
+      }
+    },
+    {
+      "id": "NL49",
+      "type": "netlabel",
+      "x": 1850,
+      "y": 370,
+      "rot": 180,
+      "label": "V_SERVO",
+      "props": {
+        "net": "V_SERVO"
+      }
+    },
+    {
+      "id": "G50",
+      "type": "gnd",
+      "x": 1920,
+      "y": 420,
+      "rot": 0,
+      "label": "GND",
+      "props": {}
+    },
+    {
+      "id": "NL51",
+      "type": "netlabel",
+      "x": 1050,
+      "y": 310,
+      "rot": 180,
+      "label": "S9",
+      "props": {
+        "net": "S9"
+      }
+    },
+    {
+      "id": "M9",
+      "type": "custom-hexapod-servo",
+      "x": 2300,
+      "y": 340,
+      "rot": 0,
+      "label": "L3_LOW",
+      "props": {}
+    },
+    {
+      "id": "NL52",
+      "type": "netlabel",
+      "x": 2170,
+      "y": 350,
+      "rot": 180,
+      "label": "S9",
+      "props": {
+        "net": "S9"
+      }
+    },
+    {
+      "id": "NL53",
+      "type": "netlabel",
+      "x": 2170,
+      "y": 370,
+      "rot": 180,
+      "label": "V_SERVO",
+      "props": {
+        "net": "V_SERVO"
+      }
+    },
+    {
+      "id": "G54",
+      "type": "gnd",
+      "x": 2240,
+      "y": 420,
+      "rot": 0,
+      "label": "GND",
+      "props": {}
+    },
+    {
+      "id": "NL55",
+      "type": "netlabel",
+      "x": 1050,
+      "y": 330,
+      "rot": 180,
+      "label": "S10",
+      "props": {
+        "net": "S10"
+      }
+    },
+    {
+      "id": "M10",
+      "type": "custom-hexapod-servo",
+      "x": 1660,
+      "y": 480,
+      "rot": 0,
+      "label": "R1_HIP",
+      "props": {}
+    },
+    {
+      "id": "NL56",
+      "type": "netlabel",
+      "x": 1530,
+      "y": 490,
+      "rot": 180,
+      "label": "S10",
+      "props": {
+        "net": "S10"
+      }
+    },
+    {
+      "id": "NL57",
+      "type": "netlabel",
+      "x": 1530,
+      "y": 510,
+      "rot": 180,
+      "label": "V_SERVO",
+      "props": {
+        "net": "V_SERVO"
+      }
+    },
+    {
+      "id": "G58",
+      "type": "gnd",
+      "x": 1600,
+      "y": 560,
+      "rot": 0,
+      "label": "GND",
+      "props": {}
+    },
+    {
+      "id": "NL59",
+      "type": "netlabel",
+      "x": 1050,
+      "y": 350,
+      "rot": 180,
+      "label": "S11",
+      "props": {
+        "net": "S11"
+      }
+    },
+    {
+      "id": "M11",
+      "type": "custom-hexapod-servo",
+      "x": 1980,
+      "y": 480,
+      "rot": 0,
+      "label": "R1_UP",
+      "props": {}
+    },
+    {
+      "id": "NL60",
+      "type": "netlabel",
+      "x": 1850,
+      "y": 490,
+      "rot": 180,
+      "label": "S11",
+      "props": {
+        "net": "S11"
+      }
+    },
+    {
+      "id": "NL61",
+      "type": "netlabel",
+      "x": 1850,
+      "y": 510,
+      "rot": 180,
+      "label": "V_SERVO",
+      "props": {
+        "net": "V_SERVO"
+      }
+    },
+    {
+      "id": "G62",
+      "type": "gnd",
+      "x": 1920,
+      "y": 560,
+      "rot": 0,
+      "label": "GND",
+      "props": {}
+    },
+    {
+      "id": "NL63",
+      "type": "netlabel",
+      "x": 1050,
+      "y": 370,
+      "rot": 180,
+      "label": "S12",
+      "props": {
+        "net": "S12"
+      }
+    },
+    {
+      "id": "M12",
+      "type": "custom-hexapod-servo",
+      "x": 2300,
+      "y": 480,
+      "rot": 0,
+      "label": "R1_LOW",
+      "props": {}
+    },
+    {
+      "id": "NL64",
+      "type": "netlabel",
+      "x": 2170,
+      "y": 490,
+      "rot": 180,
+      "label": "S12",
+      "props": {
+        "net": "S12"
+      }
+    },
+    {
+      "id": "NL65",
+      "type": "netlabel",
+      "x": 2170,
+      "y": 510,
+      "rot": 180,
+      "label": "V_SERVO",
+      "props": {
+        "net": "V_SERVO"
+      }
+    },
+    {
+      "id": "G66",
+      "type": "gnd",
+      "x": 2240,
+      "y": 560,
+      "rot": 0,
+      "label": "GND",
+      "props": {}
+    },
+    {
+      "id": "NL67",
+      "type": "netlabel",
+      "x": 1050,
+      "y": 390,
+      "rot": 180,
+      "label": "S13",
+      "props": {
+        "net": "S13"
+      }
+    },
+    {
+      "id": "M13",
+      "type": "custom-hexapod-servo",
+      "x": 1660,
+      "y": 620,
+      "rot": 0,
+      "label": "R2_HIP",
+      "props": {}
+    },
+    {
+      "id": "NL68",
+      "type": "netlabel",
+      "x": 1530,
+      "y": 630,
+      "rot": 180,
+      "label": "S13",
+      "props": {
+        "net": "S13"
+      }
+    },
+    {
+      "id": "NL69",
+      "type": "netlabel",
+      "x": 1530,
+      "y": 650,
+      "rot": 180,
+      "label": "V_SERVO",
+      "props": {
+        "net": "V_SERVO"
+      }
+    },
+    {
+      "id": "G70",
+      "type": "gnd",
+      "x": 1600,
+      "y": 700,
+      "rot": 0,
+      "label": "GND",
+      "props": {}
+    },
+    {
+      "id": "NL71",
+      "type": "netlabel",
+      "x": 1050,
+      "y": 410,
+      "rot": 180,
+      "label": "S14",
+      "props": {
+        "net": "S14"
+      }
+    },
+    {
+      "id": "M14",
+      "type": "custom-hexapod-servo",
+      "x": 1980,
+      "y": 620,
+      "rot": 0,
+      "label": "R2_UP",
+      "props": {}
+    },
+    {
+      "id": "NL72",
+      "type": "netlabel",
+      "x": 1850,
+      "y": 630,
+      "rot": 180,
+      "label": "S14",
+      "props": {
+        "net": "S14"
+      }
+    },
+    {
+      "id": "NL73",
+      "type": "netlabel",
+      "x": 1850,
+      "y": 650,
+      "rot": 180,
+      "label": "V_SERVO",
+      "props": {
+        "net": "V_SERVO"
+      }
+    },
+    {
+      "id": "G74",
+      "type": "gnd",
+      "x": 1920,
+      "y": 700,
+      "rot": 0,
+      "label": "GND",
+      "props": {}
+    },
+    {
+      "id": "NL75",
+      "type": "netlabel",
+      "x": 1050,
+      "y": 430,
+      "rot": 180,
+      "label": "S15",
+      "props": {
+        "net": "S15"
+      }
+    },
+    {
+      "id": "M15",
+      "type": "custom-hexapod-servo",
+      "x": 2300,
+      "y": 620,
+      "rot": 0,
+      "label": "R2_LOW",
+      "props": {}
+    },
+    {
+      "id": "NL76",
+      "type": "netlabel",
+      "x": 2170,
+      "y": 630,
+      "rot": 180,
+      "label": "S15",
+      "props": {
+        "net": "S15"
+      }
+    },
+    {
+      "id": "NL77",
+      "type": "netlabel",
+      "x": 2170,
+      "y": 650,
+      "rot": 180,
+      "label": "V_SERVO",
+      "props": {
+        "net": "V_SERVO"
+      }
+    },
+    {
+      "id": "G78",
+      "type": "gnd",
+      "x": 2240,
+      "y": 700,
+      "rot": 0,
+      "label": "GND",
+      "props": {}
+    },
+    {
+      "id": "NL79",
+      "type": "netlabel",
+      "x": 1050,
+      "y": 450,
+      "rot": 180,
+      "label": "S16",
+      "props": {
+        "net": "S16"
+      }
+    },
+    {
+      "id": "M16",
+      "type": "custom-hexapod-servo",
+      "x": 1660,
+      "y": 760,
+      "rot": 0,
+      "label": "R3_HIP",
+      "props": {}
+    },
+    {
+      "id": "NL80",
+      "type": "netlabel",
+      "x": 1530,
+      "y": 770,
+      "rot": 180,
+      "label": "S16",
+      "props": {
+        "net": "S16"
+      }
+    },
+    {
+      "id": "NL81",
+      "type": "netlabel",
+      "x": 1530,
+      "y": 790,
+      "rot": 180,
+      "label": "V_SERVO",
+      "props": {
+        "net": "V_SERVO"
+      }
+    },
+    {
+      "id": "G82",
+      "type": "gnd",
+      "x": 1600,
+      "y": 840,
+      "rot": 0,
+      "label": "GND",
+      "props": {}
+    },
+    {
+      "id": "NL83",
+      "type": "netlabel",
+      "x": 1050,
+      "y": 470,
+      "rot": 180,
+      "label": "S17",
+      "props": {
+        "net": "S17"
+      }
+    },
+    {
+      "id": "M17",
+      "type": "custom-hexapod-servo",
+      "x": 1980,
+      "y": 760,
+      "rot": 0,
+      "label": "R3_UP",
+      "props": {}
+    },
+    {
+      "id": "NL84",
+      "type": "netlabel",
+      "x": 1850,
+      "y": 770,
+      "rot": 180,
+      "label": "S17",
+      "props": {
+        "net": "S17"
+      }
+    },
+    {
+      "id": "NL85",
+      "type": "netlabel",
+      "x": 1850,
+      "y": 790,
+      "rot": 180,
+      "label": "V_SERVO",
+      "props": {
+        "net": "V_SERVO"
+      }
+    },
+    {
+      "id": "G86",
+      "type": "gnd",
+      "x": 1920,
+      "y": 840,
+      "rot": 0,
+      "label": "GND",
+      "props": {}
+    },
+    {
+      "id": "NL87",
+      "type": "netlabel",
+      "x": 1050,
+      "y": 490,
+      "rot": 180,
+      "label": "S18",
+      "props": {
+        "net": "S18"
+      }
+    },
+    {
+      "id": "M18",
+      "type": "custom-hexapod-servo",
+      "x": 2300,
+      "y": 760,
+      "rot": 0,
+      "label": "R3_LOW",
+      "props": {}
+    },
+    {
+      "id": "NL88",
+      "type": "netlabel",
+      "x": 2170,
+      "y": 770,
+      "rot": 180,
+      "label": "S18",
+      "props": {
+        "net": "S18"
+      }
+    },
+    {
+      "id": "NL89",
+      "type": "netlabel",
+      "x": 2170,
+      "y": 790,
+      "rot": 180,
+      "label": "V_SERVO",
+      "props": {
+        "net": "V_SERVO"
+      }
+    },
+    {
+      "id": "G90",
+      "type": "gnd",
+      "x": 2240,
+      "y": 840,
+      "rot": 0,
+      "label": "GND",
+      "props": {}
+    }
+  ],
+  "wires": [
+    {
+      "id": "w1",
+      "a": {
+        "c": "U1",
+        "p": "GPIO14"
+      },
+      "b": {
+        "c": "U2",
+        "p": "SCL"
+      },
+      "label": "TX → RX",
+      "mid": null,
+      "color": "#2563eb"
+    },
+    {
+      "id": "w2",
+      "a": {
+        "c": "U1",
+        "p": "GPIO15"
+      },
+      "b": {
+        "c": "U2",
+        "p": "SDA"
+      },
+      "label": "RX ← TX",
+      "mid": null,
+      "color": "#16a34a"
+    },
+    {
+      "id": "w3",
+      "a": {
+        "c": "U1",
+        "p": "GND6"
+      },
+      "b": {
+        "c": "U2",
+        "p": "GND"
+      },
+      "label": "GND",
+      "mid": null,
+      "color": "#111827"
+    },
+    {
+      "id": "w4",
+      "a": {
+        "c": "BT1",
+        "p": "POS"
+      },
+      "b": {
+        "c": "SW1",
+        "p": "IN"
+      },
+      "label": "",
+      "mid": null,
+      "color": "#dc2626"
+    },
+    {
+      "id": "w5",
+      "a": {
+        "c": "BT1",
+        "p": "NEG"
+      },
+      "b": {
+        "c": "G1",
+        "p": "P"
+      },
+      "label": "",
+      "mid": null,
+      "color": "#111827"
+    },
+    {
+      "id": "w6",
+      "a": {
+        "c": "SW1",
+        "p": "OUT"
+      },
+      "b": {
+        "c": "NL2",
+        "p": "P"
+      },
+      "label": "",
+      "mid": null,
+      "color": "#dc2626"
+    },
+    {
+      "id": "w7",
+      "a": {
+        "c": "PS1",
+        "p": "INP"
+      },
+      "b": {
+        "c": "NL3",
+        "p": "P"
+      },
+      "label": "",
+      "mid": null,
+      "color": "#dc2626"
+    },
+    {
+      "id": "w8",
+      "a": {
+        "c": "PS1",
+        "p": "INN"
+      },
+      "b": {
+        "c": "G4",
+        "p": "P"
+      },
+      "label": "",
+      "mid": null,
+      "color": "#111827"
+    },
+    {
+      "id": "w9",
+      "a": {
+        "c": "PS1",
+        "p": "OUTP"
+      },
+      "b": {
+        "c": "V5",
+        "p": "P"
+      },
+      "label": "PWR IN micro-USB",
+      "mid": null,
+      "color": "#ea580c"
+    },
+    {
+      "id": "w10",
+      "a": {
+        "c": "PS1",
+        "p": "OUTN"
+      },
+      "b": {
+        "c": "G6",
+        "p": "P"
+      },
+      "label": "",
+      "mid": null,
+      "color": "#111827"
+    },
+    {
+      "id": "w11",
+      "a": {
+        "c": "U2",
+        "p": "VP"
+      },
+      "b": {
+        "c": "NL7",
+        "p": "P"
+      },
+      "label": "",
+      "mid": null,
+      "color": "#dc2626"
+    },
+    {
+      "id": "w12",
+      "a": {
+        "c": "U2",
+        "p": "VM"
+      },
+      "b": {
+        "c": "G8",
+        "p": "P"
+      },
+      "label": "",
+      "mid": null,
+      "color": "#111827"
+    },
+    {
+      "id": "w13",
+      "a": {
+        "c": "HUB1",
+        "p": "IN5V"
+      },
+      "b": {
+        "c": "V9",
+        "p": "P"
+      },
+      "label": "Pi USB port (OTG)",
+      "mid": null,
+      "color": "#6d4c41"
+    },
+    {
+      "id": "w14",
+      "a": {
+        "c": "HUB1",
+        "p": "INGND"
+      },
+      "b": {
+        "c": "G10",
+        "p": "P"
+      },
+      "label": "",
+      "mid": null,
+      "color": "#111827"
+    },
+    {
+      "id": "w15",
+      "a": {
+        "c": "HUB1",
+        "p": "P15V"
+      },
+      "b": {
+        "c": "V11",
+        "p": "P"
+      },
+      "label": "to Servo 2040 USB-C",
+      "mid": null,
+      "color": "#6d4c41"
+    },
+    {
+      "id": "w16",
+      "a": {
+        "c": "HUB1",
+        "p": "P1GND"
+      },
+      "b": {
+        "c": "G12",
+        "p": "P"
+      },
+      "label": "",
+      "mid": null,
+      "color": "#111827"
+    },
+    {
+      "id": "w17",
+      "a": {
+        "c": "U2",
+        "p": "USB5V"
+      },
+      "b": {
+        "c": "V13",
+        "p": "P"
+      },
+      "label": "hub port 1",
+      "mid": null,
+      "color": "#6d4c41"
+    },
+    {
+      "id": "w18",
+      "a": {
+        "c": "U2",
+        "p": "USBGND"
+      },
+      "b": {
+        "c": "G14",
+        "p": "P"
+      },
+      "label": "",
+      "mid": null,
+      "color": "#111827"
+    },
+    {
+      "id": "w19",
+      "a": {
+        "c": "HUB1",
+        "p": "P25V"
+      },
+      "b": {
+        "c": "UA1",
+        "p": "U5V"
+      },
+      "label": "hub port 2",
+      "mid": null,
+      "color": "#6d4c41"
+    },
+    {
+      "id": "w20",
+      "a": {
+        "c": "HUB1",
+        "p": "P2GND"
+      },
+      "b": {
+        "c": "UA1",
+        "p": "UGND"
+      },
+      "label": "",
+      "mid": null,
+      "color": "#111827"
+    },
+    {
+      "id": "w21",
+      "a": {
+        "c": "HUB1",
+        "p": "P2D"
+      },
+      "b": {
+        "c": "UA1",
+        "p": "UD"
+      },
+      "label": "USB data",
+      "mid": null,
+      "color": "#6d4c41"
+    },
+    {
+      "id": "w22",
+      "a": {
+        "c": "UA1",
+        "p": "U5V"
+      },
+      "b": {
+        "c": "V15",
+        "p": "P"
+      },
+      "label": "",
+      "mid": null,
+      "color": "#6d4c41"
+    },
+    {
+      "id": "w23",
+      "a": {
+        "c": "UA1",
+        "p": "UGND"
+      },
+      "b": {
+        "c": "G16",
+        "p": "P"
+      },
+      "label": "",
+      "mid": null,
+      "color": "#111827"
+    },
+    {
+      "id": "w24",
+      "a": {
+        "c": "UA1",
+        "p": "L5V"
+      },
+      "b": {
+        "c": "LD1",
+        "p": "VCC"
+      },
+      "label": "5 V",
+      "mid": null,
+      "color": "#ea580c"
+    },
+    {
+      "id": "w25",
+      "a": {
+        "c": "UA1",
+        "p": "LGND"
+      },
+      "b": {
+        "c": "LD1",
+        "p": "GND"
+      },
+      "label": "",
+      "mid": null,
+      "color": "#111827"
+    },
+    {
+      "id": "w26",
+      "a": {
+        "c": "UA1",
+        "p": "LRX"
+      },
+      "b": {
+        "c": "LD1",
+        "p": "TX"
+      },
+      "label": "460800 baud",
+      "mid": null,
+      "color": "#0e7490"
+    },
+    {
+      "id": "w27",
+      "a": {
+        "c": "UA1",
+        "p": "LTX"
+      },
+      "b": {
+        "c": "LD1",
+        "p": "RX"
+      },
+      "label": "",
+      "mid": null,
+      "color": "#0e7490"
+    },
+    {
+      "id": "w28",
+      "a": {
+        "c": "LD1",
+        "p": "GND"
+      },
+      "b": {
+        "c": "G17",
+        "p": "P"
+      },
+      "label": "",
+      "mid": null,
+      "color": "#111827"
+    },
+    {
+      "id": "w29",
+      "a": {
+        "c": "LD1",
+        "p": "VCC"
+      },
+      "b": {
+        "c": "V18",
+        "p": "P"
+      },
+      "label": "",
+      "mid": null,
+      "color": "#ea580c"
+    },
+    {
+      "id": "w30",
+      "a": {
+        "c": "U2",
+        "p": "S1"
+      },
+      "b": {
+        "c": "NL19",
+        "p": "P"
+      },
+      "label": "",
+      "mid": null,
+      "color": "#7c3aed"
+    },
+    {
+      "id": "w31",
+      "a": {
+        "c": "M1",
+        "p": "SIG"
+      },
+      "b": {
+        "c": "NL20",
+        "p": "P"
+      },
+      "label": "",
+      "mid": null,
+      "color": "#7c3aed"
+    },
+    {
+      "id": "w32",
+      "a": {
+        "c": "M1",
+        "p": "VP"
+      },
+      "b": {
+        "c": "NL21",
+        "p": "P"
+      },
+      "label": "",
+      "mid": null,
+      "color": "#dc2626"
+    },
+    {
+      "id": "w33",
+      "a": {
+        "c": "M1",
+        "p": "GND"
+      },
+      "b": {
+        "c": "G22",
+        "p": "P"
+      },
+      "label": "",
+      "mid": null,
+      "color": "#111827"
+    },
+    {
+      "id": "w34",
+      "a": {
+        "c": "U2",
+        "p": "S2"
+      },
+      "b": {
+        "c": "NL23",
+        "p": "P"
+      },
+      "label": "",
+      "mid": null,
+      "color": "#7c3aed"
+    },
+    {
+      "id": "w35",
+      "a": {
+        "c": "M2",
+        "p": "SIG"
+      },
+      "b": {
+        "c": "NL24",
+        "p": "P"
+      },
+      "label": "",
+      "mid": null,
+      "color": "#7c3aed"
+    },
+    {
+      "id": "w36",
+      "a": {
+        "c": "M2",
+        "p": "VP"
+      },
+      "b": {
+        "c": "NL25",
+        "p": "P"
+      },
+      "label": "",
+      "mid": null,
+      "color": "#dc2626"
+    },
+    {
+      "id": "w37",
+      "a": {
+        "c": "M2",
+        "p": "GND"
+      },
+      "b": {
+        "c": "G26",
+        "p": "P"
+      },
+      "label": "",
+      "mid": null,
+      "color": "#111827"
+    },
+    {
+      "id": "w38",
+      "a": {
+        "c": "U2",
+        "p": "S3"
+      },
+      "b": {
+        "c": "NL27",
+        "p": "P"
+      },
+      "label": "",
+      "mid": null,
+      "color": "#7c3aed"
+    },
+    {
+      "id": "w39",
+      "a": {
+        "c": "M3",
+        "p": "SIG"
+      },
+      "b": {
+        "c": "NL28",
+        "p": "P"
+      },
+      "label": "",
+      "mid": null,
+      "color": "#7c3aed"
+    },
+    {
+      "id": "w40",
+      "a": {
+        "c": "M3",
+        "p": "VP"
+      },
+      "b": {
+        "c": "NL29",
+        "p": "P"
+      },
+      "label": "",
+      "mid": null,
+      "color": "#dc2626"
+    },
+    {
+      "id": "w41",
+      "a": {
+        "c": "M3",
+        "p": "GND"
+      },
+      "b": {
+        "c": "G30",
+        "p": "P"
+      },
+      "label": "",
+      "mid": null,
+      "color": "#111827"
+    },
+    {
+      "id": "w42",
+      "a": {
+        "c": "U2",
+        "p": "S4"
+      },
+      "b": {
+        "c": "NL31",
+        "p": "P"
+      },
+      "label": "",
+      "mid": null,
+      "color": "#7c3aed"
+    },
+    {
+      "id": "w43",
+      "a": {
+        "c": "M4",
+        "p": "SIG"
+      },
+      "b": {
+        "c": "NL32",
+        "p": "P"
+      },
+      "label": "",
+      "mid": null,
+      "color": "#7c3aed"
+    },
+    {
+      "id": "w44",
+      "a": {
+        "c": "M4",
+        "p": "VP"
+      },
+      "b": {
+        "c": "NL33",
+        "p": "P"
+      },
+      "label": "",
+      "mid": null,
+      "color": "#dc2626"
+    },
+    {
+      "id": "w45",
+      "a": {
+        "c": "M4",
+        "p": "GND"
+      },
+      "b": {
+        "c": "G34",
+        "p": "P"
+      },
+      "label": "",
+      "mid": null,
+      "color": "#111827"
+    },
+    {
+      "id": "w46",
+      "a": {
+        "c": "U2",
+        "p": "S5"
+      },
+      "b": {
+        "c": "NL35",
+        "p": "P"
+      },
+      "label": "",
+      "mid": null,
+      "color": "#7c3aed"
+    },
+    {
+      "id": "w47",
+      "a": {
+        "c": "M5",
+        "p": "SIG"
+      },
+      "b": {
+        "c": "NL36",
+        "p": "P"
+      },
+      "label": "",
+      "mid": null,
+      "color": "#7c3aed"
+    },
+    {
+      "id": "w48",
+      "a": {
+        "c": "M5",
+        "p": "VP"
+      },
+      "b": {
+        "c": "NL37",
+        "p": "P"
+      },
+      "label": "",
+      "mid": null,
+      "color": "#dc2626"
+    },
+    {
+      "id": "w49",
+      "a": {
+        "c": "M5",
+        "p": "GND"
+      },
+      "b": {
+        "c": "G38",
+        "p": "P"
+      },
+      "label": "",
+      "mid": null,
+      "color": "#111827"
+    },
+    {
+      "id": "w50",
+      "a": {
+        "c": "U2",
+        "p": "S6"
+      },
+      "b": {
+        "c": "NL39",
+        "p": "P"
+      },
+      "label": "",
+      "mid": null,
+      "color": "#7c3aed"
+    },
+    {
+      "id": "w51",
+      "a": {
+        "c": "M6",
+        "p": "SIG"
+      },
+      "b": {
+        "c": "NL40",
+        "p": "P"
+      },
+      "label": "",
+      "mid": null,
+      "color": "#7c3aed"
+    },
+    {
+      "id": "w52",
+      "a": {
+        "c": "M6",
+        "p": "VP"
+      },
+      "b": {
+        "c": "NL41",
+        "p": "P"
+      },
+      "label": "",
+      "mid": null,
+      "color": "#dc2626"
+    },
+    {
+      "id": "w53",
+      "a": {
+        "c": "M6",
+        "p": "GND"
+      },
+      "b": {
+        "c": "G42",
+        "p": "P"
+      },
+      "label": "",
+      "mid": null,
+      "color": "#111827"
+    },
+    {
+      "id": "w54",
+      "a": {
+        "c": "U2",
+        "p": "S7"
+      },
+      "b": {
+        "c": "NL43",
+        "p": "P"
+      },
+      "label": "",
+      "mid": null,
+      "color": "#7c3aed"
+    },
+    {
+      "id": "w55",
+      "a": {
+        "c": "M7",
+        "p": "SIG"
+      },
+      "b": {
+        "c": "NL44",
+        "p": "P"
+      },
+      "label": "",
+      "mid": null,
+      "color": "#7c3aed"
+    },
+    {
+      "id": "w56",
+      "a": {
+        "c": "M7",
+        "p": "VP"
+      },
+      "b": {
+        "c": "NL45",
+        "p": "P"
+      },
+      "label": "",
+      "mid": null,
+      "color": "#dc2626"
+    },
+    {
+      "id": "w57",
+      "a": {
+        "c": "M7",
+        "p": "GND"
+      },
+      "b": {
+        "c": "G46",
+        "p": "P"
+      },
+      "label": "",
+      "mid": null,
+      "color": "#111827"
+    },
+    {
+      "id": "w58",
+      "a": {
+        "c": "U2",
+        "p": "S8"
+      },
+      "b": {
+        "c": "NL47",
+        "p": "P"
+      },
+      "label": "",
+      "mid": null,
+      "color": "#7c3aed"
+    },
+    {
+      "id": "w59",
+      "a": {
+        "c": "M8",
+        "p": "SIG"
+      },
+      "b": {
+        "c": "NL48",
+        "p": "P"
+      },
+      "label": "",
+      "mid": null,
+      "color": "#7c3aed"
+    },
+    {
+      "id": "w60",
+      "a": {
+        "c": "M8",
+        "p": "VP"
+      },
+      "b": {
+        "c": "NL49",
+        "p": "P"
+      },
+      "label": "",
+      "mid": null,
+      "color": "#dc2626"
+    },
+    {
+      "id": "w61",
+      "a": {
+        "c": "M8",
+        "p": "GND"
+      },
+      "b": {
+        "c": "G50",
+        "p": "P"
+      },
+      "label": "",
+      "mid": null,
+      "color": "#111827"
+    },
+    {
+      "id": "w62",
+      "a": {
+        "c": "U2",
+        "p": "S9"
+      },
+      "b": {
+        "c": "NL51",
+        "p": "P"
+      },
+      "label": "",
+      "mid": null,
+      "color": "#7c3aed"
+    },
+    {
+      "id": "w63",
+      "a": {
+        "c": "M9",
+        "p": "SIG"
+      },
+      "b": {
+        "c": "NL52",
+        "p": "P"
+      },
+      "label": "",
+      "mid": null,
+      "color": "#7c3aed"
+    },
+    {
+      "id": "w64",
+      "a": {
+        "c": "M9",
+        "p": "VP"
+      },
+      "b": {
+        "c": "NL53",
+        "p": "P"
+      },
+      "label": "",
+      "mid": null,
+      "color": "#dc2626"
+    },
+    {
+      "id": "w65",
+      "a": {
+        "c": "M9",
+        "p": "GND"
+      },
+      "b": {
+        "c": "G54",
+        "p": "P"
+      },
+      "label": "",
+      "mid": null,
+      "color": "#111827"
+    },
+    {
+      "id": "w66",
+      "a": {
+        "c": "U2",
+        "p": "S10"
+      },
+      "b": {
+        "c": "NL55",
+        "p": "P"
+      },
+      "label": "",
+      "mid": null,
+      "color": "#7c3aed"
+    },
+    {
+      "id": "w67",
+      "a": {
+        "c": "M10",
+        "p": "SIG"
+      },
+      "b": {
+        "c": "NL56",
+        "p": "P"
+      },
+      "label": "",
+      "mid": null,
+      "color": "#7c3aed"
+    },
+    {
+      "id": "w68",
+      "a": {
+        "c": "M10",
+        "p": "VP"
+      },
+      "b": {
+        "c": "NL57",
+        "p": "P"
+      },
+      "label": "",
+      "mid": null,
+      "color": "#dc2626"
+    },
+    {
+      "id": "w69",
+      "a": {
+        "c": "M10",
+        "p": "GND"
+      },
+      "b": {
+        "c": "G58",
+        "p": "P"
+      },
+      "label": "",
+      "mid": null,
+      "color": "#111827"
+    },
+    {
+      "id": "w70",
+      "a": {
+        "c": "U2",
+        "p": "S11"
+      },
+      "b": {
+        "c": "NL59",
+        "p": "P"
+      },
+      "label": "",
+      "mid": null,
+      "color": "#7c3aed"
+    },
+    {
+      "id": "w71",
+      "a": {
+        "c": "M11",
+        "p": "SIG"
+      },
+      "b": {
+        "c": "NL60",
+        "p": "P"
+      },
+      "label": "",
+      "mid": null,
+      "color": "#7c3aed"
+    },
+    {
+      "id": "w72",
+      "a": {
+        "c": "M11",
+        "p": "VP"
+      },
+      "b": {
+        "c": "NL61",
+        "p": "P"
+      },
+      "label": "",
+      "mid": null,
+      "color": "#dc2626"
+    },
+    {
+      "id": "w73",
+      "a": {
+        "c": "M11",
+        "p": "GND"
+      },
+      "b": {
+        "c": "G62",
+        "p": "P"
+      },
+      "label": "",
+      "mid": null,
+      "color": "#111827"
+    },
+    {
+      "id": "w74",
+      "a": {
+        "c": "U2",
+        "p": "S12"
+      },
+      "b": {
+        "c": "NL63",
+        "p": "P"
+      },
+      "label": "",
+      "mid": null,
+      "color": "#7c3aed"
+    },
+    {
+      "id": "w75",
+      "a": {
+        "c": "M12",
+        "p": "SIG"
+      },
+      "b": {
+        "c": "NL64",
+        "p": "P"
+      },
+      "label": "",
+      "mid": null,
+      "color": "#7c3aed"
+    },
+    {
+      "id": "w76",
+      "a": {
+        "c": "M12",
+        "p": "VP"
+      },
+      "b": {
+        "c": "NL65",
+        "p": "P"
+      },
+      "label": "",
+      "mid": null,
+      "color": "#dc2626"
+    },
+    {
+      "id": "w77",
+      "a": {
+        "c": "M12",
+        "p": "GND"
+      },
+      "b": {
+        "c": "G66",
+        "p": "P"
+      },
+      "label": "",
+      "mid": null,
+      "color": "#111827"
+    },
+    {
+      "id": "w78",
+      "a": {
+        "c": "U2",
+        "p": "S13"
+      },
+      "b": {
+        "c": "NL67",
+        "p": "P"
+      },
+      "label": "",
+      "mid": null,
+      "color": "#7c3aed"
+    },
+    {
+      "id": "w79",
+      "a": {
+        "c": "M13",
+        "p": "SIG"
+      },
+      "b": {
+        "c": "NL68",
+        "p": "P"
+      },
+      "label": "",
+      "mid": null,
+      "color": "#7c3aed"
+    },
+    {
+      "id": "w80",
+      "a": {
+        "c": "M13",
+        "p": "VP"
+      },
+      "b": {
+        "c": "NL69",
+        "p": "P"
+      },
+      "label": "",
+      "mid": null,
+      "color": "#dc2626"
+    },
+    {
+      "id": "w81",
+      "a": {
+        "c": "M13",
+        "p": "GND"
+      },
+      "b": {
+        "c": "G70",
+        "p": "P"
+      },
+      "label": "",
+      "mid": null,
+      "color": "#111827"
+    },
+    {
+      "id": "w82",
+      "a": {
+        "c": "U2",
+        "p": "S14"
+      },
+      "b": {
+        "c": "NL71",
+        "p": "P"
+      },
+      "label": "",
+      "mid": null,
+      "color": "#7c3aed"
+    },
+    {
+      "id": "w83",
+      "a": {
+        "c": "M14",
+        "p": "SIG"
+      },
+      "b": {
+        "c": "NL72",
+        "p": "P"
+      },
+      "label": "",
+      "mid": null,
+      "color": "#7c3aed"
+    },
+    {
+      "id": "w84",
+      "a": {
+        "c": "M14",
+        "p": "VP"
+      },
+      "b": {
+        "c": "NL73",
+        "p": "P"
+      },
+      "label": "",
+      "mid": null,
+      "color": "#dc2626"
+    },
+    {
+      "id": "w85",
+      "a": {
+        "c": "M14",
+        "p": "GND"
+      },
+      "b": {
+        "c": "G74",
+        "p": "P"
+      },
+      "label": "",
+      "mid": null,
+      "color": "#111827"
+    },
+    {
+      "id": "w86",
+      "a": {
+        "c": "U2",
+        "p": "S15"
+      },
+      "b": {
+        "c": "NL75",
+        "p": "P"
+      },
+      "label": "",
+      "mid": null,
+      "color": "#7c3aed"
+    },
+    {
+      "id": "w87",
+      "a": {
+        "c": "M15",
+        "p": "SIG"
+      },
+      "b": {
+        "c": "NL76",
+        "p": "P"
+      },
+      "label": "",
+      "mid": null,
+      "color": "#7c3aed"
+    },
+    {
+      "id": "w88",
+      "a": {
+        "c": "M15",
+        "p": "VP"
+      },
+      "b": {
+        "c": "NL77",
+        "p": "P"
+      },
+      "label": "",
+      "mid": null,
+      "color": "#dc2626"
+    },
+    {
+      "id": "w89",
+      "a": {
+        "c": "M15",
+        "p": "GND"
+      },
+      "b": {
+        "c": "G78",
+        "p": "P"
+      },
+      "label": "",
+      "mid": null,
+      "color": "#111827"
+    },
+    {
+      "id": "w90",
+      "a": {
+        "c": "U2",
+        "p": "S16"
+      },
+      "b": {
+        "c": "NL79",
+        "p": "P"
+      },
+      "label": "",
+      "mid": null,
+      "color": "#7c3aed"
+    },
+    {
+      "id": "w91",
+      "a": {
+        "c": "M16",
+        "p": "SIG"
+      },
+      "b": {
+        "c": "NL80",
+        "p": "P"
+      },
+      "label": "",
+      "mid": null,
+      "color": "#7c3aed"
+    },
+    {
+      "id": "w92",
+      "a": {
+        "c": "M16",
+        "p": "VP"
+      },
+      "b": {
+        "c": "NL81",
+        "p": "P"
+      },
+      "label": "",
+      "mid": null,
+      "color": "#dc2626"
+    },
+    {
+      "id": "w93",
+      "a": {
+        "c": "M16",
+        "p": "GND"
+      },
+      "b": {
+        "c": "G82",
+        "p": "P"
+      },
+      "label": "",
+      "mid": null,
+      "color": "#111827"
+    },
+    {
+      "id": "w94",
+      "a": {
+        "c": "U2",
+        "p": "S17"
+      },
+      "b": {
+        "c": "NL83",
+        "p": "P"
+      },
+      "label": "",
+      "mid": null,
+      "color": "#7c3aed"
+    },
+    {
+      "id": "w95",
+      "a": {
+        "c": "M17",
+        "p": "SIG"
+      },
+      "b": {
+        "c": "NL84",
+        "p": "P"
+      },
+      "label": "",
+      "mid": null,
+      "color": "#7c3aed"
+    },
+    {
+      "id": "w96",
+      "a": {
+        "c": "M17",
+        "p": "VP"
+      },
+      "b": {
+        "c": "NL85",
+        "p": "P"
+      },
+      "label": "",
+      "mid": null,
+      "color": "#dc2626"
+    },
+    {
+      "id": "w97",
+      "a": {
+        "c": "M17",
+        "p": "GND"
+      },
+      "b": {
+        "c": "G86",
+        "p": "P"
+      },
+      "label": "",
+      "mid": null,
+      "color": "#111827"
+    },
+    {
+      "id": "w98",
+      "a": {
+        "c": "U2",
+        "p": "S18"
+      },
+      "b": {
+        "c": "NL87",
+        "p": "P"
+      },
+      "label": "",
+      "mid": null,
+      "color": "#7c3aed"
+    },
+    {
+      "id": "w99",
+      "a": {
+        "c": "M18",
+        "p": "SIG"
+      },
+      "b": {
+        "c": "NL88",
+        "p": "P"
+      },
+      "label": "",
+      "mid": null,
+      "color": "#7c3aed"
+    },
+    {
+      "id": "w100",
+      "a": {
+        "c": "M18",
+        "p": "VP"
+      },
+      "b": {
+        "c": "NL89",
+        "p": "P"
+      },
+      "label": "",
+      "mid": null,
+      "color": "#dc2626"
+    },
+    {
+      "id": "w101",
+      "a": {
+        "c": "M18",
+        "p": "GND"
+      },
+      "b": {
+        "c": "G90",
+        "p": "P"
+      },
+      "label": "",
+      "mid": null,
+      "color": "#111827"
+    }
+  ],
+  "notes": [
+    {
+      "id": "n1",
+      "x": 40,
+      "y": 960,
+      "text": "Hexapod Pi Zero 2 W wiring, Rev C (5 November 2026).\n1. UART: Pi pin 8 (GPIO14 TX) → Servo 2040 SCL (GP21 RX); pin 10 (GPIO15 RX) ← SDA (GP20 TX); pin 6 GND → GND. Do NOT join 3V3.\n2. The 5V symbol is the Pi 5 V rail: the buck converter feeds it through PWR IN (micro-USB); the hub takes it from the inner USB port.\n3. All grounds are joined: battery −, buck converter, Pi, Servo 2040, hub and LiDAR.\n4. Switch the servo power off before connecting or disconnecting anything."
+    },
+    {
+      "id": "n2",
+      "x": 40,
+      "y": 1100,
+      "text": "RPLIDAR C1 (planned): connect through its USB adapter and the hub. The Pi’s GPIO UART is used by the Servo 2040 and its other UART by Bluetooth (Xbox controller). 5 V about 230 mA; 3.3 V logic; 460 800 baud. Check the pinout on the Slamtec datasheet."
+    },
+    {
+      "id": "n3",
+      "x": 1700,
+      "y": 900,
+      "text": "Servo outputs: L1 = 1–3, L2 = 4–6, L3 = 7–9, R1 = 10–12, R2 = 13–15, R3 = 16–18 (hip, upper leg, lower leg). Each servo plugs into the Servo 2040 header, which carries V+ and GND for it."
+    }
+  ],
+  "customCode": null,
+  "lang": "arduino",
+  "libraries": [],
+  "bb": {
+    "parts": {},
+    "jumpers": {}
+  },
+  "titleBlock": {
+    "author": "Kangan hexapod",
+    "revision": "C"
+  },
+  "customParts": [
+    {
+      "format": "circuit-studio-component",
+      "id": "custom-hexapod-battery",
+      "name": "Battery pack",
+      "category": "Custom",
+      "labelPrefix": "BT",
+      "description": "Servo supply at the voltage the servos are rated for. Its − is the common ground for the whole robot.",
+      "mount": "wires",
+      "widthMm": 40,
+      "heightMm": 20,
+      "pins": [
+        {
+          "id": "POS",
+          "label": "BAT +",
+          "name": "Battery +",
+          "role": "passive",
+          "x": 2.54,
+          "y": 8
+        },
+        {
+          "id": "NEG",
+          "label": "BAT −",
+          "name": "Battery − (common ground)",
+          "role": "gnd",
+          "x": 2.54,
+          "y": 10.54
+        }
+      ],
+      "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 40 20\"><rect x=\"0.5\" y=\"0.5\" width=\"39\" height=\"19\" rx=\"2\" fill=\"#b91c1c\" stroke=\"#1e293b\" stroke-width=\"0.6\"/><text x=\"20\" y=\"5\" font-size=\"3\" text-anchor=\"middle\" fill=\"#fff\" font-family=\"sans-serif\">Battery pack</text></svg>"
+    },
+    {
+      "format": "circuit-studio-component",
+      "id": "custom-hexapod-switch",
+      "name": "Main switch + fuse",
+      "category": "Custom",
+      "labelPrefix": "SW",
+      "description": "Main switch and fuse, on the battery + wire only.",
+      "mount": "wires",
+      "widthMm": 40,
+      "heightMm": 20,
+      "pins": [
+        {
+          "id": "IN",
+          "label": "IN",
+          "name": "From battery +",
+          "role": "passive",
+          "x": 2.54,
+          "y": 8
+        },
+        {
+          "id": "OUT",
+          "label": "OUT",
+          "name": "Switched + (servo power)",
+          "role": "passive",
+          "x": 2.54,
+          "y": 10.54
+        }
+      ],
+      "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 40 20\"><rect x=\"0.5\" y=\"0.5\" width=\"39\" height=\"19\" rx=\"2\" fill=\"#b91c1c\" stroke=\"#1e293b\" stroke-width=\"0.6\"/><text x=\"20\" y=\"5\" font-size=\"3\" text-anchor=\"middle\" fill=\"#fff\" font-family=\"sans-serif\">Main switch + fuse</text></svg>"
+    },
+    {
+      "format": "circuit-studio-component",
+      "id": "custom-hexapod-buck",
+      "name": "5 V buck converter, 3 A",
+      "category": "Custom",
+      "labelPrefix": "PS",
+      "description": "Steps the battery down to 5 V for the Pi, the USB hub, the LiDAR and the Servo 2040 logic. 3 A or more.",
+      "mount": "wires",
+      "widthMm": 40,
+      "heightMm": 20,
+      "pins": [
+        {
+          "id": "INP",
+          "label": "IN +",
+          "name": "Input + (switched battery)",
+          "role": "passive",
+          "x": 2.54,
+          "y": 8
+        },
+        {
+          "id": "INN",
+          "label": "IN −",
+          "name": "Input −",
+          "role": "gnd",
+          "x": 2.54,
+          "y": 10.54
+        },
+        {
+          "id": "OUTP",
+          "label": "OUT + 5V",
+          "name": "Output + 5 V (to Pi PWR IN)",
+          "role": "passive",
+          "x": 2.54,
+          "y": 13.08
+        },
+        {
+          "id": "OUTN",
+          "label": "OUT −",
+          "name": "Output − (GND)",
+          "role": "gnd",
+          "x": 2.54,
+          "y": 15.620000000000001
+        }
+      ],
+      "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 40 20\"><rect x=\"0.5\" y=\"0.5\" width=\"39\" height=\"19\" rx=\"2\" fill=\"#c2410c\" stroke=\"#1e293b\" stroke-width=\"0.6\"/><text x=\"20\" y=\"5\" font-size=\"3\" text-anchor=\"middle\" fill=\"#fff\" font-family=\"sans-serif\">5 V buck converter, 3 A</text></svg>"
+    },
+    {
+      "format": "circuit-studio-component",
+      "id": "custom-hexapod-servo2040",
+      "name": "Pimoroni Servo 2040",
+      "category": "Custom",
+      "labelPrefix": "U",
+      "description": "RP2040 servo controller running motion_bridge.py. UART1 on the Qw/ST connector: SDA = GP20 (TX), SCL = GP21 (RX). Logic powered from its USB-C port.",
+      "mount": "wires",
+      "widthMm": 40,
+      "heightMm": 74.04,
+      "pins": [
+        {
+          "id": "GND",
+          "label": "GND",
+          "name": "Qw/ST GND",
+          "role": "gnd",
+          "x": 2.54,
+          "y": 8
+        },
+        {
+          "id": "SCL",
+          "label": "SCL GP21 RX",
+          "name": "Qw/ST SCL = GP21, UART RX",
+          "role": "gpio-in",
+          "x": 2.54,
+          "y": 10.54
+        },
+        {
+          "id": "SDA",
+          "label": "SDA GP20 TX",
+          "name": "Qw/ST SDA = GP20, UART TX",
+          "role": "gpio-out",
+          "x": 2.54,
+          "y": 13.08
+        },
+        {
+          "id": "V3",
+          "label": "3V3 (NC)",
+          "name": "Qw/ST 3V3, not connected",
+          "role": "nc",
+          "x": 2.54,
+          "y": 15.620000000000001
+        },
+        {
+          "id": "S1",
+          "label": "Servo 1",
+          "name": "Servo output 1 (signal)",
+          "role": "passive",
+          "x": 2.54,
+          "y": 18.16
+        },
+        {
+          "id": "S2",
+          "label": "Servo 2",
+          "name": "Servo output 2 (signal)",
+          "role": "passive",
+          "x": 2.54,
+          "y": 20.7
+        },
+        {
+          "id": "S3",
+          "label": "Servo 3",
+          "name": "Servo output 3 (signal)",
+          "role": "passive",
+          "x": 2.54,
+          "y": 23.240000000000002
+        },
+        {
+          "id": "S4",
+          "label": "Servo 4",
+          "name": "Servo output 4 (signal)",
+          "role": "passive",
+          "x": 2.54,
+          "y": 25.78
+        },
+        {
+          "id": "S5",
+          "label": "Servo 5",
+          "name": "Servo output 5 (signal)",
+          "role": "passive",
+          "x": 2.54,
+          "y": 28.32
+        },
+        {
+          "id": "S6",
+          "label": "Servo 6",
+          "name": "Servo output 6 (signal)",
+          "role": "passive",
+          "x": 2.54,
+          "y": 30.86
+        },
+        {
+          "id": "S7",
+          "label": "Servo 7",
+          "name": "Servo output 7 (signal)",
+          "role": "passive",
+          "x": 2.54,
+          "y": 33.4
+        },
+        {
+          "id": "S8",
+          "label": "Servo 8",
+          "name": "Servo output 8 (signal)",
+          "role": "passive",
+          "x": 2.54,
+          "y": 35.94
+        },
+        {
+          "id": "S9",
+          "label": "Servo 9",
+          "name": "Servo output 9 (signal)",
+          "role": "passive",
+          "x": 2.54,
+          "y": 38.480000000000004
+        },
+        {
+          "id": "S10",
+          "label": "Servo 10",
+          "name": "Servo output 10 (signal)",
+          "role": "passive",
+          "x": 2.54,
+          "y": 41.02
+        },
+        {
+          "id": "S11",
+          "label": "Servo 11",
+          "name": "Servo output 11 (signal)",
+          "role": "passive",
+          "x": 2.54,
+          "y": 43.56
+        },
+        {
+          "id": "S12",
+          "label": "Servo 12",
+          "name": "Servo output 12 (signal)",
+          "role": "passive",
+          "x": 2.54,
+          "y": 46.1
+        },
+        {
+          "id": "S13",
+          "label": "Servo 13",
+          "name": "Servo output 13 (signal)",
+          "role": "passive",
+          "x": 2.54,
+          "y": 48.64
+        },
+        {
+          "id": "S14",
+          "label": "Servo 14",
+          "name": "Servo output 14 (signal)",
+          "role": "passive",
+          "x": 2.54,
+          "y": 51.18
+        },
+        {
+          "id": "S15",
+          "label": "Servo 15",
+          "name": "Servo output 15 (signal)",
+          "role": "passive",
+          "x": 2.54,
+          "y": 53.72
+        },
+        {
+          "id": "S16",
+          "label": "Servo 16",
+          "name": "Servo output 16 (signal)",
+          "role": "passive",
+          "x": 2.54,
+          "y": 56.26
+        },
+        {
+          "id": "S17",
+          "label": "Servo 17",
+          "name": "Servo output 17 (signal)",
+          "role": "passive",
+          "x": 2.54,
+          "y": 58.8
+        },
+        {
+          "id": "S18",
+          "label": "Servo 18",
+          "name": "Servo output 18 (signal)",
+          "role": "passive",
+          "x": 2.54,
+          "y": 61.34
+        },
+        {
+          "id": "USB5V",
+          "label": "USB-C 5V",
+          "name": "USB-C VBUS (logic power)",
+          "role": "vcc",
+          "x": 2.54,
+          "y": 63.88
+        },
+        {
+          "id": "USBGND",
+          "label": "USB-C GND",
+          "name": "USB-C ground",
+          "role": "gnd",
+          "x": 2.54,
+          "y": 66.42
+        },
+        {
+          "id": "VP",
+          "label": "V+ servo",
+          "name": "Servo power terminal V+",
+          "role": "passive",
+          "x": 2.54,
+          "y": 68.96000000000001
+        },
+        {
+          "id": "VM",
+          "label": "V− servo",
+          "name": "Servo power terminal V−",
+          "role": "gnd",
+          "x": 2.54,
+          "y": 71.5
+        }
+      ],
+      "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 40 74.04\"><rect x=\"0.5\" y=\"0.5\" width=\"39\" height=\"73.04\" rx=\"2\" fill=\"#5b21b6\" stroke=\"#1e293b\" stroke-width=\"0.6\"/><text x=\"20\" y=\"5\" font-size=\"3\" text-anchor=\"middle\" fill=\"#fff\" font-family=\"sans-serif\">Pimoroni Servo 2040</text></svg>"
+    },
+    {
+      "format": "circuit-studio-component",
+      "id": "custom-hexapod-servo",
+      "name": "Leg servo",
+      "category": "Motors & actuators",
+      "labelPrefix": "M",
+      "description": "One of the 18 leg servos. Plugs into a Servo 2040 output, which carries its signal, V+ and GND.",
+      "mount": "wires",
+      "widthMm": 40,
+      "heightMm": 20,
+      "pins": [
+        {
+          "id": "SIG",
+          "label": "SIG",
+          "name": "Signal from the Servo 2040",
+          "role": "passive",
+          "x": 2.54,
+          "y": 8
+        },
+        {
+          "id": "VP",
+          "label": "V+",
+          "name": "Servo power + (V_SERVO)",
+          "role": "passive",
+          "x": 2.54,
+          "y": 10.54
+        },
+        {
+          "id": "GND",
+          "label": "GND",
+          "name": "Ground",
+          "role": "gnd",
+          "x": 2.54,
+          "y": 13.08
+        }
+      ],
+      "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 40 20\"><rect x=\"0.5\" y=\"0.5\" width=\"39\" height=\"19\" rx=\"2\" fill=\"#7c3aed\" stroke=\"#1e293b\" stroke-width=\"0.6\"/><text x=\"20\" y=\"5\" font-size=\"3\" text-anchor=\"middle\" fill=\"#fff\" font-family=\"sans-serif\">Leg servo</text></svg>"
+    },
+    {
+      "format": "circuit-studio-component",
+      "id": "custom-hexapod-usb-hub",
+      "name": "USB hub (micro-USB OTG)",
+      "category": "Custom",
+      "labelPrefix": "HUB",
+      "description": "Plugs into the Pi’s inner USB port (not PWR IN). Port 1: Servo 2040 logic power. Port 2: LiDAR USB adapter.",
+      "mount": "wires",
+      "widthMm": 40,
+      "heightMm": 25.78,
+      "pins": [
+        {
+          "id": "IN5V",
+          "label": "IN VBUS",
+          "name": "From the Pi USB port: 5 V",
+          "role": "vcc",
+          "x": 2.54,
+          "y": 8
+        },
+        {
+          "id": "INGND",
+          "label": "IN GND",
+          "name": "From the Pi USB port: GND",
+          "role": "gnd",
+          "x": 2.54,
+          "y": 10.54
+        },
+        {
+          "id": "P15V",
+          "label": "P1 VBUS",
+          "name": "Port 1: 5 V",
+          "role": "passive",
+          "x": 2.54,
+          "y": 13.08
+        },
+        {
+          "id": "P1GND",
+          "label": "P1 GND",
+          "name": "Port 1: GND",
+          "role": "gnd",
+          "x": 2.54,
+          "y": 15.620000000000001
+        },
+        {
+          "id": "P25V",
+          "label": "P2 VBUS",
+          "name": "Port 2: 5 V",
+          "role": "passive",
+          "x": 2.54,
+          "y": 18.16
+        },
+        {
+          "id": "P2GND",
+          "label": "P2 GND",
+          "name": "Port 2: GND",
+          "role": "gnd",
+          "x": 2.54,
+          "y": 20.7
+        },
+        {
+          "id": "P2D",
+          "label": "P2 D+/D−",
+          "name": "Port 2: data",
+          "role": "passive",
+          "x": 2.54,
+          "y": 23.240000000000002
+        }
+      ],
+      "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 40 25.78\"><rect x=\"0.5\" y=\"0.5\" width=\"39\" height=\"24.78\" rx=\"2\" fill=\"#6d4c41\" stroke=\"#1e293b\" stroke-width=\"0.6\"/><text x=\"20\" y=\"5\" font-size=\"3\" text-anchor=\"middle\" fill=\"#fff\" font-family=\"sans-serif\">USB hub (micro-USB OTG)</text></svg>"
+    },
+    {
+      "format": "circuit-studio-component",
+      "id": "custom-hexapod-lidar-usb",
+      "name": "RPLIDAR USB adapter",
+      "category": "Custom",
+      "labelPrefix": "UA",
+      "description": "USB-to-serial adapter board supplied with the RPLIDAR C1. Gives the LiDAR 5 V and turns its 460 800 baud serial link into USB.",
+      "mount": "wires",
+      "widthMm": 40,
+      "heightMm": 25.78,
+      "pins": [
+        {
+          "id": "U5V",
+          "label": "USB VBUS",
+          "name": "USB 5 V in",
+          "role": "vcc",
+          "x": 2.54,
+          "y": 8
+        },
+        {
+          "id": "UGND",
+          "label": "USB GND",
+          "name": "USB GND",
+          "role": "gnd",
+          "x": 2.54,
+          "y": 10.54
+        },
+        {
+          "id": "UD",
+          "label": "USB D+/D−",
+          "name": "USB data",
+          "role": "passive",
+          "x": 2.54,
+          "y": 13.08
+        },
+        {
+          "id": "L5V",
+          "label": "5V",
+          "name": "To LiDAR VCC",
+          "role": "passive",
+          "x": 2.54,
+          "y": 15.620000000000001
+        },
+        {
+          "id": "LGND",
+          "label": "GND",
+          "name": "To LiDAR GND",
+          "role": "gnd",
+          "x": 2.54,
+          "y": 18.16
+        },
+        {
+          "id": "LRX",
+          "label": "RX",
+          "name": "Adapter RX (from LiDAR TX)",
+          "role": "passive",
+          "x": 2.54,
+          "y": 20.7
+        },
+        {
+          "id": "LTX",
+          "label": "TX",
+          "name": "Adapter TX (to LiDAR RX)",
+          "role": "passive",
+          "x": 2.54,
+          "y": 23.240000000000002
+        }
+      ],
+      "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 40 25.78\"><rect x=\"0.5\" y=\"0.5\" width=\"39\" height=\"24.78\" rx=\"2\" fill=\"#00838f\" stroke=\"#1e293b\" stroke-width=\"0.6\"/><text x=\"20\" y=\"5\" font-size=\"3\" text-anchor=\"middle\" fill=\"#fff\" font-family=\"sans-serif\">RPLIDAR USB adapter</text></svg>"
+    },
+    {
+      "format": "circuit-studio-component",
+      "id": "custom-hexapod-rplidar-c1",
+      "name": "RPLIDAR C1 (planned)",
+      "category": "Sensors",
+      "labelPrefix": "LD",
+      "description": "Slamtec RPLIDAR C1: 360° DTOF laser range scanner, 12 m, IP54. 5 V about 230 mA. UART 460 800 baud, 3.3 V logic. Check the pinout on the Slamtec datasheet.",
+      "mount": "wires",
+      "widthMm": 40,
+      "heightMm": 20.7,
+      "pins": [
+        {
+          "id": "VCC",
+          "label": "VCC 5V",
+          "name": "Power 5 V",
+          "role": "vcc",
+          "x": 2.54,
+          "y": 8
+        },
+        {
+          "id": "GND",
+          "label": "GND",
+          "name": "Ground",
+          "role": "gnd",
+          "x": 2.54,
+          "y": 10.54
+        },
+        {
+          "id": "TX",
+          "label": "TX",
+          "name": "Serial out (3.3 V)",
+          "role": "passive",
+          "x": 2.54,
+          "y": 13.08
+        },
+        {
+          "id": "RX",
+          "label": "RX",
+          "name": "Serial in (3.3 V)",
+          "role": "passive",
+          "x": 2.54,
+          "y": 15.620000000000001
+        },
+        {
+          "id": "MOTO",
+          "label": "MOTOCTL (NC)",
+          "name": "Motor speed control: leave unconnected",
+          "role": "nc",
+          "x": 2.54,
+          "y": 18.16
+        }
+      ],
+      "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 40 20.7\"><rect x=\"0.5\" y=\"0.5\" width=\"39\" height=\"19.7\" rx=\"2\" fill=\"#00838f\" stroke=\"#1e293b\" stroke-width=\"0.6\"/><text x=\"20\" y=\"5\" font-size=\"3\" text-anchor=\"middle\" fill=\"#fff\" font-family=\"sans-serif\">RPLIDAR C1 (planned)</text></svg>"
+    }
+  ]
+}
