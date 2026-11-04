@@ -12,13 +12,14 @@ module.exports = {
     title: 'Hexapod Pi Zero 2 W',
     subtitle: 'User Manual',
     docNo: 'HXP-UM-001',
-    revision: 'H',
+    revision: 'I',
     date: '5 November 2026',
     status: 'Draft for review',
     scope: 'Raspberry Pi Zero 2 W version of the hexapod walking robot',
   },
 
   revisions: [
+    ['I', '5 November 2026', 'The robot\u2019s work Wi-Fi network (access point) is **Robocop** (Sections 6.1 and 8.1\u20138.2).'],
     ['H', '5 November 2026', 'Wiring schematic Rev C: RPLIDAR C1 360\u00b0 laser scanner (planned) on a USB hub at the Pi\u2019s USB port, with the Servo 2040 power lead. Pi supply raised to 3 A (Sections 5.2, 5.4 and 5.5).'],
     ['G', '4 November 2026', 'Live View: gait timing chart, pause / slow motion / replay, balance view, leg inspector, battery graph, message inspector and Join screen with QR codes (Section 8.1).'],
     ['F', '4 November 2026', 'Menu button changes the gait (ripple, wave, tripod); gait table added (Section 7.4). Live View split into pages with a side panel or top menu (Section 8.1).'],
@@ -218,7 +219,7 @@ module.exports = {
             'Select **Device: Raspberry Pi Zero 2 W**.',
             'Select **Operating system: Raspberry Pi OS (other) → Raspberry Pi OS Lite (64-bit)**.',
             'Select **Storage:** the 16 GB card. Check carefully: this erases the selected disk.',
-            'Click **Next**, then **Edit settings**. On the **General** tab set hostname `hexapod`, username `kangan` and its password, your Wi-Fi network and password, Wi-Fi country **AU**, and your time zone.',
+            'Click **Next**, then **Edit settings**. On the **General** tab set hostname `hexapod`, username `kangan` and its password, the work Wi-Fi network **Robocop** and its password, Wi-Fi country **AU**, and your time zone.',
             'On the **Services** tab, turn on **Enable SSH** with password authentication.',
             'Click **Save**, then **Yes**. Writing and verifying takes 5–10 minutes.',
             {text: 'Re-insert the card if it was ejected. On the **bootfs** volume, open `config.txt`, add this line at the end, save, and eject the card:', code: ['enable_uart=1']},
@@ -334,7 +335,7 @@ module.exports = {
         {id: 'web-view', title: 'Live View (web page for teaching)', blocks: [
           {p: 'The Pi serves a **Live View** web page that shows, as it happens, how the robot moves and how a command travels from the controller to the servos. It is designed for showing students how the robot works. It starts automatically with the driving service; nothing needs to be installed on the viewing devices.'},
           {steps: [
-            'Connect the phone, tablet or laptop to the **same Wi-Fi network** as the robot.',
+            'Connect the phone, tablet or laptop to the **same Wi-Fi network** as the robot: at work this is **Robocop**.',
             {text: 'Open a web browser (Chrome, Edge, Safari or Firefox) and go to the Pi’s address on port 5181. If `hexapod.local` is not found, use the Pi’s IP address instead (192.168.20.28 when this manual was written; check the router if it has changed). In offline mode (Section 8.2) it is always 10.42.0.1:', code: ['http://hexapod.local:5181', 'http://192.168.20.28:5181', 'http://10.42.0.1:5181']},
             'Drive the robot with the Xbox controller as usual. The page updates on every viewer at the same time.',
           ]},
@@ -355,7 +356,7 @@ module.exports = {
         {id: 'offline', title: 'Offline mode: the robot’s own Wi-Fi', blocks: [
           {p: 'Where there is no Wi-Fi network, or the robot is away from its saved network, the Pi runs its **own Wi-Fi network (a hotspot)**. Laptops, tablets and phones join it directly, so the Live View and remote login still work with no router and no internet.'},
           {table: {caption: 'Wi-Fi modes', head: ['Mode', 'What the Pi does', 'Address of the Pi'], widths: [1900, 4626, 2500], rows: [
-            ['**Station** (normal)', 'Joins a saved Wi-Fi network, like any other device.', 'Given by the router, for example 192.168.20.28'],
+            ['**Station** (normal)', 'Joins a saved Wi-Fi network, like any other device. At work this is the **Robocop** access point.', 'Given by the router, for example 192.168.20.28'],
             ['**Hotspot** (access point)', 'Runs its own network called **Hexapod-6607** (the last four characters of the Pi’s Wi-Fi address). Gives each device that joins an address.', 'Always **10.42.0.1**'],
           ]}},
           {p: 'The Pi Zero 2 W does one or the other, not both. By default it chooses automatically (**auto** mode):'},
@@ -406,7 +407,7 @@ module.exports = {
           ['Motors switch off unexpectedly', 'Watchdog: no command for 3 seconds', 'Check the UART wires, the ground wire and the Pi’s power supply.'],
           ['“No training bridge reply” on a laptop', 'Board program not running, or port in use', 'Close Thonny and other browser tabs. Unplug USB for 5 seconds, reconnect and try again.'],
           ['Board link goes offline when the laptop is unplugged', 'Servo 2040 processor has no 5 V supply', 'Connect the Pi\u2019s USB port to the Servo 2040 USB-C (Section 5.4).'],
-          ['The Live View page does not load', 'Wrong address, different Wi-Fi network, or the driving service is stopped', 'Check the device is on the robot’s Wi-Fi and use the Pi’s IP address with :5181. On the Pi, `systemctl status hexapod-drive` should show active and the log should contain “Live View”. Some school networks block devices from reaching each other: show the page from one laptop on a projector instead.'],
+          ['The Live View page does not load', 'Wrong address, different Wi-Fi network, or the driving service is stopped', 'Check the device is on the robot’s Wi-Fi (**Robocop** at work, or the robot’s hotspot) and use the Pi’s IP address with :5181. On the Pi, `systemctl status hexapod-drive` should show active and the log should contain “Live View”. Some school networks block devices from reaching each other: show the page from one laptop on a projector instead.'],
           ['The Live View says “Board offline”', 'Servo 2040 not powered or serial link down', 'See “Board link goes offline” above, and check the board’s USB-C lead to the Pi.'],
           ['The Hexapod Wi-Fi network does not appear', 'The Pi is on a saved network, or still starting', 'Wait 2 minutes after power-on. If the Pi can reach its saved network it does not run the hotspot: run `sudo hexapod-wifi hotspot` to force it, or `sudo hexapod-wifi test-hotspot 5` to try it.'],
           ['Joined the Hexapod network but the page does not load', 'Device left the network because it has no internet, or wrong address', 'Choose “stay connected” when the device warns about no internet, turn off mobile data on phones, and use http://10.42.0.1:5181.'],
