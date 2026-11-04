@@ -2,8 +2,8 @@
   "format": "iot-circuit-studio",
   "version": 1,
   "name": "Hexapod Pi Zero 2 W wiring",
-  "created": "2026-11-04T19:36:13.689Z",
-  "updated": "2026-11-04T19:36:13.689Z",
+  "created": "2026-11-04T19:36:37.559Z",
+  "updated": "2026-11-04T19:36:37.559Z",
   "boardId": "pi-zero-2w",
   "components": [
     {

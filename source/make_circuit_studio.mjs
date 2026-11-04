@@ -150,4 +150,5 @@ writeFileSync(join(out, 'Hexapod wiring.circuit-studio.json'), json);
 const link = SITE + '#p=z' + deflateRawSync(Buffer.from(JSON.stringify(project))).toString('base64url');
 writeFileSync(join(out, 'Open in Circuit Studio.url'), `[InternetShortcut]\nURL=${link}\n`);
 writeFileSync(join(out, 'share-link.txt'), link + '\n');
+writeFileSync(join(out, 'Open in Circuit Studio.webloc'), `<?xml version="1.0" encoding="UTF-8"?>\n<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">\n<plist version="1.0"><dict><key>URL</key><string>${link}</string></dict></plist>\n`);
 console.log(`ok: ${components.length} parts, ${wires.length} wires, link ${link.length} characters`);
