@@ -6,3 +6,6 @@ node_modules/
 # Written on the Pi by `npm run controller-setup` (one per controller)
 pi-service/controller-map.json
 pi-service/controller-map.json.bak
+
+# Photos and videos of the real robot stay on this computer only (not published).
+images/
