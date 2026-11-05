@@ -6,7 +6,7 @@
 ![Platform](https://img.shields.io/badge/Raspberry%20Pi-Zero%202%20W-c51a4a)
 ![Board](https://img.shields.io/badge/Servo%202040-MicroPython-5e35b1)
 ![Node](https://img.shields.io/badge/Node.js-%E2%89%A518-339933)
-![Tests](https://img.shields.io/badge/tests-44%20passing-2e7d32)
+![Tests](https://img.shields.io/badge/tests-45%20passing-2e7d32)
 ![Manual](https://img.shields.io/badge/manual-rev%20K-0d7a69)
 
 A Raspberry Pi Zero 2 W mounted on the robot reads an Xbox controller over Bluetooth, checks every
@@ -48,7 +48,7 @@ Xbox controller ──Bluetooth──▶ Raspberry Pi Zero 2 W ──UART──�
 | **Standalone driving** | Starts by itself at power-on. Xbox controller over Bluetooth (xpadneo driver), with no laptop. |
 | **Three gaits** | Ripple (default), wave and tripod. The **Menu** button switches between them, blending mid-walk without stopping. |
 | **Safety built in** | Every command is checked for reach and joint limits. A 3-second watchdog on the Servo 2040 turns the motors off if the Pi stops talking. |
-| **Live View teaching app** | 3D robot view, balance view, gait timing chart, pause, slow motion and replay, leg inspector (inverse kinematics), servo angles, battery graph, and a message inspector for the real serial traffic. |
+| **Live View teaching app** | Realistic 3D robot (drawn as built: red hip servos, black knee servos, curved red feet, sensor box at the front), balance view, gait timing chart, pause, slow motion and replay, leg inspector (inverse kinematics), servo angles, battery graph, and a message inspector for the real serial traffic. |
 | **Easy for a class to join** | The **Join** screen shows the address as a QR code and, on the hotspot, a Wi-Fi QR code. Up to 40 viewers can watch at once. |
 | **Works anywhere** | Joins the work Wi-Fi (**Robocop**) when it is in range. Otherwise it runs its own hotspot, so the app still works with no router. |
 | **Demo mode** | A simulated robot and a scripted 75-second lesson, for practising the Live View on any computer. |
@@ -193,7 +193,7 @@ with a class** (manual, Section 8.2).
 ```sh
 cd pi-service
 npm install
-npm test             # 44 unit tests
+npm test             # 45 unit tests
 npm run live-demo    # Live View with a simulated robot: http://localhost:5182
 ```
 

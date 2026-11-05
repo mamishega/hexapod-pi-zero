@@ -2,6 +2,7 @@
 // Server-Sent Events sent by the driving service. Read-only: this page sends no commands.
 import {LEG_NAMES, DEFAULT_POSE, copyPose, legJoints, project, bodyStep, balance} from './motion-geometry.js';
 import {Timeline} from './timeline.js';
+import {legSvg, bodySvg} from './robot-model.js';
 import {drawGaitChart} from './gait-chart.js';
 import {drawPower} from './power-chart.js';
 import {createInspector} from './messages.js';
@@ -93,27 +94,24 @@ function drawScene(now) {
   const centre = depth(world([0, 0, 0]));
   const back = cam === 'top' ? legs : legs.filter(l => depth(l.joints[0]) < centre);
   const front = legs.filter(l => !back.includes(l));
+  // Ground marks first (shadows; a dashed line from a lifted foot down to its shadow).
+  for (const {joints, lift} of legs) {
+    const foot = project(joints[3], cam), shadow = project([joints[3][0], joints[3][1], -ground], cam);
+    const k = 1 - Math.min(Math.max(lift, 0), 30) / 90;
+    out += `<ellipse cx="${shadow[0]}" cy="${shadow[1]}" rx="${(cam === 'top' ? 11 : 13) * k}" ry="${(cam === 'top' ? 11 : 5) * k}" fill="#071c22" opacity="${0.5 - Math.min(Math.max(lift, 0), 30) / 90}"/>`;
+    if (lift > 1) out += `<line x1="${foot[0]}" y1="${foot[1]}" x2="${shadow[0]}" y2="${shadow[1]}" stroke="#6c9680" stroke-dasharray="3 4"/>`;
+  }
+  // The robot as built (robot-model.js); a lifted foot is outlined and marked bright, as in the legend.
   const drawLeg = ({i, joints, lift}) => {
-    const pts = joints.map(p => project(p, cam)), foot = pts[3], shadow = project([joints[3][0], joints[3][1], -ground], cam);
-    const up = lift > 1, k = 1 - Math.min(Math.max(lift, 0), 30) / 90;
-    let g = `<ellipse cx="${shadow[0]}" cy="${shadow[1]}" rx="${(cam === 'top' ? 11 : 13) * k}" ry="${(cam === 'top' ? 11 : 5) * k}" fill="#071c22" opacity="${0.5 - Math.min(Math.max(lift, 0), 30) / 90}"/>`;
-    if (up) g += `<line x1="${foot[0]}" y1="${foot[1]}" x2="${shadow[0]}" y2="${shadow[1]}" stroke="#6c9680" stroke-dasharray="3 4"/>`;
-    const colours = up ? ['#9fbf8c', '#d6eaa7', '#a2c58b'] : ['#567c73', '#8eaca0', '#63897c'];
-    for (let j = 0; j < 3; j++) {
-      g += `<line x1="${pts[j][0]}" y1="${pts[j][1]}" x2="${pts[j + 1][0]}" y2="${pts[j + 1][1]}" stroke="#0b2026" stroke-width="${[16, 13, 10][j]}" stroke-linecap="round"/>`;
-      g += `<line x1="${pts[j][0]}" y1="${pts[j][1]}" x2="${pts[j + 1][0]}" y2="${pts[j + 1][1]}" stroke="${colours[j]}" stroke-width="${[11, 8, 5][j]}" stroke-linecap="round"/>`;
-    }
-    for (let j = 0; j < 3; j++) g += `<circle cx="${pts[j][0]}" cy="${pts[j][1]}" r="${j ? 6 : 7}" fill="#183b40" stroke="#8cab92" stroke-width="1.5"/><circle cx="${pts[j][0]}" cy="${pts[j][1]}" r="2" fill="#c8dfa0"/>`;
+    const up = lift > 1, foot = project(joints[3], cam);
+    let g = legSvg(joints, i, body.theta, cam, up);
     if (up) g += `<circle cx="${foot[0]}" cy="${foot[1]}" r="11" fill="#e7f7bc" opacity=".22"/>`;
-    g += `<circle cx="${foot[0]}" cy="${foot[1]}" r="5" fill="${up ? '#e7f7bc' : '#a6c290'}"/>`;
-    g += `<text x="${foot[0] + (i < 3 ? -16 : 16)}" y="${foot[1] + 4}" text-anchor="${i < 3 ? 'end' : 'start'}" fill="#bbd1be" font-size="12" font-family="system-ui,sans-serif">${LEG_NAMES[i]}</text>`;
+    g += `<circle cx="${foot[0]}" cy="${foot[1]}" r="${up ? 5 : 4}" fill="${up ? '#e7f7bc' : '#a6c290'}" stroke="#0b1114" stroke-width="1"/>`;
+    g += `<text x="${foot[0] + (i < 3 ? -16 : 16)}" y="${foot[1] + 4}" text-anchor="${i < 3 ? 'end' : 'start'}" fill="#bbd1be" font-size="12" font-family="system-ui,sans-serif" paint-order="stroke" stroke="#0b1114" stroke-width="3">${LEG_NAMES[i]}</text>`;
     return g;
   };
   out += back.map(drawLeg).join('');
-  out += `<polygon points="${poly(shell, cam)}" fill="url(#shell)" stroke="#8cab92" stroke-width="2"/>`;
-  out += `<polygon points="${poly([[-13, -78, 10], [0, -97, 10], [13, -78, 10]].map(world), cam)}" fill="#c8e68f"/>`;
-  const label = project(world([0, 6, 11]), cam);
-  out += `<text x="${label[0]}" y="${label[1]}" text-anchor="middle" fill="#d6eaa7" font-size="11" font-weight="600" font-family="system-ui,sans-serif" letter-spacing=".08em">FRONT ▲</text>`;
+  out += bodySvg(body.theta, cam);
   out += front.map(drawLeg).join('');
   for (const svg of visibleRobotViews()) svg.innerHTML = out;
 }

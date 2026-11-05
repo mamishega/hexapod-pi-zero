@@ -80,3 +80,22 @@ test('QR codes: structure, size and Wi-Fi text (decoding was checked with the ma
   assert.deepEqual(rsRemainder([0x10, 0x20, 0x0c, 0x56, 0x61, 0x80, 0xec, 0x11, 0xec, 0x11, 0xec, 0x11, 0xec, 0x11, 0xec, 0x11], 10),
     [0xa5, 0x24, 0xd4, 0xc1, 0xed, 0x36, 0xc7, 0x87, 0x2c, 0x55]);
 });
+
+test('the realistic robot drawing is valid in every view and hides faces turned away', async () => {
+  const {legSvg, bodySvg, VIEW_DIR} = await import('../live/robot-model.js');
+  const pose = [[0, 175, 70], [20, 160, 45], [-5, 180, 70], [0, 175, 70], [0, 175, 55], [3, 170, 70]];
+  for (const cam of Object.keys(VIEW_DIR)) {
+    for (const theta of [0, 1.1, -2.6]) {
+      let svg = bodySvg(theta, cam);
+      pose.forEach((p, i) => { svg += legSvg(legJoints(p, i), i, theta, cam, i === 1); });
+      assert.doesNotMatch(svg, /NaN|undefined|Infinity/, `${cam} view`);
+      assert.match(svg, /<polygon/);
+    }
+  }
+  // Only faces turned towards the camera are drawn, so different views draw different faces.
+  const top = (bodySvg(0, 'top').match(/<polygon/g) ?? []).length, front = (bodySvg(0, 'front').match(/<polygon/g) ?? []).length;
+  assert.ok(top > 0 && front > 0 && top !== front);
+  // A foot in the air is outlined (the legend's "lifted"); one on the ground is not.
+  assert.match(legSvg(legJoints([0, 175, 40], 0), 0, 0, 'angled', true), /#e7f7bc/);
+  assert.doesNotMatch(legSvg(legJoints([0, 175, 70], 0), 0, 0, 'angled', false), /#e7f7bc/);
+});
