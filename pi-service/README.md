@@ -21,7 +21,7 @@ Hexapod Remote app, so the controls work the same way.
 Do these first. The user manual (section 6) explains each one.
 
 - [ ] The microSD card set up with **Raspberry Pi OS Lite (64-bit)**, hostname `hexapod`, SSH on
-- [ ] You can log in to the Pi from the Mac: `ssh <username>@hexapod.local`
+- [ ] You can log in to the Pi from the Mac: `ssh kangan@hexapod.local`
 - [ ] Node.js installed on the Pi: `sudo apt install -y nodejs npm`
 - [ ] The Xbox controller paired with the Pi (`bluetoothctl`, user manual section 6.3)
 - [ ] The 3 wires connected between the Pi and the Servo 2040 (see the wiring schematic)
@@ -38,7 +38,7 @@ In the steps below, each command says **where** to type it:
 🖥️ **Mac**, from the `Hexapod Pi Zero 2 W` folder:
 
 ```sh
-scp -r pi-service <username>@hexapod.local:~/
+scp -r pi-service kangan@hexapod.local:~/
 ```
 
 ### Step 2. Install it on the Pi
@@ -134,7 +134,7 @@ From now on it starts by itself whenever the Pi powers on.
 | **D-pad right / left** | Longer / shorter strides |
 
 **To switch off:** let go of the sticks, press **X** (sit), press **View**, then
-🖥️ **Mac**: `ssh -t <username>@hexapod.local sudo shutdown -h now`.
+🖥️ **Mac**: `ssh -t kangan@hexapod.local sudo shutdown -h now`.
 Wait 10 seconds, then turn off the main power switch.
 
 ---
