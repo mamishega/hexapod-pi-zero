@@ -16,6 +16,7 @@ const POWER_EVERY_MS = 1000, POWER_KEEP = 600; // battery history: one sample a 
 const MSG_KEEP = 60, MSG_MS = 250;              // message inspector: last 60, sent in batches 4 times a second
 const MSG_TEXT = 260;                           // longest message text shown
 const HOTSPOT_IP = '10.42.0.1';
+const HEALTH_SEND_MS = 2000, HEALTH_SAMPLE_MS = 5000, STATS_SAVE_MS = 60000; // Health and Servo care pages
 
 const round1 = rows => rows?.map(row => row.map(v => Math.round(v * 10) / 10)) ?? null;
 
@@ -69,8 +70,9 @@ export function padView(pad, buttons) {
   return {connected: true, name: pad.id, axes: [axis(0), axis(1), axis(2), axis(3)], held};
 }
 
+// health: optional createHealth() monitor (src/health.js) for the Health and Servo care pages.
 export function createLiveServer({root, port = 5181, host = '0.0.0.0', log = () => {}, now = Date.now,
-  wifiConf = '/etc/hexapod/wifi.conf', addresses = ipv4, hostname = os.hostname} = {}) {
+  wifiConf = '/etc/hexapod/wifi.conf', addresses = ipv4, hostname = os.hostname, health = null} = {}) {
   const viewers = new Set();
   const state = {robot: null, pad: {connected: false}, log: [], power: [], messages: []};
   let lastPower = -Infinity, msgBatch = [], msgTimer = null;
@@ -103,6 +105,7 @@ export function createLiveServer({root, port = 5181, host = '0.0.0.0', log = () 
   const api = {
     get viewers() { return viewers.size; },
     robot: guard(snapshot => {
+      if (health) guard(() => health.robot(snapshot))();
       state.robot = robotView(snapshot);
       const p = state.robot.live?.power;
       if (Number.isFinite(p?.voltage) && now() - lastPower >= POWER_EVERY_MS) {
@@ -127,8 +130,9 @@ export function createLiveServer({root, port = 5181, host = '0.0.0.0', log = () 
         const send = link.send.bind(link);
         link.send = (op, args, ...rest) => {
           api.message('out', op, {op, ...(args || {})});
-          const reply = send(op, args, ...rest);
-          Promise.resolve(reply).then(answer => api.message('in', op, answer), error => api.message('in', op, {error: error?.message || String(error)}));
+          const sent = now(), reply = send(op, args, ...rest);
+          Promise.resolve(reply).then(answer => { health?.reply(now() - sent, true); api.message('in', op, answer); },
+            error => { const text = error?.message || String(error); health?.reply(now() - sent, false, /time ?out|no reply/i.test(text)); api.message('in', op, {error: text}); });
           return reply;
         };
         link.liveViewWatched = true;
@@ -137,6 +141,7 @@ export function createLiveServer({root, port = 5181, host = '0.0.0.0', log = () 
     }),
     pad: guard((pad, buttons) => {
       const view = padView(pad, buttons), key = JSON.stringify(view);
+      health?.pad(view.connected);
       if (key === padKey) return;
       padKey = key; state.pad = view;
       if (viewers.size) sendPad(view);
@@ -147,7 +152,7 @@ export function createLiveServer({root, port = 5181, host = '0.0.0.0', log = () 
       state.log = [...state.log, entry].slice(-LOG_KEEP);
       if (viewers.size) send('log', entry);
     }),
-    close() { for (const res of viewers) res.end(); viewers.clear(); return new Promise(resolve => server.close(() => resolve())); },
+    close() { clearInterval(healthTimers.send); clearInterval(healthTimers.sample); clearInterval(healthTimers.save); guard(() => health?.close())(); for (const res of viewers) res.end(); viewers.clear(); return new Promise(resolve => server.close(() => resolve())); },
   };
 
   // A bad request must never take down the driving service: everything is caught here.
@@ -161,7 +166,7 @@ export function createLiveServer({root, port = 5181, host = '0.0.0.0', log = () 
     if (url.pathname === '/events') {
       if (viewers.size >= MAX_VIEWERS) { res.writeHead(503, {'Content-Type': 'text/plain'}); res.end('Too many viewers'); return; }
       res.writeHead(200, {'Content-Type': 'text/event-stream', 'Cache-Control': 'no-store', Connection: 'keep-alive', 'X-Accel-Buffering': 'no'});
-      res.write(`retry: 2000\nevent: hello\ndata: ${JSON.stringify({robot: state.robot, pad: state.pad, log: state.log, power: state.power, messages: state.messages, serverTime: now()})}\n\n`);
+      res.write(`retry: 2000\nevent: hello\ndata: ${JSON.stringify({robot: state.robot, pad: state.pad, log: state.log, power: state.power, messages: state.messages, health: healthView(), serverTime: now()})}\n\n`);
       viewers.add(res);
       req.on('close', () => viewers.delete(res));
       res.on('error', () => viewers.delete(res)); // a lost connection must not crash the service
@@ -186,10 +191,22 @@ export function createLiveServer({root, port = 5181, host = '0.0.0.0', log = () 
       res.end(req.method === 'HEAD' ? undefined : body);
     });
   }
+  // Health: Pi readings every 5 s, sent to viewers every 2 s; lifetime servo totals saved every minute.
+  function healthView() { try { return health ? health.snapshot() : null; } catch (error) { console.error(`Live View health: ${error.stack || error}`); return null; } }
+  const healthTimers = {};
+  if (health) {
+    let sampling = false;
+    const sample = async () => { if (sampling) return; sampling = true; try { await health.sample(); } catch (error) { console.error(`Live View health sample: ${error.message}`); } finally { sampling = false; } };
+    sample();
+    healthTimers.sample = setInterval(sample, HEALTH_SAMPLE_MS);
+    healthTimers.send = setInterval(guard(() => { if (viewers.size) { const h = healthView(); if (h) send('health', h); } }), HEALTH_SEND_MS);
+    healthTimers.save = setInterval(guard(() => health.stats?.save()), STATS_SAVE_MS);
+    for (const t of Object.values(healthTimers)) t.unref?.();
+  }
   // Keep-alive comment so proxies and sleeping laptops notice a dead connection.
   const ping = setInterval(guard(() => write(': ping\n\n')), 15000);
   ping.unref?.();
-  server.on('close', () => clearInterval(ping));
+  server.on('close', () => { clearInterval(ping); clearInterval(healthTimers.send); clearInterval(healthTimers.sample); clearInterval(healthTimers.save); });
   server.on('error', error => log(`Live View could not start on port ${port}: ${error.message}`));
   server.listen(port, host, () => log(`Live View: http://${host === '0.0.0.0' ? '<pi-address>' : host}:${port}`));
   api.server = server;

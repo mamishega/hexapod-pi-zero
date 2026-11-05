@@ -11,11 +11,14 @@ import {BUTTONS} from '../vendor/controller/src/gamepad.js';
 import {toStandardPad, DEFAULT_MAP, MENU} from '../src/linux-gamepad.js';
 import {createDriveLoop} from '../src/controls.js';
 import {createLiveServer} from '../src/live-server.js';
+import {createHealth} from '../src/health.js';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const port = Number(process.env.HEXAPOD_LIVE_PORT || 5182); // 5182: does not clash with the real service
 const log = (text, error = /^ERROR/.test(text)) => { console.log(`${new Date().toISOString().slice(11, 19)}  ${text}`); live.log(text, error); };
-const live = createLiveServer({root: path.join(ROOT, 'live'), port, host: process.env.HEXAPOD_LIVE_HOST || '127.0.0.1', log: text => console.log(text)});
+// Health page: simulated Pi readings; servo statistics are kept in memory only (nothing saved).
+const live = createLiveServer({root: path.join(ROOT, 'live'), port, host: process.env.HEXAPOD_LIVE_HOST || '127.0.0.1', log: text => console.log(text),
+  health: createHealth({simulated: true})});
 
 const robot = new RobotController({links: {sim: SimulatedLink}});
 live.watchLink(robot);

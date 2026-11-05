@@ -33,6 +33,10 @@
   <symbol id="i-chart" viewBox="0 0 24 24"><path d="M3 6h7M3 12h4M3 18h9M13 6h8M10 12h11M15 18h6"/></symbol>
   <symbol id="i-leg" viewBox="0 0 24 24"><circle cx="5" cy="7" r="2"/><circle cx="13" cy="5" r="2"/><path d="M6.8 6.6 11.2 5.4M14.5 6.3 19 19M15 19h6"/></symbol>
   <symbol id="i-pulse" viewBox="0 0 24 24"><path d="M2 16h4V8h4v8h4V8h4v8h4"/></symbol>
+  <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10Z"/><path d="M6 12h3l1.5-2.5 2 5 1.5-2.5H18"/></symbol>
+  <symbol id="i-wrench" viewBox="0 0 24 24"><path d="M14.5 5.5a4 4 0 0 0 4.9 4.9l-9.1 9.1a2 2 0 0 1-2.8-2.8l9.1-9.1a4 4 0 0 1-2.1-2.1Z"/><path d="M15 4.5 17 6.5"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 3 2 20h20L12 3Z"/><path d="M12 10v4M12 17h.01"/></symbol>
+  <symbol id="i-list" viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13M3.5 6h.01M3.5 12h.01M3.5 18h.01"/></symbol>
 </svg>
 
 <header class="topbar">
@@ -61,11 +65,14 @@
     <a href="#controller" data-page="controller"><svg class="ico"><use href="#i-pad"/></svg><span>Controller</span></a>
     <a href="#how" data-page="how"><svg class="ico"><use href="#i-flow"/></svg><span>How it works</span></a>
     <a href="#servos" data-page="servos"><svg class="ico"><use href="#i-gauge"/></svg><span>Servo angles</span></a>
+    <a href="#health" data-page="health"><svg class="ico"><use href="#i-heart"/></svg><span>Health</span><b class="count alert" id="health-count" hidden>0</b></a>
+    <a href="#care" data-page="care"><svg class="ico"><use href="#i-wrench"/></svg><span>Servo care</span></a>
     <a href="#messages" data-page="messages"><svg class="ico"><use href="#i-chat"/></svg><span>Messages</span><b class="count" id="unread" hidden>0</b></a>
     <p class="nav-note">Watch only: nothing here can move the robot. Drive it with the Xbox controller.</p>
   </nav>
 
   <main class="content">
+    <a class="alert-bar" id="alert-bar" href="#health" hidden><svg class="ico"><use href="#i-alert"/></svg><span id="alert-text"></span><b>Health ›</b></a>
     <!-- ============================================================ Live -->
     <section class="page" id="page-live" data-title="Live">
       <header class="page-head"><h2>Live</h2><p>The robot as it moves, and what the last command did.</p></header>
@@ -230,6 +237,52 @@
         <section class="card" aria-label="18 servo angles">
           <header class="card-head"><h3><svg class="ico"><use href="#i-gauge"/></svg>18 servo angles</h3><span class="meta">tap a leg to inspect it</span></header>
           <div class="servos" id="servos"></div>
+        </section>
+      </div>
+    </section>
+
+    <!-- ============================================================ Health -->
+    <section class="page" id="page-health" data-title="Health" hidden>
+      <header class="page-head"><h2>Health</h2><p>Battery, power, controller, board link and the Pi, checked every few seconds. Red means act now.</p></header>
+      <div class="grid grid-health">
+        <section class="card wide" aria-label="Right now">
+          <header class="card-head"><h3><svg class="ico"><use href="#i-heart"/></svg>Right now</h3><span class="meta" id="health-note">waiting for the robot…</span></header>
+          <div class="tiles" id="health-tiles"></div>
+        </section>
+        <section class="card" aria-label="Events">
+          <header class="card-head"><h3><svg class="ico"><use href="#i-list"/></svg>Events</h3><span class="meta">since the service started, newest first</span></header>
+          <ol class="feed events" id="health-events"></ol>
+        </section>
+        <section class="card" aria-label="Raspberry Pi">
+          <header class="card-head"><h3><svg class="ico"><use href="#i-gauge"/></svg>Raspberry Pi</h3><span class="meta" id="pi-note"></span></header>
+          <dl class="stats" id="pi-stats"></dl>
+          <p class="caption"><strong>Why it matters:</strong> a Pi that restarts or slows down stops sending commands, and after 3 seconds the Servo 2040 switches the motors off. Power dips are the usual cause: a weak 5 V converter or thin wires.</p>
+        </section>
+      </div>
+    </section>
+
+    <!-- ============================================================ Servo care -->
+    <section class="page" id="page-care" data-title="Servo care" hidden>
+      <header class="page-head"><h2>Servo care</h2><p>Which servos work hardest, which run close to the end of their travel, and which may need recalibrating.</p></header>
+      <div class="grid grid-care">
+        <section class="card" aria-label="Check these">
+          <header class="card-head"><h3><svg class="ico"><use href="#i-alert"/></svg>Check these</h3><span class="meta" id="care-note"></span></header>
+          <ul class="checks" id="care-checks"></ul>
+        </section>
+        <section class="card" aria-label="Hardest-working servos">
+          <header class="card-head"><h3><svg class="ico"><use href="#i-chart"/></svg>Hardest-working servos</h3><span class="meta">lifetime movement</span></header>
+          <ol class="ranks" id="care-ranks"></ol>
+        </section>
+        <section class="card wide" aria-label="All 18 servos">
+          <header class="card-head"><h3><svg class="ico"><use href="#i-wrench"/></svg>All 18 servos</h3>
+            <div class="segmented" role="group" aria-label="Period"><button data-period="session" aria-pressed="true">This session</button><button data-period="lifetime" aria-pressed="false">Lifetime</button></div>
+          </header>
+          <div class="table-wrap"><table class="care-table">
+            <thead><tr><th scope="col">Out</th><th scope="col">Servo</th><th scope="col" class="range-col">Angle now, in its usable range</th><th scope="col">Near a limit</th><th scope="col">Movement</th><th scope="col">Offset</th></tr></thead>
+            <tbody id="care-rows"></tbody>
+          </table></div>
+          <div class="chart-legend care-legend"><span><i class="swatch zone"></i>last 10° of travel</span><span><i class="swatch band"></i>range used</span><span><i class="swatch tick"></i>angle now</span></div>
+          <p class="caption" id="care-caption"></p>
         </section>
       </div>
     </section>

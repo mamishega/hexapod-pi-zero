@@ -6,8 +6,8 @@
 ![Platform](https://img.shields.io/badge/Raspberry%20Pi-Zero%202%20W-c51a4a)
 ![Board](https://img.shields.io/badge/Servo%202040-MicroPython-5e35b1)
 ![Node](https://img.shields.io/badge/Node.js-%E2%89%A518-339933)
-![Tests](https://img.shields.io/badge/tests-45%20passing-2e7d32)
-![Manual](https://img.shields.io/badge/manual-rev%20K-0d7a69)
+![Tests](https://img.shields.io/badge/tests-53%20passing-2e7d32)
+![Manual](https://img.shields.io/badge/manual-rev%20L-0d7a69)
 
 A Raspberry Pi Zero 2 W mounted on the robot reads an Xbox controller over Bluetooth, checks every
 movement against reach and joint limits, and sends walking commands to a Pimoroni Servo 2040, which
@@ -49,6 +49,7 @@ Xbox controller ──Bluetooth──▶ Raspberry Pi Zero 2 W ──UART──�
 | **Three gaits** | Ripple (default), wave and tripod. The **Menu** button switches between them, blending mid-walk without stopping. |
 | **Safety built in** | Every command is checked for reach and joint limits. A 3-second watchdog on the Servo 2040 turns the motors off if the Pi stops talking. |
 | **Live View teaching app** | Realistic 3D robot (drawn as built: red hip servos, black knee servos, curved red feet, sensor box at the front), balance view, gait timing chart, pause, slow motion and replay, leg inspector (inverse kinematics), servo angles, battery graph, and a message inspector for the real serial traffic. |
+| **Health and servo care** | A Health page (battery, Pi power and temperature, controller drop-outs, board link, Wi-Fi) with a warning banner on every page, and a Servo care page that tracks each servo's travel, time near its limits and calibration offset, with lifetime totals saved on the Pi. |
 | **Easy for a class to join** | The **Join** screen shows the address as a QR code and, on the hotspot, a Wi-Fi QR code. Up to 40 viewers can watch at once. |
 | **Works anywhere** | Joins the work Wi-Fi (**Robocop**) when it is in range. Otherwise it runs its own hotspot, so the app still works with no router. |
 | **Demo mode** | A simulated robot and a scripted 75-second lesson, for practising the Live View on any computer. |
@@ -129,6 +130,8 @@ project the QR code.
 | **Controller** | Sticks and buttons in use, what each does, and "Try this" activities |
 | **How it works** | Controller → Bluetooth → Pi → UART → Servo 2040 → servos, plus the message inspector |
 | **Servo angles** | Every joint angle, and the leg inspector with the inverse-kinematics working |
+| **Health** | Battery, Pi power and temperature, controller, board link and Wi-Fi at a glance; events; a warning banner on every page |
+| **Servo care** | Each servo's angle within its usable range, time near the end of travel, movement and calibration offset; hardest-working servos |
 | **Messages** | The driving service's log, newest first |
 
 ## Controls
@@ -183,7 +186,7 @@ with a class** (manual, Section 8.2).
 
 | Document | Contents |
 |---|---|
-| [`User Manual.docx`](User%20Manual.docx) / [`Web Manual/index.html`](Web%20Manual/index.html) | Safety, wiring, Pi setup, controller pairing, driving, Live View, offline mode, troubleshooting and maintenance (revision K) |
+| [`User Manual.docx`](User%20Manual.docx) / [`Web Manual/index.html`](Web%20Manual/index.html) | Safety, wiring, Pi setup, controller pairing, driving, Live View, offline mode, troubleshooting and maintenance (revision L) |
 | [`pi-service/README.md`](pi-service/README.md) | Step-by-step install and everyday use of the Pi program |
 | [`Wiring Schematic.pdf`](Wiring%20Schematic.pdf) | Wiring diagram, Rev C, A3 |
 | [`Circuit Studio/`](Circuit%20Studio/) | The schematic in [Circuit Studio](https://circuit-studio.pages.dev/): double-click `Open in Circuit Studio.webloc`, or load the `.json` with **Open** |
@@ -193,7 +196,7 @@ with a class** (manual, Section 8.2).
 ```sh
 cd pi-service
 npm install
-npm test             # 45 unit tests
+npm test             # 53 unit tests
 npm run live-demo    # Live View with a simulated robot: http://localhost:5182
 ```
 
@@ -224,6 +227,7 @@ because a restart drops it.
 - [x] Live View teaching app with replay, gait chart, leg inspector and QR join screen
 - [x] Offline hotspot mode
 - [x] Gait change from the controller
+- [x] Health page and servo stress monitor
 - [ ] RPLIDAR C1 360° scanning (wiring designed, software to come)
 - [ ] Changing walk settings from the web app
 

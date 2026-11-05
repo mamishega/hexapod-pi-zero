@@ -8,6 +8,7 @@ import {drawPower} from './power-chart.js';
 import {createInspector} from './messages.js';
 import {drawLegInspector} from './leg-inspector.js';
 import {fillJoin} from './join.js';
+import {renderAlerts, renderHealth, renderCare} from './health-view.js';
 
 const $ = id => document.getElementById(id);
 const SVG = 'http://www.w3.org/2000/svg';
@@ -49,7 +50,7 @@ const scene = {pose: copyPose(DEFAULT_POSE), lastT: 0, body: {x: 0, y: 0, theta:
 const timeline = new Timeline();
 const LIVE_DELAY = 260, REPLAY_MS = 20000;
 const play = {mode: 'live', t: 0, speed: 1, last: 0}; // mode: live | paused | replay
-const ui = {leg: 0, power: [], serverOffset: 0, lastPower: -Infinity};
+const ui = {leg: 0, power: [], serverOffset: 0, lastPower: -Infinity, health: null, carePeriod: 'session'};
 
 // ---------------------------------------------------------------- robot scene
 const poly = (points, cam) => points.map(p => project(p, cam).map(v => v.toFixed(1)).join(',')).join(' ');
@@ -496,8 +497,10 @@ function connect() {
     inspector.clear(); inspector.add(d.messages || []);
     if (d.pad) onPad(d.pad, now);
     if (d.robot) onRobot(d.robot, now); else renderChips();
+    if (d.health) onHealth(d.health);
   });
   source.addEventListener('msgs', e => inspector.add(JSON.parse(e.data)));
+  source.addEventListener('health', e => onHealth(JSON.parse(e.data)));
   source.addEventListener('robot', e => onRobot(JSON.parse(e.data), performance.now()));
   source.addEventListener('pad', e => onPad(JSON.parse(e.data), performance.now()));
   source.addEventListener('action', e => {
@@ -510,6 +513,26 @@ function connect() {
   });
   source.addEventListener('log', e => addFeed(JSON.parse(e.data)));
 }
+
+// ---------------------------------------------------------------- health and servo care
+const healthEls = () => ({note: $('health-note'), tiles: $('health-tiles'), events: $('health-events'), pi: $('pi-stats'), piNote: $('pi-note')});
+const careEls = () => ({checks: $('care-checks'), note: $('care-note'), ranks: $('care-ranks'), rows: $('care-rows'), caption: $('care-caption')});
+function drawHealthPages() {
+  const h = ui.health;
+  if (!h) return;
+  if (page === 'health') renderHealth(h, healthEls(), Date.now() + ui.serverOffset);
+  if (page === 'care') renderCare(h.servos, careEls(), ui.carePeriod);
+}
+function onHealth(h) {
+  ui.health = h;
+  renderAlerts(h, $('alert-bar'), $('alert-text'), $('health-count'));
+  drawHealthPages();
+}
+document.querySelectorAll('[data-period]').forEach(b => b.addEventListener('click', () => {
+  ui.carePeriod = b.dataset.period;
+  document.querySelectorAll('[data-period]').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+  drawHealthPages();
+}));
 
 // ---------------------------------------------------------------- theme, full screen
 function currentTheme() { return document.documentElement.dataset.theme || (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'); }
@@ -545,9 +568,9 @@ $('join-close').addEventListener('click', () => $('join').close());
 $('join').addEventListener('click', e => { if (e.target === $('join')) $('join').close(); }); // click outside the card
 
 // ---------------------------------------------------------------- pages
-// Each page has its own address (#live, #controller, #how, #servos, #messages), so a page can be
+// Each page has its own address (#live, #controller, #how, #servos, #health, #care, #messages), so a page can be
 // projected or shared, and Back works. Hidden pages are not drawn.
-const PAGES = ['live', 'controller', 'how', 'servos', 'messages'];
+const PAGES = ['live', 'controller', 'how', 'servos', 'health', 'care', 'messages'];
 let page = 'live', unread = 0;
 function showPage(name, {scroll = true} = {}) {
   page = PAGES.includes(name) ? name : 'live';
@@ -560,6 +583,7 @@ function showPage(name, {scroll = true} = {}) {
   if (page === 'messages') { unread = 0; showUnread(); }
   dirty = true; buildFlow();
   if (page === 'how') drawFlow(performance.now()); // clear highlights left from the last visit
+  if (page === 'health' || page === 'care') drawHealthPages();
   if (scroll) window.scrollTo({top: 0});
 }
 function showUnread() { $('unread').hidden = !unread; $('unread').textContent = unread > 99 ? '99+' : String(unread); }
