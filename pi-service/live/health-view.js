@@ -10,6 +10,15 @@ export function duration(sec) {
   const h = Math.floor(sec / 3600), m = Math.round((sec % 3600) / 60);
   return h < 48 ? `${h} h${m ? ` ${m} min` : ''}` : `${Math.round(h / 24)} days`;
 }
+// Battery time left, from the Sessions insights (src/insights.js runtime()).
+export function runtimeText(rt) {
+  if (!rt) return null;
+  if (rt.reason === 'trend' && Number.isFinite(rt.minutes)) return `about ${rt.minutes} min left`;
+  if (rt.reason === 'low') return 'at the low level now';
+  if (rt.reason === 'collecting') return `time left: estimate in about ${rt.needMinutes} min`;
+  if (rt.reason === 'steady') return 'voltage steady: no time estimate yet';
+  return null;
+}
 export const ago = (t, now) => (Number.isFinite(t) ? `${duration((now - t) / 1000)} ago` : '—');
 // Angle travel: 840° -> "840°", 12400° -> "12.4k°"
 export const travel = deg => (!Number.isFinite(deg) ? '—' : deg >= 10000 ? `${(deg / 1000).toFixed(deg >= 100000 ? 0 : 1)}k°` : `${Math.round(deg)}°`);
@@ -34,7 +43,7 @@ export function healthTiles(h, now) {
   // Battery
   if (Number.isFinite(b.v)) {
     out.push(tile(b.state === 'critical' ? 'bad' : b.state === 'low' ? 'warn' : 'ok', 'Battery', `${b.v.toFixed(2)} V${Number.isFinite(b.a) ? ` · ${b.a.toFixed(2)} A` : ''}`,
-      `${b.state === 'ok' ? 'OK' : b.state === 'low' ? 'Low: finish soon' : 'Critical: stop now'} · lowest ${b.min?.toFixed(2)} V · warns at ${b.low} V (${b.cells})${b.sim ? ' · simulated' : ''}`));
+      `${b.state === 'ok' ? 'OK' : b.state === 'low' ? 'Low: finish soon' : 'Critical: stop now'}${runtimeText(h.runtime) ? ` · ${runtimeText(h.runtime)}` : ''} · lowest ${b.min?.toFixed(2)} V · warns at ${b.low} V (${b.cells})${b.sim ? ' · simulated' : ''}`));
   } else out.push(tile('off', 'Battery', '—', 'No reading from the Servo 2040'));
   // Pi power supply
   if (th) {
@@ -68,7 +77,7 @@ export function renderHealth(h, els, now) {
   if (!h) return;
   els.note.textContent = `${h.simulated ? 'simulated readings (demo) · ' : ''}updated ${new Date(h.t).toLocaleTimeString([], {hour12: false})}`;
   els.tiles.innerHTML = healthTiles(h, now);
-  els.events.innerHTML = (h.events || []).map(e => `<li class="${e.level === 'bad' ? 'error' : e.level}"><time>${new Date(e.t).toLocaleTimeString([], {hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false})}</time><span>${esc(e.text)}</span></li>`).join('');
+  els.events.innerHTML = (h.events || []).map(e => `<li class="${e.level === 'bad' ? 'error' : e.level}"><time>${new Date(e.t).toLocaleTimeString([], {hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false})}</time><span>${esc(e.text)}${e.incident ? ` <a class="replay-link" href="#sessions" data-incident="${esc(e.incident)}">Replay</a>` : ''}</span></li>`).join('');
   const pi = h.pi, stat = (label, value, small) => `<div><dt>${esc(label)}</dt><dd>${esc(value)}</dd><small>${esc(small)}</small></div>`;
   els.piNote.textContent = pi.available === false && !h.simulated ? 'readings only on the robot' : '';
   els.pi.innerHTML = [

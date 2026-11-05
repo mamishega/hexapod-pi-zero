@@ -156,7 +156,8 @@ const readText = file => { try { return fs.readFileSync(file, 'utf8'); } catch {
 // ---------------------------------------------------------------- the health monitor
 const EVENTS_KEEP = 40;
 
-export function createHealth({now = Date.now, simulated = false, statsFile = null, battery = {}, run = runCommand, read = readText,
+// onEvent(event) may return an incident id (the recorder keeps a replay of serious events).
+export function createHealth({now = Date.now, simulated = false, statsFile = null, battery = {}, run = runCommand, read = readText, onEvent = null,
   padBattery = () => findPadBattery(), servoRange = SERVO_RANGE} = {}) {
   const thresholds = {low: Number(battery.low ?? 7.0), critical: Number(battery.critical ?? 6.6), cells: battery.cells || '2S LiPo'};
   const stats = new ServoStats({file: statsFile, now, servoRange});
@@ -168,7 +169,9 @@ export function createHealth({now = Date.now, simulated = false, statsFile = nul
   let motorsOn = false, lastMessage = '';
 
   function event(level, text, t = now()) {
-    events.push({t, level, text});
+    let incident = null;
+    if (onEvent) try { incident = onEvent({t, level, text}) || null; } catch {}
+    events.push(incident ? {t, level, text, incident} : {t, level, text});
     if (events.length > EVENTS_KEEP) events.splice(0, events.length - EVENTS_KEEP);
   }
   event('info', 'Driving service started');

@@ -8,7 +8,9 @@ import {drawPower} from './power-chart.js';
 import {createInspector} from './messages.js';
 import {drawLegInspector} from './leg-inspector.js';
 import {fillJoin} from './join.js';
-import {renderAlerts, renderHealth, renderCare} from './health-view.js';
+import {renderAlerts, renderHealth, renderCare, runtimeText} from './health-view.js';
+import {renderBattery, renderGaits, renderSessions, renderIncidents, createIncidentPlayer} from './sessions-view.js';
+import {createClassroomUI} from './classroom-view.js';
 
 const $ = id => document.getElementById(id);
 const SVG = 'http://www.w3.org/2000/svg';
@@ -50,7 +52,7 @@ const scene = {pose: copyPose(DEFAULT_POSE), lastT: 0, body: {x: 0, y: 0, theta:
 const timeline = new Timeline();
 const LIVE_DELAY = 260, REPLAY_MS = 20000;
 const play = {mode: 'live', t: 0, speed: 1, last: 0}; // mode: live | paused | replay
-const ui = {leg: 0, power: [], serverOffset: 0, lastPower: -Infinity, health: null, carePeriod: 'session'};
+const ui = {leg: 0, power: [], serverOffset: 0, lastPower: -Infinity, health: null, carePeriod: 'session', insights: null, lastSessions: 0};
 
 // ---------------------------------------------------------------- robot scene
 const poly = (points, cam) => points.map(p => project(p, cam).map(v => v.toFixed(1)).join(',')).join(' ');
@@ -149,8 +151,9 @@ function recordFootprints(now) {
   if (scene.prints.length > 240) scene.prints.splice(0, scene.prints.length - 240);
 }
 
+const setView = name => document.querySelector(`[data-view="${name}"]`)?.click();
 document.querySelectorAll('[data-view]').forEach(button => button.addEventListener('click', () => {
-  scene.camera = button.dataset.view; dirty = true;
+  scene.camera = button.dataset.view; dirty = true; setTimeout(() => classroom?.localChange(), 0);
   // Every page with a robot shares the same camera.
   document.querySelectorAll('[data-view]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.view === scene.camera)));
 }));
@@ -431,7 +434,9 @@ function renderChips() {
   chip('chip-motors', live?.active ? (live.walking ? 'busy' : 'ok') : 'off', live?.active ? (live.walking ? 'walking' : 'on') : 'off');
   const p = live?.power;
   const volts = Number.isFinite(p?.voltage), amps = Number.isFinite(p?.current);
-  chip('chip-power', volts ? 'ok' : 'off', volts ? `${p.voltage.toFixed(2)} V${amps ? ` · ${p.current.toFixed(2)} A` : ''}` : '—');
+  const left = ui.health?.runtime?.reason === 'trend' ? ` · ~${ui.health.runtime.minutes} min` : '';
+  const level = ui.health?.battery?.state, tone = level === 'critical' ? 'bad' : level === 'low' ? 'busy' : 'ok';
+  chip('chip-power', volts ? tone : 'off', volts ? `${p.voltage.toFixed(2)} V${amps ? ` · ${p.current.toFixed(2)} A` : ''}${left}` : '—');
   const badge = $('mode-badge');
   if (!view.online) { badge.textContent = 'Live View disconnected'; badge.dataset.tone = 'warn'; }
   else if (c !== 'online') { badge.textContent = 'Board offline'; badge.dataset.tone = 'warn'; }
@@ -498,9 +503,16 @@ function connect() {
     if (d.pad) onPad(d.pad, now);
     if (d.robot) onRobot(d.robot, now); else renderChips();
     if (d.health) onHealth(d.health);
+    if (d.insights) onInsights(d.insights);
+    if (d.version) $('version').textContent = `Software ${d.version}`;
+    if (d.answers) classroom.onAnswers(d.answers);
+    if (d.follow) classroom.onFollow(d.follow);
   });
   source.addEventListener('msgs', e => inspector.add(JSON.parse(e.data)));
   source.addEventListener('health', e => onHealth(JSON.parse(e.data)));
+  source.addEventListener('insights', e => onInsights(JSON.parse(e.data)));
+  source.addEventListener('follow', e => classroom.onFollow(JSON.parse(e.data)));
+  source.addEventListener('answers', e => classroom.onAnswers(JSON.parse(e.data)));
   source.addEventListener('robot', e => onRobot(JSON.parse(e.data), performance.now()));
   source.addEventListener('pad', e => onPad(JSON.parse(e.data), performance.now()));
   source.addEventListener('action', e => {
@@ -526,8 +538,49 @@ function drawHealthPages() {
 function onHealth(h) {
   ui.health = h;
   renderAlerts(h, $('alert-bar'), $('alert-text'), $('health-count'));
-  drawHealthPages();
+  drawHealthPages(); renderChips();
 }
+// Replay links on the Health page open the incident on the Sessions page.
+$('health-events').addEventListener('click', e => {
+  const link = e.target.closest('[data-incident]');
+  if (!link) return;
+  e.preventDefault(); location.hash = 'sessions'; player.open(link.dataset.incident);
+});
+
+// ---------------------------------------------------------------- sessions and data
+const player = createIncidentPlayer({card: $('incident-card'), svg: $('inc-svg'), title: $('inc-title'), when: $('inc-when'), play: $('inc-play'), slow: $('inc-slow'),
+  scrub: $('inc-scrub'), time: $('inc-time'), facts: $('inc-facts'), close: $('inc-close')});
+function onInsights(d) {
+  ui.insights = d;
+  if (page === 'sessions') drawInsights();
+}
+function drawInsights() {
+  const d = ui.insights;
+  if (!d) return;
+  renderGaits(d.gaits || [], $('gait-rows'));
+  renderBattery(d.battery, {runtime: $('bat-runtime'), runtimeNote: $('bat-note'), usage: $('bat-usage'), usageNote: $('bat-usage-note')});
+}
+async function loadSessions() {
+  ui.lastSessions = Date.now();
+  try {
+    const [sessions, incidents] = await Promise.all([fetch('sessions', {cache: 'no-store'}).then(r => r.json()), fetch('incidents', {cache: 'no-store'}).then(r => r.json())]);
+    renderSessions(sessions, $('session-rows'));
+    renderIncidents(incidents, $('incident-list'), id => player.open(id));
+  } catch { $('session-rows').innerHTML = '<tr><td colspan="8" class="empty">Sessions are recorded by the robot’s driving service.</td></tr>'; }
+}
+setInterval(() => { if (page === 'sessions' && Date.now() - ui.lastSessions > 10000) loadSessions(); }, 2000);
+
+// ---------------------------------------------------------------- classroom
+const classroom = createClassroomUI({$, showPage: name => { location.hash = name; showPage(name); }, setView, current: () => ({page, view: scene.camera})});
+
+// ---------------------------------------------------------------- projector mode (large text, stronger contrast)
+function showProjector() { $('projector').setAttribute('aria-pressed', String(document.documentElement.classList.contains('projector'))); }
+$('projector').addEventListener('click', () => {
+  const on = document.documentElement.classList.toggle('projector');
+  try { localStorage.setItem('hexapod-projector', on ? '1' : '0'); } catch {}
+  showProjector(); dirty = true;
+});
+showProjector();
 document.querySelectorAll('[data-period]').forEach(b => b.addEventListener('click', () => {
   ui.carePeriod = b.dataset.period;
   document.querySelectorAll('[data-period]').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
@@ -568,9 +621,9 @@ $('join-close').addEventListener('click', () => $('join').close());
 $('join').addEventListener('click', e => { if (e.target === $('join')) $('join').close(); }); // click outside the card
 
 // ---------------------------------------------------------------- pages
-// Each page has its own address (#live, #controller, #how, #servos, #health, #care, #messages), so a page can be
+// Each page has its own address (#live, #controller, #how, #servos, #health, #care, #sessions, #messages), so a page can be
 // projected or shared, and Back works. Hidden pages are not drawn.
-const PAGES = ['live', 'controller', 'how', 'servos', 'health', 'care', 'messages'];
+const PAGES = ['live', 'controller', 'how', 'servos', 'health', 'care', 'sessions', 'messages'];
 let page = 'live', unread = 0;
 function showPage(name, {scroll = true} = {}) {
   page = PAGES.includes(name) ? name : 'live';
@@ -584,6 +637,8 @@ function showPage(name, {scroll = true} = {}) {
   dirty = true; buildFlow();
   if (page === 'how') drawFlow(performance.now()); // clear highlights left from the last visit
   if (page === 'health' || page === 'care') drawHealthPages();
+  if (page === 'sessions') { drawInsights(); loadSessions(); }
+  if (typeof classroom !== 'undefined') classroom.localChange();
   if (scroll) window.scrollTo({top: 0});
 }
 function showUnread() { $('unread').hidden = !unread; $('unread').textContent = unread > 99 ? '99+' : String(unread); }

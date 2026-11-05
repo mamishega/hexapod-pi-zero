@@ -9,3 +9,5 @@ pi-service/controller-map.json.bak
 
 # Photos and videos of the real robot stay on this computer only (not published).
 images/
+# Written by tools/deploy.sh on the copy sent to the robot
+pi-service/VERSION

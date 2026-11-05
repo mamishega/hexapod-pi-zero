@@ -12,13 +12,21 @@ import {toStandardPad, DEFAULT_MAP, MENU} from '../src/linux-gamepad.js';
 import {createDriveLoop} from '../src/controls.js';
 import {createLiveServer} from '../src/live-server.js';
 import {createHealth} from '../src/health.js';
+import {createRecorder} from '../src/recorder.js';
+import {createInsights} from '../src/insights.js';
+import {createClassroom} from '../src/classroom.js';
+import {readVersion} from '../src/version.js';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const port = Number(process.env.HEXAPOD_LIVE_PORT || 5182); // 5182: does not clash with the real service
 const log = (text, error = /^ERROR/.test(text)) => { console.log(`${new Date().toISOString().slice(11, 19)}  ${text}`); live.log(text, error); };
-// Health page: simulated Pi readings; servo statistics are kept in memory only (nothing saved).
+// Health page: simulated Pi readings. Sessions, incidents and gait results are kept in memory only.
+// Teacher code for the demo: 1234 (or HEXAPOD_TEACHER_CODE).
+const recorder = createRecorder();
 const live = createLiveServer({root: path.join(ROOT, 'live'), port, host: process.env.HEXAPOD_LIVE_HOST || '127.0.0.1', log: text => console.log(text),
-  health: createHealth({simulated: true})});
+  health: createHealth({simulated: true, onEvent: event => recorder.event(event)}), recorder, insights: createInsights({battery: {capacityMah: 2200}}),
+  classroom: createClassroom({code: process.env.HEXAPOD_TEACHER_CODE || '1234'}), version: `${readVersion(ROOT)} · demo`});
+console.log('Teacher code for the demo: ' + (process.env.HEXAPOD_TEACHER_CODE || '1234'));
 
 const robot = new RobotController({links: {sim: SimulatedLink}});
 live.watchLink(robot);
@@ -41,7 +49,7 @@ robot.subscribe(() => {
 const FULL = 32767;
 const raw = {connected: true, axes: [0, 0, -FULL, 0, 0, -FULL, 0, 0], buttons: [0, 0, 0, 0, 0, 0, 0, 0]};
 const BUTTON = {a: 0, b: 1, x: 2, y: 3, lb: 4, rb: 5, view: 6, menu: 7};
-const rest = () => { raw.axes = [0, 0, -FULL, 0, 0, -FULL, 0, 0]; raw.buttons = [0, 0, 0, 0, 0, 0, 0, 0]; };
+const rest = () => { raw.connected = true; raw.axes = [0, 0, -FULL, 0, 0, -FULL, 0, 0]; raw.buttons = [0, 0, 0, 0, 0, 0, 0, 0]; };
 const stick = (lx, ly, rx = 0) => { raw.axes[0] = Math.round(lx * FULL); raw.axes[1] = Math.round(ly * FULL); raw.axes[3] = Math.round(rx * FULL); };
 const press = name => { if (name in BUTTON) raw.buttons[BUTTON[name]] = 1; else raw.axes[{up: 7, down: 7, left: 6, right: 6}[name]] = (name === 'up' || name === 'left' ? -1 : 1) * FULL; };
 
@@ -63,6 +71,7 @@ const SCRIPT = [
   [4, () => stick(0, -0.85)], [0.3, () => { stick(0, -0.85); press('menu'); }],   // wave -> tripod
   [4, () => stick(0, -0.85)], [0.3, () => { stick(0, -0.85); press('menu'); }],   // tripod -> ripple
   [3, () => stick(0, -0.85)], [2.5, () => {}],
+  [3, () => stick(0, -0.85)], [2, () => { raw.connected = false; }], [2, () => {}], // controller drops out while walking: an incident to replay
   [0.4, () => press('x')], [4, () => {}],                   // sit
   [0.4, () => press('y')], [4, () => {}],                   // stand
   [0.4, () => press('view')], [4, () => {}],                // motors off

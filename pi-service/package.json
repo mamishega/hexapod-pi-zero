@@ -14,7 +14,8 @@
     "controller-setup": "node tools/controller-setup.js",
     "controller-test": "node tools/controller-test.js",
     "sync": "bash scripts/sync-shared.sh",
-    "live-demo": "node tools/live-demo.js"
+    "live-demo": "node tools/live-demo.js",
+    "deploy": "bash tools/deploy.sh"
   },
   "dependencies": {
     "serialport": "12.0.0"

@@ -454,3 +454,88 @@ dialog.join .card-head { margin-bottom: 14px; }
 .swatch.band { background: color-mix(in srgb, var(--accent) 35%, transparent); }
 .swatch.tick { width: 3px; background: var(--text); }
 .care-legend { margin-top: -4px; }
+
+/* ------------------------------------------------------------ Sessions and data */
+.big-figure { font-size: 1.9em; font-weight: 750; letter-spacing: -0.02em; margin: -4px 0 0; }
+.care-table td.empty, .incidents li.empty { color: var(--muted); white-space: normal; font-size: .92em; }
+.gait-table td small, .care-table td small { display: block; color: var(--muted); font-size: .8em; font-weight: 400; }
+.gait-table tr.best td { background: color-mix(in srgb, var(--accent) 8%, transparent); }
+.gait-table td.score { min-width: 150px; }
+.score-num { font-weight: 750; font-size: 1.15em; margin-right: 8px; font-variant-numeric: tabular-nums; }
+.score-bar { display: inline-flex; width: 100px; height: 8px; border-radius: 99px; background: var(--surface-3); overflow: hidden; vertical-align: middle; }
+.score-bar i { display: block; height: 100%; }
+.score-bar .s, .swatch.s { background: var(--accent); }
+.score-bar .v, .swatch.v { background: var(--lime); }
+.score-bar .e, .swatch.e { background: var(--warn); }
+.care-table tr.current td { background: color-mix(in srgb, var(--lime) 8%, transparent); }
+.pill { display: inline-block; margin-left: 8px; padding: 0 8px; border-radius: 99px; font-size: .74em; font-weight: 700; background: var(--lime); color: #1a2e05; vertical-align: 1px; }
+.btn-link, .replay-link { font: inherit; font-weight: 650; color: var(--accent); background: none; border: 0; padding: 0; cursor: pointer; text-decoration: underline; text-underline-offset: 2px; }
+.btn-link[disabled] { color: var(--muted); cursor: default; text-decoration: none; }
+td .warn, b.warn { color: var(--warn); }
+.incidents { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.incidents li { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 9px 11px; border-radius: 10px; background: var(--surface-2); border: 1px solid color-mix(in srgb, var(--danger) 35%, var(--border)); font-size: .9em; }
+.incidents li.empty { border-color: var(--border); }
+.incidents li small { display: block; color: var(--muted); font-size: .85em; }
+.incident .card-head .meta { margin-left: auto; }
+.incident-view { width: 100%; height: auto; display: block; border-radius: 12px; background: var(--stage); }
+.incident .transport { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.incident .transport input[type="range"] { flex: 1; min-width: 160px; accent-color: var(--accent); }
+.inc-time { font: 650 .9em var(--mono); min-width: 9em; text-align: right; }
+.inc-time.at { color: var(--danger); }
+.incident-facts { grid-template-columns: repeat(auto-fill, minmax(min(100%, 170px), 1fr)); }
+.incident-facts dd { font-size: 1.05em; }
+.howto { border-top: 1px solid var(--border); padding-top: 10px; font-size: .9em; }
+.howto summary { cursor: pointer; font-weight: 650; color: var(--accent); }
+.howto ol { margin: 8px 0 0; padding-left: 20px; display: grid; gap: 6px; color: var(--text-2); }
+.nav-note small { display: block; margin-top: 6px; color: var(--muted); font-size: .9em; word-break: break-word; }
+
+/* ------------------------------------------------------------ Follow the teacher, lesson cards */
+.follow-pill { display: flex; align-items: center; gap: 10px; justify-content: space-between; margin: 0 0 var(--gap); padding: 8px 8px 8px 14px; border-radius: 99px; font-weight: 650; font-size: .9em;
+  background: color-mix(in srgb, var(--lime) 18%, var(--surface)); border: 1px solid color-mix(in srgb, var(--lime) 45%, transparent); }
+.follow-pill[hidden] { display: none; }
+.follow-pill[data-state="off"] { background: var(--surface-2); border-color: var(--border-strong); }
+.follow-pill[data-state="lead"] { background: color-mix(in srgb, var(--accent) 16%, var(--surface)); border-color: color-mix(in srgb, var(--accent) 45%, transparent); }
+.follow-pill button, .lesson-controls button, .teach-row button, .teach-form button { border: 1px solid var(--border-strong); background: var(--surface); color: var(--text); border-radius: 99px; padding: 5px 14px; font-weight: 650; cursor: pointer; }
+button.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.lesson-card { position: fixed; right: max(16px, env(safe-area-inset-right)); bottom: max(16px, env(safe-area-inset-bottom)); z-index: 40; width: min(420px, calc(100vw - 32px)); max-height: min(70vh, 560px); overflow: auto;
+  background: var(--surface); border: 1px solid var(--border-strong); border-radius: 16px; box-shadow: 0 20px 50px -20px rgba(0, 0, 0, .6); padding: 16px 18px; display: flex; flex-direction: column; gap: 8px; }
+.lesson-card[hidden] { display: none; }
+.lesson-step { font-size: .76em; font-weight: 700; color: var(--accent); text-transform: uppercase; letter-spacing: .04em; }
+.lesson-card h3 { font-size: 1.1em; }
+.lesson-card > p { color: var(--text-2); font-size: .92em; }
+.lesson-q { font-weight: 700; margin-top: 4px !important; color: var(--text) !important; }
+.lesson-options { display: flex; flex-direction: column; gap: 6px; }
+.lesson-options button { position: relative; overflow: hidden; display: flex; justify-content: space-between; align-items: center; gap: 10px; text-align: left; padding: 9px 12px; border-radius: 10px;
+  border: 1px solid var(--border-strong); background: var(--surface-2); color: var(--text); font-weight: 600; cursor: pointer; }
+.lesson-options button[disabled] { cursor: default; }
+.lesson-options button span, .lesson-options button b { position: relative; z-index: 1; }
+.lesson-options button i { position: absolute; left: 0; top: 0; bottom: 0; background: color-mix(in srgb, var(--accent) 20%, transparent); }
+.lesson-options button.mine { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent) inset; }
+.lesson-options button.right { border-color: var(--ok); box-shadow: 0 0 0 2px var(--ok) inset; }
+.lesson-foot { font-size: .8em; color: var(--muted); }
+.lesson-why { font-size: .88em; padding: 8px 10px; border-radius: 10px; background: color-mix(in srgb, var(--ok) 12%, transparent); }
+.lesson-controls { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; margin-top: 4px; }
+.lesson-controls button[disabled] { opacity: .45; cursor: default; }
+.teach #teach-body { display: flex; flex-direction: column; gap: 12px; padding-top: 6px; }
+.teach-form { display: flex; gap: 8px; align-items: flex-end; flex-wrap: wrap; }
+.teach-form label, .teach-lesson { display: flex; flex-direction: column; gap: 4px; font-size: .85em; font-weight: 650; color: var(--text-2); flex: 1; }
+.teach input, .teach select { font: inherit; font-size: 1.05em; padding: 8px 10px; border-radius: 10px; border: 1px solid var(--border-strong); background: var(--surface-2); color: var(--text); }
+.teach-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 12px; background: var(--surface-2); border: 1px solid var(--border); }
+.teach-error { color: var(--danger); font-size: .88em; }
+.teach button.link { background: none; border: 0; color: var(--muted); text-decoration: underline; cursor: pointer; align-self: flex-start; padding: 0; }
+
+/* ------------------------------------------------------------ Projector mode: larger text, stronger lines */
+html.projector body { font-size: 19px; }
+@media (min-width: 1800px) { html.projector body { font-size: 22px; } }
+html.projector { --border: #3a4c60; --border-strong: #50657c; --muted: #a3b1bf; }
+html.projector[data-theme="light"] { --border: #c3ccd6; --border-strong: #9aa8b6; --muted: #475569; }
+html.projector .caption, html.projector .meta { font-size: .9em; }
+#projector[aria-pressed="true"] { background: var(--accent-soft); color: var(--accent); border-color: color-mix(in srgb, var(--accent) 45%, transparent); }
+
+.lesson-card header { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.lesson-size { border: 1px solid var(--border-strong); background: var(--surface-2); color: var(--text-2); border-radius: 8px; width: 30px; height: 26px; cursor: pointer; flex: none; }
+.lesson-card.small > :not(header):not(h3) { display: none; }
+.lesson-card.small { gap: 2px; }
+.lesson-controls { position: sticky; bottom: -16px; margin: 4px -18px -16px; padding: 10px 18px 14px; background: var(--surface); border-top: 1px solid var(--border); }
+.incident .stage { width: 100%; max-width: 720px; margin: 0 auto; }
+.card[hidden] { display: none; }

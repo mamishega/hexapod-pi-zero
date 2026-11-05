@@ -7,8 +7,13 @@
 <meta name="theme-color" content="#0b1016">
 <title>Hexapod Live View</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230b1016'/%3E%3Cg fill='none' stroke='%235eead4' stroke-width='2.4' stroke-linecap='round'%3E%3Cellipse cx='16' cy='16' rx='5' ry='7'/%3E%3Cpath d='M11 12 6 9M11 16H5M11 20l-5 3M21 12l5-3M21 16h6M21 20l5 3'/%3E%3C/g%3E%3C/svg%3E">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Hexapod">
 <link rel="stylesheet" href="app.css">
-<script>/* ?theme=light|dark (e.g. for a projector), else the last choice, else the device setting */ try { const q = new URLSearchParams(location.search).get('theme'), t = /^(light|dark)$/.test(q || '') ? q : localStorage.getItem('hexapod-theme'); if (t) document.documentElement.dataset.theme = t; } catch {}</script>
+<script>/* ?theme=light|dark (e.g. for a projector), else the last choice, else the device setting; ?projector=1 for large text */ try { const u = new URLSearchParams(location.search), q = u.get('theme'), t = /^(light|dark)$/.test(q || '') ? q : localStorage.getItem('hexapod-theme'); if (t) document.documentElement.dataset.theme = t; const p = u.get('projector'); if (p === '1' || (p === null && localStorage.getItem('hexapod-projector') === '1')) document.documentElement.classList.add('projector'); } catch {}</script>
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -36,6 +41,9 @@
   <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10Z"/><path d="M6 12h3l1.5-2.5 2 5 1.5-2.5H18"/></symbol>
   <symbol id="i-wrench" viewBox="0 0 24 24"><path d="M14.5 5.5a4 4 0 0 0 4.9 4.9l-9.1 9.1a2 2 0 0 1-2.8-2.8l9.1-9.1a4 4 0 0 1-2.1-2.1Z"/><path d="M15 4.5 17 6.5"/></symbol>
   <symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 3 2 20h20L12 3Z"/><path d="M12 10v4M12 17h.01"/></symbol>
+  <symbol id="i-teach" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4M7 9l3 2-3 2"/></symbol>
+  <symbol id="i-projector" viewBox="0 0 24 24"><path d="M4 7h16M6 7v9a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V7M9 21l3-4 3 4"/><path d="M9.5 11.5h5"/></symbol>
+  <symbol id="i-record" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="3.5"/></symbol>
   <symbol id="i-list" viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13M3.5 6h.01M3.5 12h.01M3.5 18h.01"/></symbol>
 </svg>
 
@@ -53,6 +61,8 @@
   </ul>
   <div class="tools">
     <button class="join-btn" id="join-open" type="button" aria-label="Join: how students open this page" title="How students join this page"><svg><use href="#i-join"/></svg><span>Join</span></button>
+    <button class="icon-btn" id="teach-open" type="button" aria-label="Teach: lead the class" title="Teach: lead the class"><svg><use href="#i-teach"/></svg></button>
+    <button class="icon-btn" id="projector" type="button" aria-label="Projector mode: large text" aria-pressed="false" title="Projector mode (large text)"><svg><use href="#i-projector"/></svg></button>
     <button class="icon-btn" id="theme" type="button" aria-label="Switch light or dark theme" title="Light / dark"><svg><use href="#i-moon"/></svg></button>
     <button class="icon-btn" id="fullscreen" type="button" aria-label="Full screen" title="Full screen (for a projector)"><svg><use href="#i-expand"/></svg></button>
   </div>
@@ -67,11 +77,13 @@
     <a href="#servos" data-page="servos"><svg class="ico"><use href="#i-gauge"/></svg><span>Servo angles</span></a>
     <a href="#health" data-page="health"><svg class="ico"><use href="#i-heart"/></svg><span>Health</span><b class="count alert" id="health-count" hidden>0</b></a>
     <a href="#care" data-page="care"><svg class="ico"><use href="#i-wrench"/></svg><span>Servo care</span></a>
+    <a href="#sessions" data-page="sessions"><svg class="ico"><use href="#i-record"/></svg><span>Sessions</span></a>
     <a href="#messages" data-page="messages"><svg class="ico"><use href="#i-chat"/></svg><span>Messages</span><b class="count" id="unread" hidden>0</b></a>
-    <p class="nav-note">Watch only: nothing here can move the robot. Drive it with the Xbox controller.</p>
+    <p class="nav-note">Watch only: nothing here can move the robot. Drive it with the Xbox controller.<small id="version"></small></p>
   </nav>
 
   <main class="content">
+    <div class="follow-pill" id="follow-pill" hidden></div>
     <a class="alert-bar" id="alert-bar" href="#health" hidden><svg class="ico"><use href="#i-alert"/></svg><span id="alert-text"></span><b>Health ›</b></a>
     <!-- ============================================================ Live -->
     <section class="page" id="page-live" data-title="Live">
@@ -283,6 +295,55 @@
           </table></div>
           <div class="chart-legend care-legend"><span><i class="swatch zone"></i>last 10° of travel</span><span><i class="swatch band"></i>range used</span><span><i class="swatch tick"></i>angle now</span></div>
           <p class="caption" id="care-caption"></p>
+          <details class="howto"><summary>How to recalibrate a servo</summary><ol>
+            <li>Make the robot sit (<kbd>X</kbd>) and switch the motors off (<kbd>View</kbd>), then turn off the main switch.</li>
+            <li>For a large offset: undo the horn screw, lift the horn off and put it back one tooth round (about 14°) in the direction that makes the offset smaller. Refit the screw.</li>
+            <li>Move the Servo 2040 USB-C lead from the Pi to a laptop and open <b>Motion Studio</b> (user manual, Section 8.3).</li>
+            <li>In the <b>Leg calibration</b> tab, choose the leg, adjust each joint until the leg matches the reference stance, and save.</li>
+            <li>Move the lead back to the Pi, switch on, and check the leg here: its offset should now be small.</li>
+          </ol></details>
+        </section>
+      </div>
+    </section>
+
+    <!-- ============================================================ Sessions -->
+    <section class="page" id="page-sessions" data-title="Sessions" hidden>
+      <header class="page-head"><h2>Sessions and data</h2><p>What the robot has done: gait scores, battery use, every session as a spreadsheet file, and replays of anything that went wrong.</p></header>
+      <div class="grid grid-care">
+        <section class="card wide" aria-label="Gait comparison">
+          <header class="card-head"><h3><svg class="ico"><use href="#i-chart"/></svg>Gait comparison</h3>
+            <span class="chart-legend"><span><i class="swatch s"></i>stability</span><span><i class="swatch v"></i>speed</span><span><i class="swatch e"></i>battery</span></span></header>
+          <div class="table-wrap"><table class="care-table gait-table">
+            <thead><tr><th scope="col">Gait and settings</th><th scope="col">Score</th><th scope="col">Balance margin</th><th scope="col">Stable</th><th scope="col">Speed</th><th scope="col">Current</th><th scope="col">Per Ah</th><th scope="col">Walked</th></tr></thead>
+            <tbody id="gait-rows"></tbody></table></div>
+          <p class="caption"><strong>Score out of 100:</strong> stability 50 (how far the body’s centre stays inside the feet, and the share of time it is inside), speed 30 and battery use 20 (both compared with the best setting tried). <strong>Per Ah:</strong> metres walked for each amp-hour of battery. Worked out from the commanded pose: slipping feet are not detected.</p>
+        </section>
+        <section class="card" aria-label="Battery">
+          <header class="card-head"><h3><svg class="ico"><use href="#i-battery"/></svg>Battery time</h3></header>
+          <p class="big-figure" id="bat-runtime">—</p>
+          <p class="caption" id="bat-note"></p>
+          <div class="table-wrap"><table class="care-table">
+            <thead><tr><th scope="col">Activity</th><th scope="col">Current</th><th scope="col">On a full battery</th><th scope="col">Measured</th></tr></thead>
+            <tbody id="bat-usage"></tbody></table></div>
+          <p class="caption" id="bat-usage-note"></p>
+        </section>
+        <section class="card" aria-label="Incidents">
+          <header class="card-head"><h3><svg class="ico"><use href="#i-alert"/></svg>Incidents</h3><span class="meta">30 s before, 5 s after</span></header>
+          <ul class="incidents" id="incident-list"></ul>
+        </section>
+        <section class="card wide incident" id="incident-card" aria-label="Incident replay" hidden>
+          <header class="card-head"><h3><svg class="ico"><use href="#i-play"/></svg><span id="inc-title">Replay</span></h3><span class="meta" id="inc-when"></span><button class="icon-btn" id="inc-close" type="button" aria-label="Close the replay">✕</button></header>
+          <div class="stage"><svg class="incident-view" id="inc-svg" viewBox="0 0 620 440" role="img" aria-label="Replay of the robot before the incident"></svg></div>
+          <div class="transport"><button class="chip-toggle plain" id="inc-play" type="button">Play</button><button class="chip-toggle plain" id="inc-slow" type="button" aria-pressed="false">¼×</button>
+            <input type="range" id="inc-scrub" min="0" max="1000" value="0" aria-label="Replay position"><span class="inc-time" id="inc-time">—</span></div>
+          <dl class="stats incident-facts" id="inc-facts"></dl>
+        </section>
+        <section class="card wide" aria-label="Sessions">
+          <header class="card-head"><h3><svg class="ico"><use href="#i-record"/></svg>Sessions</h3><span class="meta" id="session-note">from motors on until they have been off for 30 s</span></header>
+          <div class="table-wrap"><table class="care-table">
+            <thead><tr><th scope="col">Started</th><th scope="col">Length</th><th scope="col">Walking</th><th scope="col">Distance</th><th scope="col">Gaits</th><th scope="col">Lowest battery</th><th scope="col">Incidents</th><th scope="col">Data</th></tr></thead>
+            <tbody id="session-rows"></tbody></table></div>
+          <p class="caption"><strong>CSV files</strong> open in Excel, Numbers or Google Sheets: twice a second, the motors, gait, settings, battery, controller, balance margin and all 18 servo angles. The oldest sessions are deleted when the recordings reach 50 MB.</p>
         </section>
       </div>
     </section>
@@ -297,6 +358,11 @@
     </section>
   </main>
 </div>
+<aside class="lesson-card" id="lesson-card" aria-live="polite" hidden></aside>
+<dialog id="teach" class="join teach" aria-labelledby="teach-title">
+  <header class="card-head"><h3 id="teach-title"><svg class="ico"><use href="#i-teach"/></svg>Teach: lead the class</h3><button class="icon-btn" id="teach-close" type="button" aria-label="Close">✕</button></header>
+  <div id="teach-body"></div>
+</dialog>
 <dialog id="join" class="join" aria-labelledby="join-title">
   <header class="card-head"><h3 id="join-title"><svg class="ico"><use href="#i-join"/></svg>Join the Live View</h3><button class="icon-btn" id="join-close" type="button" aria-label="Close">✕</button></header>
   <div id="join-body"></div>

@@ -6,7 +6,10 @@
 //   HEXAPOD_MAP        controller map file   (default ./controller-map.json, from controller-setup)
 //   HEXAPOD_LIVE_PORT  Live View web page    (default 5181; 0 turns it off)
 //   HEXAPOD_BATTERY_LOW / HEXAPOD_BATTERY_CRITICAL  battery warnings in volts (default 7.0 / 6.6, a 2S LiPo)
+//   HEXAPOD_BATTERY_MAH battery capacity in mAh (optional: running time on a full battery)
+//   HEXAPOD_TEACHER_CODE teacher code for follow-the-teacher (default: a random code saved in ~/.hexapod/teacher-code)
 //   HEXAPOD_STATS      servo statistics file (default ~/.hexapod/servo-stats.json, kept when the software is updated)
+// Sessions, incidents and gait results are saved in ~/.hexapod as well.
 import path from 'node:path';
 import os from 'node:os';
 import {fileURLToPath} from 'node:url';
@@ -16,6 +19,10 @@ import {LinuxGamepad, loadMap, MENU} from './linux-gamepad.js';
 import {createDriveLoop} from './controls.js';
 import {createLiveServer} from './live-server.js';
 import {createHealth} from './health.js';
+import {createRecorder} from './recorder.js';
+import {createInsights} from './insights.js';
+import {createClassroom, teacherCode} from './classroom.js';
+import {readVersion} from './version.js';
 import {BUTTONS} from '../vendor/controller/src/gamepad.js';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -25,7 +32,8 @@ const config = {
   map: process.env.HEXAPOD_MAP || path.join(ROOT, 'controller-map.json'),
   livePort: Number(process.env.HEXAPOD_LIVE_PORT ?? 5181),
   stats: process.env.HEXAPOD_STATS || path.join(os.homedir(), '.hexapod', 'servo-stats.json'),
-  battery: {low: Number(process.env.HEXAPOD_BATTERY_LOW || 7.0), critical: Number(process.env.HEXAPOD_BATTERY_CRITICAL || 6.6)},
+  battery: {low: Number(process.env.HEXAPOD_BATTERY_LOW || 7.0), critical: Number(process.env.HEXAPOD_BATTERY_CRITICAL || 6.6), capacityMah: Number(process.env.HEXAPOD_BATTERY_MAH) || null},
+  data: path.join(os.homedir(), '.hexapod'),
 };
 const LOOP_MS = 20;        // read the controller 50 times a second
 const RECONNECT_MS = 3000; // retry the Servo 2040 link this often while it is down
@@ -36,8 +44,14 @@ log(`Hexapod driving service starting: board ${config.serial}, controller ${conf
 
 const robot = new RobotController({links: {uart: linkClass({path: config.serial})}});
 if (config.livePort) {
-  const health = createHealth({statsFile: config.stats, battery: config.battery});
-  live = createLiveServer({root: path.join(ROOT, 'live'), port: config.livePort, log, health});
+  const recorder = createRecorder({dir: config.data, log: text => console.log(text)});
+  const health = createHealth({statsFile: config.stats, battery: config.battery, onEvent: event => recorder.event(event)});
+  const insights = createInsights({file: path.join(config.data, 'insights.json'), battery: config.battery});
+  const code = teacherCode({file: path.join(config.data, 'teacher-code')});
+  // Only in the service log (journalctl -u hexapod-drive), never on the web page.
+  console.log(`Live View teacher code: ${code}  (change it in ${path.join(config.data, 'teacher-code')})`);
+  live = createLiveServer({root: path.join(ROOT, 'live'), port: config.livePort, log, health, recorder, insights,
+    classroom: createClassroom({code}), version: readVersion(ROOT)});
   robot.subscribe(() => live.robot(robot.getSnapshot()));
   live.watchLink(robot); // message inspector: every command to the board and its reply
 }

@@ -6,7 +6,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import os from 'node:os';
 
-const TYPES = {'.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.svg': 'image/svg+xml', '.ico': 'image/x-icon'};
+const TYPES = {'.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.svg': 'image/svg+xml', '.ico': 'image/x-icon',
+  '.png': 'image/png', '.webmanifest': 'application/manifest+json', '.json': 'application/json'};
 const ROBOT_MS = 100;   // at most 10 robot updates a second per viewer
 const PAD_MS = 50;      // at most 20 controller updates a second
 const MAX_VIEWERS = 40; // a classroom; each viewer costs a little CPU on the Pi Zero
@@ -17,6 +18,8 @@ const MSG_KEEP = 60, MSG_MS = 250;              // message inspector: last 60, s
 const MSG_TEXT = 260;                           // longest message text shown
 const HOTSPOT_IP = '10.42.0.1';
 const HEALTH_SEND_MS = 2000, HEALTH_SAMPLE_MS = 5000, STATS_SAVE_MS = 60000; // Health and Servo care pages
+const INSIGHTS_SEND_MS = 5000;                     // Sessions page: gait scores and battery use
+const POST_MAX_BYTES = 4096, POST_LIMIT = 30, POST_WINDOW_MS = 10000; // classroom requests: small, and not too many
 
 const round1 = rows => rows?.map(row => row.map(v => Math.round(v * 10) / 10)) ?? null;
 
@@ -70,9 +73,11 @@ export function padView(pad, buttons) {
   return {connected: true, name: pad.id, axes: [axis(0), axis(1), axis(2), axis(3)], held};
 }
 
-// health: optional createHealth() monitor (src/health.js) for the Health and Servo care pages.
+// Optional parts: health (src/health.js) for the Health and Servo care pages; recorder (src/recorder.js)
+// and insights (src/insights.js) for the Sessions page; classroom (src/classroom.js) for follow-the-teacher.
 export function createLiveServer({root, port = 5181, host = '0.0.0.0', log = () => {}, now = Date.now,
-  wifiConf = '/etc/hexapod/wifi.conf', addresses = ipv4, hostname = os.hostname, health = null} = {}) {
+  wifiConf = '/etc/hexapod/wifi.conf', addresses = ipv4, hostname = os.hostname, health = null, recorder = null, insights = null, classroom = null,
+  version = null} = {}) {
   const viewers = new Set();
   const state = {robot: null, pad: {connected: false}, log: [], power: [], messages: []};
   let lastPower = -Infinity, msgBatch = [], msgTimer = null;
@@ -106,6 +111,8 @@ export function createLiveServer({root, port = 5181, host = '0.0.0.0', log = () 
     get viewers() { return viewers.size; },
     robot: guard(snapshot => {
       if (health) guard(() => health.robot(snapshot))();
+      if (recorder) guard(() => recorder.robot(snapshot))();
+      if (insights) guard(() => insights.robot(snapshot))();
       state.robot = robotView(snapshot);
       const p = state.robot.live?.power;
       if (Number.isFinite(p?.voltage) && now() - lastPower >= POWER_EVERY_MS) {
@@ -141,7 +148,7 @@ export function createLiveServer({root, port = 5181, host = '0.0.0.0', log = () 
     }),
     pad: guard((pad, buttons) => {
       const view = padView(pad, buttons), key = JSON.stringify(view);
-      health?.pad(view.connected);
+      health?.pad(view.connected); recorder?.pad(view.connected);
       if (key === padKey) return;
       padKey = key; state.pad = view;
       if (viewers.size) sendPad(view);
@@ -152,7 +159,7 @@ export function createLiveServer({root, port = 5181, host = '0.0.0.0', log = () 
       state.log = [...state.log, entry].slice(-LOG_KEEP);
       if (viewers.size) send('log', entry);
     }),
-    close() { clearInterval(healthTimers.send); clearInterval(healthTimers.sample); clearInterval(healthTimers.save); guard(() => health?.close())(); for (const res of viewers) res.end(); viewers.clear(); return new Promise(resolve => server.close(() => resolve())); },
+    close() { for (const t of Object.values(healthTimers)) clearInterval(t); guard(() => health?.close())(); guard(() => recorder?.close())(); guard(() => insights?.save())(); for (const res of viewers) res.end(); viewers.clear(); return new Promise(resolve => server.close(() => resolve())); },
   };
 
   // A bad request must never take down the driving service: everything is caught here.
@@ -162,11 +169,35 @@ export function createLiveServer({root, port = 5181, host = '0.0.0.0', log = () 
   });
   function handle(req, res) {
     const url = new URL(req.url.replace(/^\/+/, '/'), 'http://localhost');
+    if (req.method === 'POST' && classroom && /^\/(teacher\/(login|follow|clear)|answer)$/.test(url.pathname)) { post(req, res, url.pathname); return; }
     if (req.method !== 'GET' && req.method !== 'HEAD') { res.writeHead(405, {Allow: 'GET'}); res.end(); return; }
+    const json = (body, status = 200, extra = {}) => { res.writeHead(status, {'Content-Type': 'application/json', 'Cache-Control': 'no-store', ...extra}); res.end(req.method === 'HEAD' ? undefined : JSON.stringify(body)); };
+    if (url.pathname === '/status') {
+      // For the safe-update script: restart only when the motors are off.
+      const live = state.robot?.live;
+      json({connection: state.robot?.connection || 'offline', motorsOn: !!live?.active, walking: !!live?.walking, viewers: viewers.size, version});
+      return;
+    }
+    if (recorder && url.pathname === '/sessions') { json(recorder.sessions()); return; }
+    if (recorder && url.pathname === '/incidents') { json(recorder.incidents()); return; }
+    let m;
+    if (recorder && (m = /^\/sessions\/([0-9]{8}-[0-9]{6})\.csv$/.exec(url.pathname))) {
+      const text = recorder.csv(m[1]);
+      if (text === null) { res.writeHead(404, {'Content-Type': 'text/plain'}); res.end('No such session'); return; }
+      res.writeHead(200, {'Content-Type': 'text/csv; charset=utf-8', 'Cache-Control': 'no-store', 'Content-Disposition': `attachment; filename="hexapod-session-${m[1]}.csv"`});
+      res.end(req.method === 'HEAD' ? undefined : text);
+      return;
+    }
+    if (recorder && (m = /^\/incidents\/([0-9]{8}-[0-9]{6}-[a-z0-9]{1,6})$/.exec(url.pathname))) {
+      const data = recorder.incident(m[1]);
+      if (!data) json({error: 'No such incident'}, 404); else json(data);
+      return;
+    }
     if (url.pathname === '/events') {
       if (viewers.size >= MAX_VIEWERS) { res.writeHead(503, {'Content-Type': 'text/plain'}); res.end('Too many viewers'); return; }
       res.writeHead(200, {'Content-Type': 'text/event-stream', 'Cache-Control': 'no-store', Connection: 'keep-alive', 'X-Accel-Buffering': 'no'});
-      res.write(`retry: 2000\nevent: hello\ndata: ${JSON.stringify({robot: state.robot, pad: state.pad, log: state.log, power: state.power, messages: state.messages, health: healthView(), serverTime: now()})}\n\n`);
+      res.write(`retry: 2000\nevent: hello\ndata: ${JSON.stringify({robot: state.robot, pad: state.pad, log: state.log, power: state.power, messages: state.messages, health: healthView(),
+        insights: insightsView(), follow: classroom?.follow ?? null, answers: classroom?.tally() ?? null, version, serverTime: now()})}\n\n`);
       viewers.add(res);
       req.on('close', () => viewers.delete(res));
       res.on('error', () => viewers.delete(res)); // a lost connection must not crash the service
@@ -176,7 +207,7 @@ export function createLiveServer({root, port = 5181, host = '0.0.0.0', log = () 
       // How to reach this page (for the Join card): addresses, and the hotspot when it is running.
       const wifi = readSettings(wifiConf), list = addresses();
       const hotspot = list.some(a => a.ip === HOTSPOT_IP);
-      const info = {hostname: hostname(), port: server.address()?.port ?? port, addresses: list.map(a => a.ip),
+      const info = {hostname: hostname(), port: server.address()?.port ?? port, addresses: list.map(a => a.ip), version,
         hotspot: {active: hotspot, ssid: wifi.HOTSPOT_SSID || null, password: hotspot && onHotspot(req.socket.remoteAddress) ? wifi.HOTSPOT_PASSWORD || null : null}};
       res.writeHead(200, {'Content-Type': 'application/json', 'Cache-Control': 'no-store'});
       res.end(req.method === 'HEAD' ? undefined : JSON.stringify(info));
@@ -191,8 +222,43 @@ export function createLiveServer({root, port = 5181, host = '0.0.0.0', log = () 
       res.end(req.method === 'HEAD' ? undefined : body);
     });
   }
+  // Classroom requests (POST, small JSON): teacher login, the teacher's view, anonymous answers.
+  const posts = new Map(); // address -> recent request times
+  function post(req, res, route) {
+    const reply = (status, body) => { if (!res.headersSent) { res.writeHead(status, {'Content-Type': 'application/json', 'Cache-Control': 'no-store'}); res.end(JSON.stringify(body)); } };
+    const who = req.socket.remoteAddress || '?', recent = (posts.get(who) || []).filter(t => now() - t < POST_WINDOW_MS);
+    if (recent.length >= POST_LIMIT) { reply(429, {error: 'Too many requests'}); return; }
+    recent.push(now()); posts.set(who, recent);
+    if (posts.size > 500) posts.delete(posts.keys().next().value);
+    let body = '', size = 0;
+    // Too large: answer straight away and throw the rest away (the connection stays usable for the reply).
+    req.on('data', chunk => { size += chunk.length; if (size > POST_MAX_BYTES) { if (!res.headersSent) { res.setHeader('Connection', 'close'); reply(413, {error: 'Too large'}); } body = ''; } else body += chunk; });
+    req.on('error', () => {});
+    req.on('end', guard(() => {
+      if (size > POST_MAX_BYTES) return;
+      let data; try { data = JSON.parse(body || '{}'); } catch { reply(400, {error: 'Bad request'}); return; }
+      if (!data || typeof data !== 'object') { reply(400, {error: 'Bad request'}); return; }
+      const token = req.headers['x-teacher-token'];
+      if (route === '/teacher/login') { const t = classroom.login(data.code); if (t) reply(200, {token: t}); else { log('Live View: wrong teacher code entered'); reply(403, {error: 'Wrong code'}); } return; }
+      if (route === '/teacher/follow') { reply(classroom.setFollow(token, data) ? 200 : 403, {ok: classroom.isTeacher(token)}); return; }
+      if (route === '/teacher/clear') { reply(classroom.clearAnswers(token, data.question) ? 200 : 403, {ok: classroom.isTeacher(token)}); return; }
+      if (route === '/answer') { reply(classroom.answer(data.client, data.question, data.choice) ? 200 : 400, {ok: true}); return; }
+      reply(404, {error: 'Not found'});
+    }));
+  }
+  if (classroom) {
+    let answersTimer = null;
+    classroom.onChange(guard(type => {
+      if (type === 'follow') send('follow', classroom.follow);
+      else if (!answersTimer) answersTimer = setTimeout(guard(() => { answersTimer = null; send('answers', classroom.tally()); }), 500);
+    }));
+  }
+  function insightsView() { try { return insights ? {battery: insights.battery(), gaits: insights.gaits()} : null; } catch (error) { console.error(`Live View insights: ${error.stack || error}`); return null; } }
   // Health: Pi readings every 5 s, sent to viewers every 2 s; lifetime servo totals saved every minute.
-  function healthView() { try { return health ? health.snapshot() : null; } catch (error) { console.error(`Live View health: ${error.stack || error}`); return null; } }
+  function healthView() {
+    try { return health ? {...health.snapshot(), runtime: insights ? insights.battery() : null} : null; }
+    catch (error) { console.error(`Live View health: ${error.stack || error}`); return null; }
+  }
   const healthTimers = {};
   if (health) {
     let sampling = false;
@@ -200,13 +266,14 @@ export function createLiveServer({root, port = 5181, host = '0.0.0.0', log = () 
     sample();
     healthTimers.sample = setInterval(sample, HEALTH_SAMPLE_MS);
     healthTimers.send = setInterval(guard(() => { if (viewers.size) { const h = healthView(); if (h) send('health', h); } }), HEALTH_SEND_MS);
-    healthTimers.save = setInterval(guard(() => health.stats?.save()), STATS_SAVE_MS);
-    for (const t of Object.values(healthTimers)) t.unref?.();
+    healthTimers.save = setInterval(guard(() => { health.stats?.save(); insights?.save(); }), STATS_SAVE_MS);
   }
+  if (insights) healthTimers.insights = setInterval(guard(() => { if (viewers.size) { const v = insightsView(); if (v) send('insights', v); } }), INSIGHTS_SEND_MS);
+  for (const t of Object.values(healthTimers)) t.unref?.();
   // Keep-alive comment so proxies and sleeping laptops notice a dead connection.
   const ping = setInterval(guard(() => write(': ping\n\n')), 15000);
   ping.unref?.();
-  server.on('close', () => { clearInterval(ping); clearInterval(healthTimers.send); clearInterval(healthTimers.sample); clearInterval(healthTimers.save); });
+  server.on('close', () => { clearInterval(ping); for (const t of Object.values(healthTimers)) clearInterval(t); });
   server.on('error', error => log(`Live View could not start on port ${port}: ${error.message}`));
   server.listen(port, host, () => log(`Live View: http://${host === '0.0.0.0' ? '<pi-address>' : host}:${port}`));
   api.server = server;

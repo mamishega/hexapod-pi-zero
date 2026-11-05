@@ -72,8 +72,8 @@ const cover = [
     ['Project', 'Hexapod Pi Zero 2 W (and the Raspberry Pi 5 version)'],
     ['Document', 'Live View improvement plan'],
     ['Date', '5 November 2026'],
-    ['Status', 'Draft for discussion: nothing in Section 3 is built yet'],
-    ['Related documents', 'User Manual HXP-UM-001 revision L (Pi Zero 2 W); HXP-UM-005 revision A (Pi 5)'],
+    ['Status', 'Sections 3.1 to 3.5 built (5 November 2026); 3.6 and 3.7 not started'],
+    ['Related documents', 'User Manual HXP-UM-001 revision M (Pi Zero 2 W); HXP-UM-005 revision A (Pi 5)'],
   ], [2600, 6426]),
 ];
 
@@ -93,10 +93,19 @@ const body = [
     ['Later', 'Gyro tilt and LiDAR scan (Pi 5 version)', 'First real sensor data: what the robot actually does', 'Medium each'],
     ['Only with safeguards', 'Changing walk settings from the web page', 'Convenient, but lets the page control the robot', 'Medium'],
   ], [1300, 2900, 3426, 1400]),
+  ...table('Progress', ['Improvement', 'Status'], [
+    ['3.1 Session recorder and incident replay', '**Built** and tested in the demo (Sessions page). Not yet installed on the robot.'],
+    ['3.2 Follow-the-teacher mode and lesson cards', '**Built**: four lessons, eleven quick questions, teacher code. Tested with a teacher and a student device in the demo.'],
+    ['3.3 Battery runtime estimate', '**Built**: time left from the voltage trend, battery use by activity. Needs the battery capacity for \u201con a full battery\u201d figures.'],
+    ['3.4 Gait quality score', '**Built**: score out of 100 for each gait and setting (Sessions page).'],
+    ['3.5 Smaller improvements', '**Built**: add to home screen, version on the page, safe update (npm run deploy), projector mode, recalibration steps on Servo care.'],
+    ['3.6 Gyro and LiDAR views', 'Not started: needs the Raspberry Pi 5 version.'],
+    ['3.7 Settings from the page', 'Not started: only with the safeguards in Section 3.7.'],
+  ], [3600, 5426]),
   ...callout('Recommendation', 'Install the current update on the robot first and let the Health page collect a few sessions of real data. Then build the **session recorder**, so the next controller drop-out is captured with everything that was happening at the time.', ACCENT, 'E3F2EE'),
 
   h1('2   Already in place'),
-  para('The improvements below build on what the Live View already does. These were added on 4–5 November 2026 and are covered by 53 automated tests.'),
+  para('The improvements in Section 3 build on what the Live View already did before them (added on 4–5 November 2026).'),
   ...table('Live View pages today', ['Page', 'What it shows'], [
     ['**Live**', 'The robot in 3D, drawn as built (red hip servos, black knee servos, curved red feet, sensor box at the front), with top, front and side views, balance area, footprints, pause and slow-motion replay, gait timing chart, battery graph.'],
     ['**Controller**', 'Sticks and buttons in use, what each one does, and “Try this” activities.'],
