@@ -12,13 +12,14 @@ module.exports = {
     title: 'Hexapod Pi Zero 2 W',
     subtitle: 'User Manual',
     docNo: 'HXP-UM-001',
-    revision: 'J',
+    revision: 'K',
     date: '5 November 2026',
     status: 'Draft for review',
     scope: 'Raspberry Pi Zero 2 W version of the hexapod walking robot',
   },
 
   revisions: [
+    ['K', '5 November 2026', 'How to launch the Live View web app: quick start, step-by-step, which address to use, and what to do if it does not open (Section 8.1).'],
     ['J', '5 November 2026', 'Pi IP address on the Robocop network updated to 10.52.126.57 (Sections 6.2, 8.1 and 8.2).'],
     ['I', '5 November 2026', 'The robot\u2019s work Wi-Fi network (access point) is **Robocop** (Sections 6.1 and 8.1\u20138.2).'],
     ['H', '5 November 2026', 'Wiring schematic Rev C: RPLIDAR C1 360\u00b0 laser scanner (planned) on a USB hub at the Pi\u2019s USB port, with the Servo 2040 power lead. Pi supply raised to 3 A (Sections 5.2, 5.4 and 5.5).'],
@@ -335,10 +336,32 @@ module.exports = {
       subsections: [
         {id: 'web-view', title: 'Live View (web page for teaching)', blocks: [
           {p: 'The Pi serves a **Live View** web page that shows, as it happens, how the robot moves and how a command travels from the controller to the servos. It is designed for showing students how the robot works. It starts automatically with the driving service; nothing needs to be installed on the viewing devices.'},
+          {callout: {kind: 'note', title: 'Quick start', text: 'Switch the robot on and wait about a minute. Join the **Robocop** Wi-Fi network, then open **http://hexapod.local:5181** in a web browser. On a phone, use **http://10.52.126.57:5181**.'}},
+          {p: '**Launching the web app**'},
+          {p: 'There is nothing to start or install. The web app runs on the robot’s Raspberry Pi and starts by itself with the driving service each time the robot is switched on. Any device with a web browser can open it.'},
           {steps: [
-            'Connect the phone, tablet or laptop to the **same Wi-Fi network** as the robot: at work this is **Robocop**.',
-            {text: 'Open a web browser (Chrome, Edge, Safari or Firefox) and go to the Pi’s address on port 5181. If `hexapod.local` is not found, use the Pi’s IP address instead (10.52.126.57 on the Robocop network when this manual was written; check the router if it has changed). In offline mode (Section 8.2) it is always 10.42.0.1:', code: ['http://hexapod.local:5181', 'http://10.52.126.57:5181', 'http://10.42.0.1:5181']},
+            'Turn on the robot’s main switch and wait **about 1 minute** for the Raspberry Pi to start.',
+            'Connect the phone, tablet or laptop to the **same Wi-Fi network** as the robot: at work this is **Robocop**. Away from a saved network, join the robot’s own network **Hexapod-6607** instead (Section 8.2).',
+            {text: 'Open a web browser (Chrome, Edge, Safari or Firefox) and type one of these addresses in the address bar:', code: ['http://hexapod.local:5181', 'http://10.52.126.57:5181', 'http://10.42.0.1:5181']},
+            'Type `http://` (not `https://`) and include `:5181` at the end. If `hexapod.local` is not found, which is common on Android phones, use the number address instead.',
+            'Bookmark the page, or on a phone or tablet choose **Add to Home Screen**, so it opens with one tap next time.',
+            'To get a class connected, press **Join** at the top of the page and show it on the projector: students scan the QR code with their phone camera.',
             'Drive the robot with the Xbox controller as usual. The page updates on every viewer at the same time.',
+          ]},
+          {table: {caption: 'Which address to use', head: ['Where the robot is', 'Devices join', 'Web app address'], widths: [2600, 2400, 4026], rows: [
+            ['At work', 'Robocop', 'http://hexapod.local:5181 or http://10.52.126.57:5181'],
+            ['No saved network (offline mode)', 'Hexapod-6607 (the robot’s hotspot)', 'http://10.42.0.1:5181 (always the same)'],
+            ['Practising without the robot', 'Not needed', 'http://localhost:5182 after `npm run live-demo` on your own computer'],
+          ]}},
+          {p: 'The number address (10.52.126.57) was correct when this manual was written. The router hands it out, so it can change after a restart. To find the current one, look for **hexapod** in the router’s list of devices, or log in to the Pi and run:'},
+          {code: ['hostname -I']},
+          {p: '**If the page does not open**'},
+          {steps: [
+            'Check the device really is on the same network as the robot, and turn off mobile data on phones for a moment.',
+            'Wait a little longer: the page is ready about 1 minute after power-on.',
+            'If it works from one device but not from another on Robocop, the network may block devices from reaching each other. Use the robot’s hotspot instead (Section 8.2).',
+            {text: 'Check that the driving service, which also runs the web app, is running. It should show **active (running)**:', code: ['systemctl status hexapod-drive']},
+            {text: 'If it is not running, restart it. First make the robot **sit (X)** and switch the **motors off (View)**, because a restart drops the robot:', code: ['sudo systemctl restart hexapod-drive']},
           ]},
           {p: 'The page is split into five pages. On a laptop or larger screen they are listed in a side panel on the left; on a tablet or phone they are in a menu along the top. Each page has its own address (for example `http://hexapod.local:5181/#servos`), so one page can be projected or shared.'},
           {table: {caption: 'Live View pages', head: ['Page', 'What it shows'], widths: [2600, 6426], rows: [
