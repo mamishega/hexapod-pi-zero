@@ -7,6 +7,7 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 
 const TOKEN_HOURS = 12;
+const LESSON_IDLE_MS = 3 * 3600e3;
 const PAGES = ['live', 'controller', 'how', 'servos', 'health', 'care', 'sessions', 'messages'];
 const VIEWS = ['angled', 'top', 'front', 'side'];
 
@@ -36,6 +37,7 @@ export function createClassroom({code, now = Date.now} = {}) {
       if (!code || !same(text, code)) return null;
       const token = crypto.randomBytes(18).toString('base64url');
       tokens.set(token, now() + TOKEN_HOURS * 3600e3);
+      while (tokens.size > 20) tokens.delete(tokens.keys().next().value); // the oldest logins expire first
       return token;
     },
     isTeacher(token) {
@@ -56,7 +58,8 @@ export function createClassroom({code, now = Date.now} = {}) {
       changed('follow');
       return true;
     },
-    get follow() { return follow; },
+    // A lesson left running (the teacher closed the tab) ends by itself after 3 hours without a change.
+    get follow() { if (follow.active && now() - follow.t > LESSON_IDLE_MS) follow = {...follow, active: false}; return follow; },
     // One anonymous answer per device per question (a device may change its mind).
     answer(client, question, choice) {
       if (!/^[A-Za-z0-9_-]{6,40}$/.test(String(client || '')) || !/^[a-z0-9-]{1,60}$/.test(String(question || '')) || !Number.isInteger(choice) || choice < 0 || choice > 7) return false;

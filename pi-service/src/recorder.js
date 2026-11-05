@@ -18,7 +18,10 @@ const MIN_SESSION_MS = 5000;    // shorter sessions (a quick enable/disable) are
 export const LEGS = ['L1', 'L2', 'L3', 'R1', 'R2', 'R3'], JOINTS = ['hip', 'upper', 'knee'];
 const r1 = v => (Number.isFinite(v) ? Math.round(v * 10) / 10 : null);
 const r2 = v => (Number.isFinite(v) ? Math.round(v * 100) / 100 : null);
-const stamp = t => new Date(t).toISOString().replace(/[-:]/g, '').replace('T', '-').slice(0, 15); // 20261105-143012
+// Local date and time as an id and file name: 20261105-143012
+const pad2 = n => String(n).padStart(2, '0');
+const stamp = t => { const d = new Date(t); return `${d.getFullYear()}${pad2(d.getMonth() + 1)}${pad2(d.getDate())}-${pad2(d.getHours())}${pad2(d.getMinutes())}${pad2(d.getSeconds())}`; };
+const MEMORY_ROWS = 7200; // without a folder (the demo): keep the last hour of rows
 
 export const CSV_HEADER = ['time_s', 'motors', 'walking', 'gait', 'speed', 'step_height', 'stride', 'voltage', 'current', 'controller', 'balance_mm',
   ...LEGS.flatMap(l => JOINTS.map(j => `${l}_${j}`))].join(',');
@@ -29,13 +32,14 @@ export function createRecorder({dir = null, now = Date.now, maxBytes = 50 * 1024
   let session = null, pad = false, lastRow = -Infinity, lastFlush = -Infinity, prevPositions = null;
   const pending = []; // incidents still collecting their "after" frames
   const memory = [];  // finished incidents when there is no folder to save them in (the demo)
+  const memorySessions = []; // finished sessions without a folder (the demo)
   const safe = fn => { try { return fn(); } catch (error) { log(`Recorder: ${error.message}`); return undefined; } };
   const ensure = d => d && fsModule.mkdirSync(d, {recursive: true});
 
   // ---------------------------------------------------------------- saved files
   const indexFile = () => path.join(sessionsDir, 'index.json');
   function readIndex() {
-    if (!sessionsDir) return [];
+    if (!sessionsDir) return memorySessions;
     try { const list = JSON.parse(fsModule.readFileSync(indexFile(), 'utf8')); return Array.isArray(list) ? list : []; } catch { return []; }
   }
   function writeIndex(list) { ensure(sessionsDir); fsModule.writeFileSync(indexFile(), JSON.stringify(list)); }
@@ -50,6 +54,7 @@ export function createRecorder({dir = null, now = Date.now, maxBytes = 50 * 1024
     return list;
   }
   function flush(force = false) {
+    if (session && !sessionsDir && session.rows.length > MEMORY_ROWS) session.rows.splice(0, session.rows.length - MEMORY_ROWS);
     if (!session || !sessionsDir || (!force && now() - lastFlush < FLUSH_MS) || !session.rows.length) return;
     lastFlush = now();
     safe(() => {
@@ -79,7 +84,35 @@ export function createRecorder({dir = null, now = Date.now, maxBytes = 50 * 1024
       if (!keep) { try { fsModule.unlinkSync(path.join(sessionsDir, `${session.id}.csv`)); } catch {} return; }
       writeIndex(prune([...readIndex().filter(s => s.id !== session.id), summary(session)]));
     });
+    else if (keep) { memorySessions.push({...summary(session), csv: `${CSV_HEADER}\n${session.rows.join('\n')}\n`}); while (memorySessions.length > 20) memorySessions.shift(); }
     session = null;
+  }
+
+  // Sessions cut short by switching the robot off (no chance to finish): list them from their CSV
+  // files, so they can still be downloaded and count towards the size limit.
+  function recover() {
+    if (!sessionsDir) return;
+    safe(() => {
+      const list = readIndex(), known = new Set(list.map(s => s.id));
+      let files = [];
+      try { files = fsModule.readdirSync(sessionsDir); } catch { return; }
+      const lost = files.map(f => /^([0-9]{8}-[0-9]{6})\.csv$/.exec(f)?.[1]).filter(id => id && !known.has(id));
+      if (!lost.length) return;
+      for (const id of lost) {
+        const m = /^(\d{4})(\d\d)(\d\d)-(\d\d)(\d\d)(\d\d)$/.exec(id), start = new Date(+m[1], m[2] - 1, +m[3], +m[4], +m[5], +m[6]).getTime();
+        let seconds = null;
+        try { const last = fsModule.readFileSync(path.join(sessionsDir, `${id}.csv`), 'utf8').trim().split('\n').at(-1); seconds = Math.round(Number(last.split(',')[0])) || null; } catch {}
+        list.push({id, start, end: seconds === null ? null : start + seconds * 1000, seconds, activeSeconds: seconds, walkingSeconds: null, distanceM: null, gaits: [],
+          minVoltage: null, maxCurrent: null, avgCurrent: null, incidents: 0, file: true, recovered: true});
+      }
+      list.sort((a, b) => a.start - b.start);
+      writeIndex(prune(list));
+    });
+  }
+  recover();
+  // An incident still waiting for its "after" frames is saved once its time is up, even if updates stopped.
+  function settle() {
+    for (const inc of pending.slice()) if (now() >= inc.until) { saveIncident(inc); pending.splice(pending.indexOf(inc), 1); }
   }
 
   // ---------------------------------------------------------------- incidents
@@ -103,10 +136,8 @@ export function createRecorder({dir = null, now = Date.now, maxBytes = 50 * 1024
         v: r2(p?.voltage), a: r2(p?.current), pad} : {t, positions: null, angles: null, active: false, walking: null, v: null, a: null, pad};
       frames.push(frame);
       while (frames.length && frames[0].t < t - KEEP_MS) frames.shift();
-      for (const inc of pending.slice()) {
-        inc.frames.push(frame);
-        if (t >= inc.until) { saveIncident(inc); pending.splice(pending.indexOf(inc), 1); }
-      }
+      for (const inc of pending) inc.frames.push(frame);
+      settle();
       // Session bookkeeping
       if (frame.active) { if (!session) startSession(t); session.offSince = null; }
       else if (session && session.offSince === null) session.offSince = t;
@@ -143,18 +174,19 @@ export function createRecorder({dir = null, now = Date.now, maxBytes = 50 * 1024
     },
     // The current session (live) and the saved ones, newest first.
     sessions() {
-      const list = readIndex().slice().reverse();
+      const list = readIndex().map(({csv, ...s}) => s).reverse();
       return session ? [{...summary(session), current: true}, ...list.filter(s => s.id !== session.id)] : list;
     },
     // CSV text of one session (saved part, plus what is still waiting to be written).
     csv(id) {
       if (!/^[0-9]{8}-[0-9]{6}$/.test(id || '')) return null;
-      let text = null;
+      let text = memorySessions.find(s => s.id === id)?.csv ?? null;
       if (sessionsDir) try { text = fsModule.readFileSync(path.join(sessionsDir, `${id}.csv`), 'utf8'); } catch {}
       if (session?.id === id && session.rows.length) text = (text || `${CSV_HEADER}\n`) + `${session.rows.join('\n')}\n`;
       return text;
     },
     incidents() {
+      settle();
       const out = [...pending.map(i => ({id: i.id, t: i.t, text: i.text, saving: true})), ...memory.map(i => ({id: i.id, t: i.t, text: i.text, frames: i.frames.length}))];
       if (incidentsDir) safe(() => {
         for (const f of fsModule.readdirSync(incidentsDir).filter(n => /\.json$/.test(n)).sort().reverse()) {
@@ -165,6 +197,7 @@ export function createRecorder({dir = null, now = Date.now, maxBytes = 50 * 1024
     },
     incident(id) {
       if (!/^[0-9]{8}-[0-9]{6}-[a-z0-9]{1,6}$/.test(id || '')) return null;
+      settle();
       const p = pending.find(i => i.id === id);
       if (p) return {id: p.id, t: p.t, text: p.text, frames: p.frames, saving: true};
       const m = memory.find(i => i.id === id);

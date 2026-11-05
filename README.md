@@ -6,7 +6,7 @@
 ![Platform](https://img.shields.io/badge/Raspberry%20Pi-Zero%202%20W-c51a4a)
 ![Board](https://img.shields.io/badge/Servo%202040-MicroPython-5e35b1)
 ![Node](https://img.shields.io/badge/Node.js-%E2%89%A518-339933)
-![Tests](https://img.shields.io/badge/tests-62%20passing-2e7d32)
+![Tests](https://img.shields.io/badge/tests-65%20passing-2e7d32)
 ![Manual](https://img.shields.io/badge/manual-rev%20M-0d7a69)
 
 A Raspberry Pi Zero 2 W mounted on the robot reads an Xbox controller over Bluetooth, checks every
@@ -199,7 +199,7 @@ with a class** (manual, Section 8.2).
 ```sh
 cd pi-service
 npm install
-npm test             # 62 unit tests
+npm test             # 65 unit tests
 npm run live-demo    # Live View with a simulated robot: http://localhost:5182
 ```
 

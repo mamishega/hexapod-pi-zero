@@ -8,7 +8,7 @@ import {drawPower} from './power-chart.js';
 import {createInspector} from './messages.js';
 import {drawLegInspector} from './leg-inspector.js';
 import {fillJoin} from './join.js';
-import {renderAlerts, renderHealth, renderCare, runtimeText} from './health-view.js';
+import {renderAlerts, renderHealth, renderCare} from './health-view.js';
 import {renderBattery, renderGaits, renderSessions, renderIncidents, createIncidentPlayer} from './sessions-view.js';
 import {createClassroomUI} from './classroom-view.js';
 

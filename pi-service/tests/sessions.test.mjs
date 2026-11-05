@@ -128,6 +128,14 @@ test('classroom: teacher code, following, questions and anonymous answers', () =
   assert.equal(room.clearAnswers(token, 'walking-tripod'), true); assert.equal(room.tally('walking-tripod').total, 0);
 });
 
+test('classroom: a lesson left running ends by itself after 3 hours', () => {
+  let t = 0; const room = createClassroom({code: '1111', now: () => t});
+  const token = room.login('1111');
+  room.setFollow(token, {active: true, page: 'how'});
+  t = 2 * 3600e3; assert.equal(room.follow.active, true);
+  t = 3.1 * 3600e3; assert.equal(room.follow.active, false);
+});
+
 test('teacher code and version files', () => {
   const dir = tmp(), file = path.join(dir, 'teacher-code');
   assert.equal(teacherCode({code: '2468', file}), '2468');
@@ -186,4 +194,30 @@ test('web routes: status, sessions, CSV, incidents, teacher and answers (with li
   for (let i = 0; i < 35 && !limited; i++) limited = (await request(port, 'POST', '/answer', {client: 'phone-123456', question: 'signal-uart', choice: 1})).status === 429;
   assert.equal(limited, true, 'too many requests are refused');
   } finally { await live.close(); }
+});
+
+test('recorder: a session cut short by switching off is recovered at the next start', () => {
+  let t = new Date(2026, 10, 5, 9, 30, 0).getTime(); const dir = tmp();
+  const first = createRecorder({dir, now: () => t});
+  for (let i = 0; i < 300; i++, t += 100) first.robot(snap()); // 30 s, CSV written every 10 s, then the power goes off
+  const id = first.sessions()[0].id;
+  assert.equal(id, '20261105-093000', 'named by the local start time');
+  const after = createRecorder({dir, now: () => t + 3600e3});
+  const [s] = after.sessions();
+  assert.equal(s.id, id); assert.equal(s.recovered, true); assert.ok(s.seconds >= 19 && s.seconds <= 30, `${s.seconds} s`);
+  assert.ok(after.csv(id).startsWith('time_s,'));
+  fs.rmSync(dir, {recursive: true, force: true});
+});
+
+test('recorder: an incident is finished even if updates stop, and demo sessions stay listed', () => {
+  let t = 1e12; const rec = createRecorder({now: () => t});
+  for (let i = 0; i < 100; i++, t += 100) rec.robot(snap());
+  const id = rec.event({t, level: 'bad', text: 'Servo 2040 link lost'});
+  t += 6000; // no more updates: the link is down
+  assert.equal(rec.incidents()[0].saving, undefined);
+  assert.equal(rec.incident(id).text, 'Servo 2040 link lost');
+  for (let i = 0; i < 400; i++, t += 100) rec.robot(snap({active: false}));
+  const list = rec.sessions();
+  assert.equal(list.length, 1, 'kept in memory without a folder'); assert.equal(list[0].csv, undefined, 'the list does not carry the CSV');
+  assert.ok(rec.csv(list[0].id).split('\n').length > 10);
 });

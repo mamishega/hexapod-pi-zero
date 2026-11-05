@@ -112,6 +112,7 @@ export function createIncidentPlayer(els) {
   els.close.addEventListener('click', () => { setPlaying(false); els.card.hidden = true; data = null; });
   return {
     async open(id) {
+      setPlaying(false); // stop a replay that is already running
       els.card.hidden = false; els.title.textContent = 'Loading…'; els.svg.innerHTML = '';
       try {
         const res = await fetch(`incidents/${encodeURIComponent(id)}`, {cache: 'no-store'});
