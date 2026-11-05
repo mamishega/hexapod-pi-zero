@@ -3,7 +3,11 @@
 // servos with gold horns, carbon upper-leg plates and curved red feet (see images/labelled/).
 // Plain SVG strings, no library: each part is a box or plate whose hidden faces are skipped and
 // whose visible faces are painted far-to-near along the camera's viewing direction.
-import {legJoints, project} from './motion-geometry.js';
+import {legJoints, project as viewProject} from './motion-geometry.js';
+
+// cam: a view name ('angled', 'top', 'front', 'side') or a custom camera {project(p) -> [x, y],
+// dir: unit vector towards the camera} (used for the manual's renders).
+const project = (p, cam) => (typeof cam === 'object' ? cam.project(p) : viewProject(p, cam));
 
 const add = (a, b) => [a[0] + b[0], a[1] + b[1], a[2] + b[2]];
 const sub = (a, b) => [a[0] - b[0], a[1] - b[1], a[2] - b[2]];
@@ -29,14 +33,14 @@ const C = {
   shell: [36, 39, 44], chassis: [30, 33, 37], carbon: [48, 52, 58], servo: [34, 36, 40],
   hipServo: [168, 26, 38], sensor: [200, 24, 30], foot: [208, 32, 38], gold: [226, 162, 44],
 };
-const shade = (rgb, n, lift = 0) => {
-  const k = 0.42 + 0.7 * Math.max(0, dot(n, LIGHT)) + lift;
+const shade = (rgb, n, lift = 0, light = LIGHT) => {
+  const k = 0.42 + 0.7 * Math.max(0, dot(n, light)) + lift;
   return `rgb(${rgb.map(v => Math.round(Math.min(255, v * k + 6))).join(',')})`;
 };
 
 // A list of painted shapes for one group (a leg, or the body), sorted by depth when output.
 class Mesh {
-  constructor(cam) { this.cam = cam; this.v = VIEW_DIR[cam] ?? VIEW_DIR.angled; this.items = []; }
+  constructor(cam) { this.cam = cam; this.v = typeof cam === 'object' ? cam.dir : VIEW_DIR[cam] ?? VIEW_DIR.angled; this.light = (typeof cam === 'object' && cam.light) || LIGHT; this.items = []; }
   pt(p) { return project(p, this.cam).map(v => v.toFixed(1)).join(','); }
   pts(list) { return list.map(p => this.pt(p)).join(' '); }
   depth(p) { return dot(p, this.v); }
@@ -45,7 +49,7 @@ class Mesh {
   face(pts, n, rgb, {extra = '', bias = 0, stroke = 'rgba(0,0,0,.45)', glow = false} = {}) {
     if (dot(n, this.v) <= 0.015) return false;
     const line = glow ? 'stroke="#e7f7bc" stroke-width="2"' : `stroke="${stroke}" stroke-width=".8"`;
-    this.raw(this.depth(avg(pts)) + bias, `<polygon points="${this.pts(pts)}" fill="${shade(rgb, n)}" ${line} stroke-linejoin="round"/>${extra}`);
+    this.raw(this.depth(avg(pts)) + bias, `<polygon points="${this.pts(pts)}" fill="${shade(rgb, n, 0, this.light)}" ${line} stroke-linejoin="round"/>${extra}`);
     return true;
   }
   // A box: centre c, unit axes ax[3] (perpendicular), half-sizes h[3]. decorate(axis, sign) may
@@ -121,7 +125,7 @@ export function legSvg(joints, i, theta, cam, lifted = false) {
     return `<polygon points="${m.pts([...a, ...b])}" fill="#2a0c0f" opacity=".9"/>`;
   };
   const footDepth = m.depth(avg(centre));
-  m.raw(footDepth - 0.4, `<polyline points="${m.pts(centre)}" fill="none" stroke="${shade(C.foot, UP, -0.1)}" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>`);
+  m.raw(footDepth - 0.4, `<polyline points="${m.pts(centre)}" fill="none" stroke="${shade(C.foot, UP, -0.1, m.light)}" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>`);
   for (const s of [-1, 1]) {
     const side = mul(w, 4.5 * s), outline = [...outer.map(p => add(p, side)), ...[...inner].reverse().map(p => add(p, side))];
     m.face(outline, mul(w, s), C.foot, {glow: lifted, extra: cutout(0.12, 0.42, 4.6 * s) + cutout(0.5, 0.76, 4.6 * s)});
