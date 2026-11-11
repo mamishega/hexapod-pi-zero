@@ -7,7 +7,7 @@
 ![Board](https://img.shields.io/badge/Servo%202040-MicroPython-5e35b1)
 ![Node](https://img.shields.io/badge/Node.js-%E2%89%A518-339933)
 ![Tests](https://img.shields.io/badge/tests-65%20passing-2e7d32)
-![Manual](https://img.shields.io/badge/manual-rev%20M-0d7a69)
+![Manual](https://img.shields.io/badge/manual-rev%20N-0d7a69)
 
 A Raspberry Pi Zero 2 W mounted on the robot reads an Xbox controller over Bluetooth, checks every
 movement against reach and joint limits, and sends walking commands to a Pimoroni Servo 2040, which
@@ -61,7 +61,7 @@ Xbox controller ──Bluetooth──▶ Raspberry Pi Zero 2 W ──UART──�
 | Part | Role |
 |---|---|
 | Raspberry Pi Zero 2 W | Runs the driving service and the Live View. Raspberry Pi OS Lite (64-bit), hostname `hexapod`, user `kangan`. |
-| Pimoroni Servo 2040 | Runs `motion_bridge.py`: gait, inverse kinematics and servo output every 20 ms. |
+| Pimoroni Servo 2040 | Runs `motion_bridge.py` (in `software/board-files/`): gait, inverse kinematics and servo output every 20 ms. |
 | 18 servos | Three per leg (hip, upper leg, lower leg) on outputs 1–18. |
 | Xbox Wireless Controller | Driver input, over Bluetooth. Keep its firmware up to date. |
 | Battery, main switch and fuse | Servo power, with the switch and fuse on the + wire only. |
@@ -78,8 +78,8 @@ Xbox controller ──Bluetooth──▶ Raspberry Pi Zero 2 W ──UART──�
 | Pin 6, GND | GND |
 | Pin 1, 3V3 | **Not connected** |
 
-The full wiring is in [`Wiring Schematic.pdf`](Wiring%20Schematic.pdf) (Rev C, print on A3). An
-interactive version is in [`Circuit Studio/`](Circuit%20Studio/).
+The full wiring is in [`docs/wiring/wiring-schematic.pdf`](docs/wiring/wiring-schematic.pdf) (Rev C, print on A3). An
+interactive version is in [`docs/wiring/circuit-studio/`](docs/wiring/circuit-studio/).
 
 ## Quick start
 
@@ -87,7 +87,7 @@ interactive version is in [`Circuit Studio/`](Circuit%20Studio/).
 
 1. **Wire and power** the robot (manual, Section 5).
 2. **Set up the Pi** with Raspberry Pi Imager (manual, Section 6): hostname `hexapod`, user `kangan`, Wi-Fi **Robocop**, country **AU**.
-3. **Install the software.** On the Mac:
+3. **Install the software.** On the Mac, from the `software` folder:
    ```sh
    scp -r pi-service kangan@hexapod.local:~/
    ```
@@ -98,7 +98,7 @@ interactive version is in [`Circuit Studio/`](Circuit%20Studio/).
    sudo bash deploy/wifi/install-wifi.sh   # offline (hotspot) mode
    sudo reboot
    ```
-4. **Update the Servo 2040.** In Thonny, copy the files in [`Board Files/`](Board%20Files/) to the board. Keep `calibration_offsets.json` and `joint_limits.json` on the board.
+4. **Update the Servo 2040.** In Thonny, copy the files in [`software/board-files/`](software/board-files/) to the board. Keep `calibration_offsets.json` and `joint_limits.json` on the board.
 5. **Test the link and set up the controller.** On the Pi:
    ```sh
    sudo systemctl stop hexapod-drive
@@ -120,7 +120,7 @@ The web app starts by itself with the robot. There is nothing to launch or insta
 |---|---|
 | At work (Robocop) | **http://hexapod.local:5181**, or **http://10.52.126.57:5181** on phones |
 | Robot's hotspot (offline) | **http://10.42.0.1:5181** |
-| Demo on your own computer | **http://localhost:5182**, after `npm run live-demo` in `pi-service` |
+| Demo on your own computer | **http://localhost:5182**, after `npm run live-demo` in `software/pi-service` |
 
 Type `http://`, not `https://`. The number address comes from the router and can change after a
 restart: run `hostname -I` on the Pi to check it. To get a class connected, press **Join** and
@@ -169,35 +169,44 @@ with a class** (manual, Section 8.2).
 
 ```
 .
-├── pi-service/          Program on the Pi (Node.js)
-│   ├── src/             Driving service, controller input, Live View server, serial link
-│   ├── live/            Live View web app (plain ES modules, no build step)
-│   ├── deploy/          systemd service, installer, Wi-Fi / hotspot manager
-│   ├── tools/           link-test, controller-setup/test, live-demo, QR checks
-│   ├── tests/           Unit tests (node --test)
-│   └── vendor/          Shared robot controller code (do not edit)
-├── Board Files/         MicroPython program for the Servo 2040
-├── source/              Manual and schematic sources (content.js, make_schematic.py, ...)
-├── Web Manual/          User manual as a web page
-├── Circuit Studio/      Interactive schematic: project file and share link
-├── User Manual.docx     User manual (Word)
-├── Wiring Schematic.*   Wiring schematic (PDF, PNG, SVG)
-└── Plan.docx            Project plan
+├── software/
+│   ├── pi-service/              Program on the Pi (Node.js)
+│   │   ├── src/                 Driving service, controller input, Live View server, serial link
+│   │   ├── live/                Live View web app (plain ES modules, no build step)
+│   │   ├── deploy/              systemd service, installer, Wi-Fi / hotspot manager
+│   │   ├── tools/               link-test, controller-setup/test, live-demo, deploy, QR checks
+│   │   ├── tests/               Unit tests (node --test)
+│   │   └── vendor/              Shared robot controller code (do not edit)
+│   └── board-files/             MicroPython program for the Servo 2040
+└── docs/
+    ├── manual/
+    │   ├── user-manual.docx     User manual (Word)
+    │   ├── web-manual/          User manual as a web page
+    │   └── src/                 Manual source (content.js) and build scripts
+    ├── wiring/
+    │   ├── wiring-schematic.*   Wiring schematic (PDF, PNG, SVG)
+    │   ├── circuit-studio/      Interactive schematic: project file and share link
+    │   └── src/                 Schematic and Circuit Studio generators
+    └── planning/
+        ├── plan.docx            Project plan
+        ├── live-view-improvement-plan.docx
+        └── src/                 Improvement plan generator
 ```
 
 ## Documentation
 
 | Document | Contents |
 |---|---|
-| [`User Manual.docx`](User%20Manual.docx) / [`Web Manual/index.html`](Web%20Manual/index.html) | Safety, wiring, Pi setup, controller pairing, driving, Live View, offline mode, troubleshooting and maintenance (revision M) |
-| [`pi-service/README.md`](pi-service/README.md) | Step-by-step install and everyday use of the Pi program |
-| [`Wiring Schematic.pdf`](Wiring%20Schematic.pdf) | Wiring diagram, Rev C, A3 |
-| [`Circuit Studio/`](Circuit%20Studio/) | The schematic in [Circuit Studio](https://circuit-studio.pages.dev/): double-click `Open in Circuit Studio.webloc`, or load the `.json` with **Open** |
+| [`user-manual.docx`](docs/manual/user-manual.docx) / [`web-manual/index.html`](docs/manual/web-manual/index.html) | Safety, wiring, Pi setup, controller pairing, driving, Live View, offline mode, troubleshooting and maintenance (revision N) |
+| [`software/pi-service/README.md`](software/pi-service/README.md) | Step-by-step install and everyday use of the Pi program |
+| [`wiring-schematic.pdf`](docs/wiring/wiring-schematic.pdf) | Wiring diagram, Rev C, A3 |
+| [`circuit-studio/`](docs/wiring/circuit-studio/) | The schematic in [Circuit Studio](https://circuit-studio.pages.dev/): double-click `open-in-circuit-studio.webloc`, or load the `.json` with **Open** |
+| [`docs/planning/`](docs/planning/) | Project plan and Live View improvement plan (Word) |
 
 ## Development
 
 ```sh
-cd pi-service
+cd software/pi-service
 npm install
 npm test             # 65 unit tests
 npm run live-demo    # Live View with a simulated robot: http://localhost:5182
@@ -206,14 +215,16 @@ npm run live-demo    # Live View with a simulated robot: http://localhost:5182
 Rebuild the documents after editing their sources:
 
 ```sh
-cd source
-npm install                                         # once
-npm run build                                       # User Manual.docx + Web Manual
-python3 make_schematic.py ..                        # Wiring Schematic.svg (then export PNG / PDF)
-node make_circuit_studio.mjs "../Circuit Studio"    # Circuit Studio project and link
+cd docs/wiring/src
+python3 make_schematic.py ..                    # wiring-schematic.svg (then export PNG / PDF)
+node make_circuit_studio.mjs ../circuit-studio  # Circuit Studio project and link
+
+cd ../../manual/src
+npm install                                     # once
+npm run build                                   # user-manual.docx + web-manual/
 ```
 
-To update the robot, run `npm run deploy` in `pi-service` (or `npm run deploy -- <pi-address>`). It copies the
+To update the robot, run `npm run deploy` in `software/pi-service` (or `npm run deploy -- <pi-address>`). It copies the
 software, records the version, keeps the controller setup and saved data, and restarts the service only once
 the motors are off, because a restart drops the robot.
 

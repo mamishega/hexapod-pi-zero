@@ -4,10 +4,13 @@ node_modules/
 .DS_Store
 ~$*
 # Written on the Pi by `npm run controller-setup` (one per controller)
-pi-service/controller-map.json
-pi-service/controller-map.json.bak
+software/pi-service/controller-map.json
+software/pi-service/controller-map.json.bak
 
 # Photos and videos of the real robot stay on this computer only (not published).
 images/
 # Written by tools/deploy.sh on the copy sent to the robot
-pi-service/VERSION
+software/pi-service/VERSION
+
+# Helper page written by docs/wiring/src/make_schematic.py for PDF / PNG export
+docs/wiring/schematic.html

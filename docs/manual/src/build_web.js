@@ -1,5 +1,5 @@
 // Builds the web manual (one self-contained, offline HTML file) from content.js.
-// Usage: node build_web.js <out/index.html> <Wiring Schematic.svg>
+// Usage: node build_web.js <out/index.html> <wiring-schematic.svg>
 const fs = require('fs');
 const manual = require('./content.js');
 const [out, schematicSvg] = process.argv.slice(2);

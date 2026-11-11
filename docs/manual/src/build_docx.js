@@ -1,4 +1,4 @@
-// Builds "User Manual.docx" from content.js.  Usage: node build_docx.js <out.docx> <schematic.png>
+// Builds user-manual.docx from content.js.  Usage: node build_docx.js <out.docx> <schematic.png>
 const fs = require('fs');
 const path = require('path');
 const {

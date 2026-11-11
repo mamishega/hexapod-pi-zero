@@ -35,7 +35,7 @@ In the steps below, each command says **where** to type it:
 
 ### Step 1. Copy this folder to the Pi
 
-🖥️ **Mac**, from the `Hexapod Pi Zero 2 W` folder:
+🖥️ **Mac**, from the `software` folder of this repository:
 
 ```sh
 scp -r pi-service kangan@hexapod.local:~/
@@ -61,7 +61,7 @@ The installer:
 
 🐍 **Thonny**, with the Servo 2040 plugged into the Mac by USB-C and the robot's power off:
 
-1. Copy the 4 files from the **`Board Files`** folder onto the board:
+1. Copy the 4 files from the **`software/board-files`** folder onto the board:
    `main.py`, `motion_bridge.py`, `FUNCTIONS.py`, `calibration_store.py`.
    **Do not delete** `calibration_offsets.json` or `joint_limits.json` on the board.
 2. Open `check_and_restart.py` and click **Run**.
@@ -202,7 +202,7 @@ such as `Environment=HEXAPOD_SERIAL=/dev/ttyACM0`.
 | `vendor/` | Shared code copied from the Motion Trainer project. **Do not edit here.** |
 | `tests/` | Automated tests |
 
-**Shared code.** `vendor/` and `../Board Files/` are copies from the Motion Trainer project.
+**Shared code.** `vendor/` and `../board-files/` are copies from the Motion Trainer project.
 Change them there, then 🖥️ **Mac**: `npm run sync`. `vendor/SOURCE.txt` shows which version was copied.
 
 **Tests.** 🖥️ **Mac**: `npm test` (19 tests, using a simulated robot).

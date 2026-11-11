@@ -12,13 +12,14 @@ module.exports = {
     title: 'Hexapod Pi Zero 2 W',
     subtitle: 'User Manual',
     docNo: 'HXP-UM-001',
-    revision: 'M',
-    date: '5 November 2026',
+    revision: 'N',
+    date: '12 November 2026',
     status: 'Draft for review',
     scope: 'Raspberry Pi Zero 2 W version of the hexapod walking robot',
   },
 
   revisions: [
+    ['N', '12 November 2026', 'Project folders renamed: the Pi program is in **software/pi-service** and the Servo 2040 program in **software/board-files**; the schematic is **docs/wiring/wiring-schematic.pdf** (Sections 5.2, 6.4 and 8.1).'],
     ['M', '5 November 2026', 'Live View: **Sessions** page (gait scores, battery time left and use by activity, recorded sessions as CSV files, incident replays); **follow-the-teacher** mode with lesson cards and anonymous questions; projector mode; add to home screen; software version shown; safe update command `npm run deploy` (Sections 6.4 and 8.1).'],
     ['L', '5 November 2026', 'Live View: new **Health** page (battery, Pi power and temperature, controller, board link, events, warning banner) and **Servo care** page (servo travel, time near the end of travel, calibration offsets, hardest-working servos). Realistic 3D robot drawn as built (Section 8.1).'],
     ['K', '5 November 2026', 'How to launch the Live View web app: quick start, step-by-step, which address to use, and what to do if it does not open (Section 8.1).'],
@@ -158,7 +159,7 @@ module.exports = {
           {callout: {kind: 'verify', title: 'Check how the Servo 2040 is powered', text: 'Tested on this robot: the servo power terminal powers the servos only, not the Servo 2040\u2019s processor. Without a 5 V supply on its USB-C port the board does not start, and the Pi reports \u201cBoard link: offline\u201d. The lead from the Pi\u2019s USB port (Section 5.4) provides this, so no laptop is needed.'}},
         ]},
         {id: 'diagram', title: 'Wiring diagram', blocks: [
-          {figure: {src: 'schematic', caption: 'Wiring schematic. Print Wiring Schematic.pdf (A3) and keep it with the robot.'}},
+          {figure: {src: 'schematic', caption: 'Wiring schematic. Print docs/wiring/wiring-schematic.pdf (A3) and keep it with the robot.'}},
         ]},
         {id: 'serial-link', title: 'Serial link connections', blocks: [
           {table: {caption: 'Serial (UART) link: Raspberry Pi to Servo 2040', head: ['Raspberry Pi Zero 2 W', 'Servo 2040 (Qw/ST connector)', 'Notes'], widths: [2900, 3000, 3126], rows: [
@@ -249,19 +250,19 @@ module.exports = {
           {callout: {kind: 'note', text: 'Older Xbox One S controllers may not pair, or may report the wrong buttons. Install the xpadneo driver and pair again, or use a Series X|S controller.'}},
         ]},
         {id: 'software', title: 'Install the hexapod software', blocks: [
-          {p: 'The software is in the **pi-service** and **Board Files** folders next to this manual. The driving service starts automatically at boot once installed.'},
+          {p: 'The software is in the project folder: **software/pi-service** (the program on the Pi) and **software/board-files** (the Servo 2040 program). The driving service starts automatically at boot once installed.'},
           {callout: {kind: 'note', text: 'Tested on the robot. Keep the body supported for the first test after any change.'}},
           {steps: [
-            {text: 'From the computer, copy the service to the Pi:', code: ['scp -r pi-service kangan@hexapod.local:~/']},
+            {text: 'From the computer, in the project\u2019s **software** folder, copy the service to the Pi:', code: ['scp -r pi-service kangan@hexapod.local:~/']},
             {text: 'On the Pi, run the installer, then restart. It installs dependencies, turns the UART on and its login console off, and sets the service to start at boot:', code: ['cd ~/pi-service', 'bash deploy/install.sh', 'sudo reboot']},
-            'With the main switch off, connect the Servo 2040 to the computer by USB-C. In **Thonny**, copy the four files from **Board Files** to the board, keeping `calibration_offsets.json` and `joint_limits.json`. Run `check_and_restart.py`, then close Thonny.',
+            'With the main switch off, connect the Servo 2040 to the computer by USB-C. In **Thonny**, copy the four files from **software/board-files** to the board, keeping `calibration_offsets.json` and `joint_limits.json`. Run `check_and_restart.py`, then close Thonny.',
             'Wire the serial link (Section 5.3) and power the robot with its body supported.',
             {text: 'On the Pi, stop the service and check the wiring. This never enables the motors:', code: ['sudo systemctl stop hexapod-drive', 'npm run link-test']},
             {text: 'Teach the service your controller\u2019s buttons (once per controller model) and follow the prompts:', code: ['npm run controller-setup']},
             {text: 'Start the service:', code: ['sudo systemctl start hexapod-drive']},
             {text: 'Set up offline mode (the robot\u2019s own Wi-Fi hotspot, Section 8.2). This does not change the current Wi-Fi connection:', code: ['sudo bash deploy/wifi/install-wifi.sh']},
           ]},
-          {callout: {kind: 'note', title: 'Updating the software later', text: 'From the Mac, in the **pi-service** folder, run `npm run deploy` (or `npm run deploy -- 10.52.126.57` if hexapod.local is not found). It copies the new software, keeps the controller setup and the saved data, and restarts the service only once the robot is sitting with its motors off: if they are on, it asks you to press X then View and waits. The new version is shown at the bottom of the Live View\u2019s side panel.'}},
+          {callout: {kind: 'note', title: 'Updating the software later', text: 'From the Mac, in the **software/pi-service** folder, run `npm run deploy` (or `npm run deploy -- 10.52.126.57` if hexapod.local is not found). It copies the new software, keeps the controller setup and the saved data, and restarts the service only once the robot is sitting with its motors off: if they are on, it asks you to press X then View and waits. The new version is shown at the bottom of the Live View\u2019s side panel.'}},
           {callout: {kind: 'caution', title: 'Run the controller setup', text: 'Linux numbers the Xbox controller\u2019s buttons differently depending on its driver. Without `npm run controller-setup`, buttons may do the wrong thing. Check with `npm run controller-test` before driving.'}},
         ]},
       ],
@@ -393,7 +394,7 @@ module.exports = {
           {p: '**Projector and home screen:** the **projector** button at the top (or `?projector=1` in the address) makes the text larger with stronger lines, for the back of a classroom. On a phone or tablet, choose **Add to Home Screen** in the browser\u2019s share menu: the Live View then opens full screen like an app. The software version running on the robot is shown at the bottom of the side panel.'},
           {callout: {kind: 'note', title: 'Battery warnings', text: 'The Health page warns at **7.0 V** (low) and **6.6 V** (critical), which suit a 2-cell (2S) LiPo battery. For a different battery, add `Environment=HEXAPOD_BATTERY_LOW=…` and `Environment=HEXAPOD_BATTERY_CRITICAL=…` lines to the service (`sudo systemctl edit hexapod-drive`), then restart it with the motors off. Add `Environment=HEXAPOD_BATTERY_MAH=…` (the capacity printed on the battery) to see running time on a full battery on the Sessions page.'}},
           {callout: {kind: 'note', title: 'Watch only', text: 'Nothing on the page can move the robot: only the Xbox controller drives it. Up to 40 devices can watch at once. The pose shown is what the board is commanding; the servos have no position sensors, so a jammed or unpowered leg still appears to move.'}},
-          {callout: {kind: 'note', title: 'Practise without the robot', text: 'On a Mac or PC with Node.js, open a terminal in the **pi-service** folder and run `npm run live-demo`, then open http://localhost:5182. A simulated robot and a scripted controller run a 75-second lesson (enable, walk, slow down, crab walk, turn, high steps, sit, stand) on repeat. Press Ctrl+C to stop.'}},
+          {callout: {kind: 'note', title: 'Practise without the robot', text: 'On a Mac or PC with Node.js, open a terminal in the **software/pi-service** folder and run `npm run live-demo`, then open http://localhost:5182. A simulated robot and a scripted controller run a 75-second lesson (enable, walk, slow down, crab walk, turn, high steps, sit, stand) on repeat. Press Ctrl+C to stop.'}},
           {p: '**Teaching tips:** slow the walk down (**D-pad ↓**) so students can see which legs lift together; use the **Top** view to show the gait pattern and the **Side** view to show step height; ask students to predict which servo angle will change before pressing **RB**.'},
         ]},
         {id: 'offline', title: 'Offline mode: the robot’s own Wi-Fi', blocks: [

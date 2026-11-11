@@ -211,7 +211,7 @@ add('</svg>')
 
 svg = '\n'.join(out)
 dest = Path(sys.argv[1])
-(dest / 'Wiring Schematic.svg').write_text(svg, encoding='utf-8')
+(dest / 'wiring-schematic.svg').write_text(svg, encoding='utf-8')
 html = ('<!doctype html><html><head><meta charset="utf-8"><title>Hexapod Pi Zero 2 W wiring schematic</title>'
         '<style>@page{size:A3 landscape;margin:8mm}html,body{margin:0;background:#fff}svg{height:278mm;width:auto;max-width:100%;display:block;margin:0 auto}</style>'
         '</head><body>' + svg + '</body></html>')

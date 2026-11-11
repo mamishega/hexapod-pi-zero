@@ -3,8 +3,8 @@
   "private": true,
   "description": "Builds the Hexapod Pi Zero 2 W user manual (Word + web) from content.js",
   "scripts": {
-    "build:word": "node build_docx.js \"../User Manual.docx\" \"../Wiring Schematic.png\"",
-    "build:web": "node build_web.js \"../Web Manual/index.html\" \"../Wiring Schematic.svg\"",
+    "build:word": "node build_docx.js ../user-manual.docx ../../wiring/wiring-schematic.png",
+    "build:web": "node build_web.js ../web-manual/index.html ../../wiring/wiring-schematic.svg",
     "build": "npm run build:web && npm run build:word"
   },
   "dependencies": {

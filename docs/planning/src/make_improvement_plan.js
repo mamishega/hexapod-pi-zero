@@ -1,7 +1,8 @@
-// Builds "Live View Improvement Plan.docx" for the hexapod project.
-// Usage (in source/): node make_improvement_plan.js "../Live View Improvement Plan.docx"
+// Builds live-view-improvement-plan.docx for the hexapod project.
+// Usage (in docs/planning/src/): node make_improvement_plan.js ../live-view-improvement-plan.docx
+// Uses the docx library installed in docs/manual/src (npm install there first).
 const fs = require('fs');
-const docxPath = process.env.DOCX_MODULE || 'docx';
+const docxPath = process.env.DOCX_MODULE || require.resolve('docx', {paths: [require('path').join(__dirname, '../../manual/src')]});
 const {
   Document, Packer, Paragraph, TextRun, HeadingLevel, Table, TableRow, TableCell, WidthType, ShadingType, BorderStyle,
   LevelFormat, AlignmentType, Header, Footer, PageNumber, PositionalTab, PositionalTabAlignment, PositionalTabRelativeTo,
