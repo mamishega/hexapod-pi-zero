@@ -14,3 +14,6 @@ software/pi-service/VERSION
 
 # Helper page written by docs/wiring/src/make_schematic.py for PDF / PNG export
 docs/wiring/schematic.html
+
+# Board files saved by software/flash-board.sh before flashing (they hold the robot calibration)
+software/board-backups/
