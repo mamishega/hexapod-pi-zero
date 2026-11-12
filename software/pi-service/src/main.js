@@ -45,7 +45,11 @@ log(`Hexapod driving service starting: board ${config.serial}, controller ${conf
 const robot = new RobotController({links: {uart: linkClass({path: config.serial})}});
 if (config.livePort) {
   const recorder = createRecorder({dir: config.data, log: text => console.log(text)});
-  const health = createHealth({statsFile: config.stats, battery: config.battery, onEvent: event => recorder.event(event)});
+  // A board restart also goes in the service log (journalctl -u hexapod-drive), not only the Health page.
+  const health = createHealth({statsFile: config.stats, battery: config.battery, onEvent: event => {
+    if (event.text.startsWith('Servo 2040 restarted')) log(`ERROR ${event.text}`);
+    return recorder.event(event);
+  }});
   const insights = createInsights({file: path.join(config.data, 'insights.json'), battery: config.battery});
   const code = teacherCode({file: path.join(config.data, 'teacher-code')});
   // Only in the service log (journalctl -u hexapod-drive), never on the web page.

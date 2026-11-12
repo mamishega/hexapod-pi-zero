@@ -65,7 +65,7 @@ export function healthTiles(h, now) {
   const r = board.replyMs;
   out.push(tile(board.connection === 'online' ? (board.errors > 5 ? 'warn' : 'ok') : 'bad', 'Servo 2040 link',
     board.connection === 'online' ? `Online${r ? ` · ${r.avg} ms` : ''}` : board.connection,
-    `${r ? `replies ${r.avg} ms on average, slowest ${r.max} ms · ` : ''}${board.errors} error${board.errors === 1 ? '' : 's'}${board.offlineCount ? ` · lost ${board.offlineCount}×` : ''}`));
+    `${r ? `replies ${r.avg} ms on average, slowest ${r.max} ms · ` : ''}${board.errors} error${board.errors === 1 ? '' : 's'}${board.offlineCount ? ` · lost ${board.offlineCount}×` : ''}${board.restarts ? ` · restarted ${board.restarts}×` : ''}`));
   // Wi-Fi
   const w = pi.wifi;
   out.push(Number.isFinite(w?.dbm)

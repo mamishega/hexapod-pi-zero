@@ -18,10 +18,18 @@ TIMEOUT_MS = 3000
 READ_BURST = 512
 # Transition time per pose, shared with the web app (model.js).
 MIN_DURATION_MS, MAX_DURATION_MS = 100, 10000
-# Gentle Enable ('arm' with glide_ms): when the last commanded pose is known the
-# legs glide from it to HOME; when it is not (first Enable after power-up, or a
-# released leg), the legs switch on one at a time this far apart.
-ARM_STAGGER_MS = 150
+# Surge protection. A servo that is switched on, or told to jump, runs flat out
+# and draws close to its stall current (1-2 A each). Several at once pull the
+# battery voltage down far enough to reset the Pi and this board. So:
+# - Enable switches the outputs on one servo at a time, ARM_SERVO_GAP_MS apart
+#   (long enough for one servo to reach its angle before the next starts), and
+#   only then glides to HOME. This covers every Enable: after power-up, and
+#   after View or the watchdog, when the legs have drooped while limp.
+# - No pose move may turn any joint faster than MAX_JOINT_SPEED; a faster
+#   request is slowed down to that speed instead.
+ARM_SERVO_GAP_MS = 200
+MAX_JOINT_SPEED = 180  # degrees per second: about half a typical hobby servo's top speed
+DEFAULT_GLIDE_MS = 1500  # 'arm' without glide_ms (older apps) glides like the Pi does
 JOINTS = ('hip', 'upper leg', 'lower leg')
 # A servo whose read-back differs by more than this did not apply the command.
 READBACK_TOLERANCE = 0.5
@@ -31,6 +39,25 @@ MAX_ADJUSTMENT = 15
 OFFSET_KEYS = ('L1o', 'L2o', 'L3o', 'R1o', 'R2o', 'R3o')
 
 _sensors = None  # None = not set up yet, False = unavailable on this board/firmware
+
+
+def reset_cause():
+    """Why the board last started, in words. A power-on while the Pi was already
+    connected usually means the supply dipped (a current surge)."""
+    try:
+        import machine
+        names = (('PWRON_RESET', 'power-on or supply dip'), ('HARD_RESET', 'reset pin'),
+                 ('WDT_RESET', 'watchdog'), ('SOFT_RESET', 'soft reset'), ('DEEPSLEEP_RESET', 'deep sleep'))
+        cause = machine.reset_cause()
+        for name, text in names:
+            if hasattr(machine, name) and cause == getattr(machine, name):
+                return text
+        return str(cause)
+    except Exception:
+        return None
+
+
+BOOT_CAUSE = reset_cause()
 
 
 def read_power():
@@ -223,6 +250,39 @@ def blend(start, end, fraction):
              for j in range(3)] for i in range(6)]
 
 
+def paced_motion(start, target, duration, mode):
+    """A checked transition from start to target, slowed down when needed so no
+    joint turns faster than MAX_JOINT_SPEED (surge protection).
+
+    Every interpolation point is checked against reach and joint limits, as
+    before. The 'smooth' ease peaks at pi/2 times the average speed.
+    """
+    peak_factor = math.pi / 2 if mode == 'smooth' else 1.0
+    slowed = False
+    while True:
+        count = steps(duration)
+        previous = pose_angles(start)
+        largest = 0.0  # the biggest change of any joint between two points
+        for step in range(1, count + 1):
+            angles = pose_angles(blend(start, target, step / count))
+            for before, after in zip(previous, angles):
+                for a, b in zip(before, after):
+                    if abs(b - a) > largest:
+                        largest = abs(b - a)
+            previous = angles
+        speed = largest * count * 1000 / duration * peak_factor  # degrees per second
+        if speed <= MAX_JOINT_SPEED or slowed:
+            break
+        needed = int(math.ceil(duration * speed / MAX_JOINT_SPEED))
+        if needed > MAX_DURATION_MS:
+            raise ValueError('This move is too big to make within %d ms at a safe servo speed; '
+                             'split it into smaller moves' % MAX_DURATION_MS)
+        duration, slowed = needed, True
+    return {'start': [p[:] for p in start], 'target': [p[:] for p in target],
+            'duration': duration, 'steps': count, 'ease': mode,
+            'started': time.ticks_ms(), 'last_step': 0, 'slowed': slowed}
+
+
 class Controller:
     def __init__(self):
         self.active = False
@@ -233,7 +293,7 @@ class Controller:
         # it ends, so a sequence plays without a pause between poses.
         self.queued = None
         self.walk = None  # Live walk computed on the board, see walk_pose()
-        self.arming = None  # Staggered Enable in progress: {'leg': next leg, 'next': ms, 'angles': HOME angles}
+        self.arming = None  # Enable in progress, one servo at a time: {'index': next servo 0..17, 'next': ms, 'pose', 'angles', 'then': glide}
         # True after a walk was interrupted mid-step: some feet may be in the
         # air, so that pose must not become the stance of a new walk.
         self.mid_step = False
@@ -248,8 +308,16 @@ class Controller:
         if self.walk is not None:
             self.mid_step = True
         if self.arming is not None:
-            # Legs not yet switched on stay off: their position is unknown.
-            self.released = set(range(self.arming['leg'], 6))
+            # Legs not yet fully switched on stay off: their position is unknown.
+            leg, joint = divmod(self.arming['index'], 3)
+            if joint:
+                for pin in PINS[leg]:
+                    try:
+                        robot.servo_cluster.disable(pin)
+                    except Exception:
+                        pass
+            self.released = set(range(leg, 6))
+            self.current = None
             self.arming = None
         self.transition = None
         self.queued = None
@@ -305,9 +373,11 @@ class Controller:
                  'calibration': {'leg': self.cal_leg, 'holding': self.cal_holding,
                                  'reference': HOME[0], 'max_adjustment': MAX_ADJUSTMENT,
                                  'targets': self.cal_targets()},
-                 'power': read_power()}
+                 'power': read_power(),
+                 # Falls back to near zero when the board restarts: how the Pi notices a reset.
+                 'uptime_ms': time.ticks_ms()}
         if include_config:
-            state.update({'names': NAMES, 'offsets': OFFSETS, 'home': HOME,
+            state.update({'names': NAMES, 'offsets': OFFSETS, 'home': HOME, 'reset_cause': BOOT_CAUSE,
                           'limits': LIMITS, 'hard_joint_limits': robot.HARD_JOINT_LIMITS,
                           'channels': PINS, 'features': FEATURES})
         return state
@@ -323,17 +393,17 @@ class Controller:
                 raise ValueError('Stop walking first')
             if self.transition is not None or self.arming is not None:
                 raise ValueError('Pause the current movement first')
+            # Without glide_ms (older apps) Enable used to switch all 18 outputs on
+            # at once; it now always switches them on gently (surge protection).
             glide = request.get('glide_ms')
-            if glide is None:
-                angles = pose_angles(HOME)
-                self.write_pose(HOME, angles)
-            else:
-                self.arm_gently(glide)
+            self.arm_gently(DEFAULT_GLIDE_MS if glide is None else glide)
             self.active = True
             self.released = set()
             self.cal_holding = False
             self.mid_step = False
         elif op == 'pose':
+            if self.arming is not None:
+                raise ValueError('Enable is still switching the servos on one at a time; wait for it to finish')
             if not self.active or self.current is None:
                 raise ValueError('Enable at home before sending movement')
             if self.walk is not None:
@@ -353,15 +423,9 @@ class Controller:
             pose_angles(target)
             # A queued pose starts where the current transition ends.
             start = self.transition['target'] if self.transition is not None else self.current
-            # Preflight the path at the same fixed interpolation points used
-            # during playback. At most one transition and one queued pose are in RAM.
-            count = steps(duration)
-            for step in range(1, count + 1):
-                pose_angles(blend(start, target, step / count))
-            motion = {'start': [p[:] for p in start],
-                      'target': [p[:] for p in target],
-                      'duration': duration, 'steps': count, 'ease': mode,
-                      'started': time.ticks_ms(), 'last_step': 0}
+            # Preflighted, and slowed down if a joint would turn too fast.
+            # At most one transition and one queued pose are in RAM.
+            motion = paced_motion(start, target, duration, mode)
             if self.transition is None:
                 self.transition = motion
             else:
@@ -731,46 +795,50 @@ class Controller:
     def arm_gently(self, glide):
         if type(glide) is not int or not MIN_DURATION_MS <= glide <= MAX_DURATION_MS:
             raise ValueError('Glide must be %d..%d milliseconds' % (MIN_DURATION_MS, MAX_DURATION_MS))
-        home_angles = pose_angles(HOME)
         start = self.current
         known = start is not None and not self.released and not self.cal_holding
+        if known and self.active:
+            # Already on and holding a known pose: just glide home.
+            self.transition = paced_motion(start, HOME, glide, 'smooth')
+            return
         if known:
-            # Preflight the whole glide first, then switch on at the last
-            # commanded pose (where the legs should still be) and glide home.
-            start_angles = pose_angles(start)
-            count = steps(glide)
-            for step in range(1, count + 1):
-                pose_angles(blend(start, HOME, ease(step / count, 'smooth')))
-            self.write_pose(start, start_angles)
-            self.transition = {'start': [p[:] for p in start], 'target': [p[:] for p in HOME],
-                               'duration': glide, 'steps': count, 'ease': 'smooth',
-                               'started': time.ticks_ms(), 'last_step': 0}
+            # Switch on at the last commanded pose (close to where the legs are,
+            # unless they drooped while limp), then glide home. Preflight first.
+            pose, angles = start, pose_angles(start)
+            then = paced_motion(start, HOME, glide, 'smooth')
         else:
-            # Unknown start: switch the legs on one at a time (see tick()).
-            self.current = None
-            self.angles = None
-            self.arming = {'leg': 0, 'next': time.ticks_ms(), 'angles': home_angles}
+            # Unknown start: switch on straight at HOME.
+            pose, angles, then = HOME, pose_angles(HOME), None
+        # Outputs go on one servo at a time (see arm_tick): never all at once.
+        self.current = None
+        self.angles = None
+        self.arming = {'index': 0, 'next': time.ticks_ms(), 'pose': [p[:] for p in pose],
+                       'angles': angles, 'then': then}
 
     def arm_tick(self, now):
         arming = self.arming
         if time.ticks_diff(now, arming['next']) < 0:
             return None
-        leg = arming['leg']
+        leg, joint = divmod(arming['index'], 3)
         try:
-            for pin, value in zip(PINS[leg], arming['angles'][leg]):
-                self.write_servo(pin, value)
+            self.write_servo(PINS[leg][joint], arming['angles'][leg][joint])
         except Exception:
             self.arming = None
             self.off()
             raise
-        arming['leg'] = leg + 1
-        arming['next'] = time.ticks_add(arming['next'], ARM_STAGGER_MS)
-        if arming['leg'] < 6:
+        arming['index'] += 1
+        arming['next'] = time.ticks_add(arming['next'], ARM_SERVO_GAP_MS)
+        if arming['index'] < 3 * len(NAMES):
             return None
         self.arming = None
-        self.current = [xyz[:] for xyz in HOME]
+        self.current = [xyz[:] for xyz in arming['pose']]
         self.angles = [values[:] for values in arming['angles']]
-        return 'arrived'
+        then = arming['then']
+        if then is None:
+            return 'arrived'
+        then['started'] = now
+        self.transition = then
+        return None
 
     def tick(self):
         now = time.ticks_ms()

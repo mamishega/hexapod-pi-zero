@@ -7,12 +7,21 @@ set -euo pipefail
 HERE="$(cd "$(dirname "$0")/.." && pwd)"
 REPO="${1:-$HERE/../../../Hexapod Motion Trainer New}"  # next to this repository
 [ -f "$REPO/Board Files/motion_bridge.py" ] || { echo "Motion Trainer project not found at: $REPO" >&2; exit 1; }
+BOARD="$HERE/../board-files"
+# This copy of motion_bridge.py has surge protection (one servo at a time on Enable, a joint
+# speed limit). Refuse to replace it with a Motion Trainer version that lacks it.
+if grep -q 'ARM_SERVO_GAP_MS' "$BOARD/motion_bridge.py" 2>/dev/null && ! grep -q 'ARM_SERVO_GAP_MS' "$REPO/Board Files/motion_bridge.py" \
+   && [ "${FORCE:-}" != 1 ]; then
+  echo "Not synced: the Motion Trainer motion_bridge.py has no surge protection (ARM_SERVO_GAP_MS)," >&2
+  echo "and copying it would remove the protection from this robot. Add the change there first," >&2
+  echo "or run FORCE=1 npm run sync to overwrite anyway." >&2
+  exit 1
+fi
 
 mkdir -p "$HERE/vendor/webapp/dist" "$HERE/vendor/controller/src"
 for f in model.js transport.js simulator.js; do cp "$REPO/webapp/dist/$f" "$HERE/vendor/webapp/dist/$f"; done
 for f in robot.js gamepad.js; do cp "$REPO/controller/src/$f" "$HERE/vendor/controller/src/$f"; done
 
-BOARD="$HERE/../board-files"
 mkdir -p "$BOARD"
 for f in FUNCTIONS.py calibration_store.py motion_bridge.py; do cp "$REPO/Board Files/$f" "$BOARD/$f"; done
 cat > "$BOARD/main.py" <<'PY'

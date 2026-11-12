@@ -164,7 +164,7 @@ export function createHealth({now = Date.now, simulated = false, statsFile = nul
   const events = [];
   const pi = {temp: null, throttled: null, wifi: null, load: null, memFreeMB: null, memTotalMB: null, uptime: null, available: !simulated && os.platform() === 'linux'};
   const pad = {connected: false, since: null, drops: 0, lastDrop: null, battery: null, everConnected: false};
-  const board = {connection: 'offline', since: now(), offlineCount: 0, replies: 0, errors: 0, timeouts: 0, times: []};
+  const board = {connection: 'offline', since: now(), offlineCount: 0, restarts: 0, uptime: null, replies: 0, errors: 0, timeouts: 0, times: []};
   const power = {v: null, a: null, min: null, sim: false, state: null};
   let motorsOn = false, lastMessage = '';
 
@@ -193,6 +193,18 @@ export function createHealth({now = Date.now, simulated = false, statsFile = nul
         if (/Connection timeout/i.test(text)) event('bad', 'Watchdog: the board switched the motors off (no command for 3 s)', t);
         else if (/stopped the movement/i.test(text)) event('warn', text, t);
       }
+      // The board's uptime falls back to near zero when it restarts. Its link stays open,
+      // so without this a reset (usually a power dip from a current surge) went unnoticed.
+      const up = live?.uptime_ms;
+      if (connection === 'online' && Number.isFinite(up)) {
+        const wrapped = board.uptime !== null && board.uptime > 2 ** 30 - 60000; // MicroPython ticks_ms wraps after ~12 days
+        if (board.uptime !== null && up + 2000 < board.uptime && !wrapped) {
+          board.restarts++;
+          const cause = live.reset_cause ? ` (${live.reset_cause})` : '';
+          event('bad', `Servo 2040 restarted${cause}; its motors are off. While driving this usually means the supply dipped: a current surge or a low battery`, t);
+        }
+        board.uptime = up;
+      } else if (connection !== 'online') board.uptime = null;
       motorsOn = !!live?.active;
       stats.update(live, t);
       const p = live?.power;
@@ -259,7 +271,7 @@ export function createHealth({now = Date.now, simulated = false, statsFile = nul
       return {t: now(), simulated,
         pi: {...pi, wifiText: wifiText(pi.wifi?.dbm), serviceUptime: Math.round(process.uptime())},
         controller: {connected: pad.connected, since: pad.since, drops: pad.drops, lastDrop: pad.lastDrop, battery: pad.battery},
-        board: {connection: board.connection, since: board.since, offlineCount: board.offlineCount, replies: board.replies, errors: board.errors, timeouts: board.timeouts,
+        board: {connection: board.connection, since: board.since, offlineCount: board.offlineCount, restarts: board.restarts, replies: board.replies, errors: board.errors, timeouts: board.timeouts,
           replyMs: avg === null ? null : {avg: Math.round(avg), max: Math.round(Math.max(...times)), last: Math.round(times.at(-1))}},
         battery: {...power, ...thresholds}, motorsOn,
         alerts: api.alerts(), events: events.slice().reverse(), servos: stats.summary()};

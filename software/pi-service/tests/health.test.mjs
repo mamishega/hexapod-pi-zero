@@ -118,6 +118,27 @@ test('health events and alerts: controller drops, board link, watchdog, battery,
   assert.equal(h.snapshot().battery.min, 6.5);
 });
 
+test('a Servo 2040 restart (its uptime falls back) is an event, not silence', () => {
+  let t = 0;
+  const seen = [];
+  const h = createHealth({now: () => t, onEvent: e => { seen.push(e.text); }});
+  const snap = (up, extra = {}) => ({connection: 'online', message: {text: ''}, live: {...live(angles(0)), uptime_ms: up, ...extra}});
+  h.robot(snap(50000)); t += 200; h.robot(snap(50200)); t += 200; h.robot(snap(50400));
+  assert.equal(h.snapshot().board.restarts, 0, 'uptime rising: no restart');
+  t += 200; h.robot(snap(900, {active: false, reset_cause: 'power-on or supply dip'}));
+  assert.equal(h.snapshot().board.restarts, 1);
+  assert.match(h.snapshot().events[0].text, /Servo 2040 restarted \(power-on or supply dip\)/);
+  assert.equal(h.snapshot().events[0].level, 'bad');
+  assert.ok(seen.some(text => text.startsWith('Servo 2040 restarted')), 'passed on (main.js logs it)');
+  // A link drop and reconnect is not a restart unless the uptime fell back while connected.
+  h.robot({connection: 'offline', message: {text: ''}, live: null});
+  h.robot(snap(400)); t += 200; h.robot(snap(600));
+  assert.equal(h.snapshot().board.restarts, 1, 'first reading after reconnecting is the new baseline');
+  // Board files without uptime_ms (older, or the demo simulator): nothing to compare.
+  h.robot(snap(undefined)); h.robot(snap(undefined));
+  assert.equal(h.snapshot().board.restarts, 1);
+});
+
 test('simulated health (demo) has plausible Pi readings', async () => {
   const h = createHealth({simulated: true});
   h.pad(true); await h.sample();
