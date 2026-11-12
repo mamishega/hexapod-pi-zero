@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 760" width="1200" height="760" role="img" aria-label="12 · How the Live View works"><title>12 · How the Live View works</title><defs><marker id="ah-green" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d32"/></marker><marker id="ah-teal" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0d7a69"/></marker></defs>
+<rect x="0" y="0" width="1200" height="760" rx="0" fill="#ffffff" stroke="none" stroke-width="1.5"/>
+<text x="40" y="50" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="26" font-weight="700" fill="#1a2b30" text-anchor="start">12 · How the Live View works</text>
+<text x="40" y="78" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="400" fill="#5f6f75" text-anchor="start">src/live-server.js on the Pi, live/app.js in each browser</text>
+<rect x="40" y="105" width="520" height="620" rx="10.0" fill="#e3f2ef" stroke="#0d7a69" stroke-width="1.8"/>
+<text x="58" y="133" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="16" font-weight="700" fill="#0d7a69" text-anchor="start">On the Pi: live-server.js</text>
+<rect x="58" y="155" width="200" height="58" rx="10.0" fill="#ffffff" stroke="#0d7a69" stroke-width="1.8"/>
+<text x="72" y="179" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="700" fill="#0d7a69" text-anchor="start">Robot state</text>
+<text x="72" y="197" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#1a2b30" text-anchor="start">every change</text>
+<path d="M260,184 L300,184" fill="none" stroke="#0d7a69" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#ah-teal)"/>
+<rect x="302" y="155" width="240" height="58" rx="10.0" fill="#ffffff" stroke="#78868b" stroke-width="1.8"/>
+<text x="316" y="177" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#1a2b30" text-anchor="start">at most 10 per second</text>
+<text x="316" y="194" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#1a2b30" text-anchor="start">event: robot</text>
+<rect x="58" y="225" width="200" height="58" rx="10.0" fill="#ffffff" stroke="#0d7a69" stroke-width="1.8"/>
+<text x="72" y="249" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="700" fill="#0d7a69" text-anchor="start">Controller</text>
+<text x="72" y="267" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#1a2b30" text-anchor="start">every 20 ms</text>
+<path d="M260,254 L300,254" fill="none" stroke="#0d7a69" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#ah-teal)"/>
+<rect x="302" y="225" width="240" height="58" rx="10.0" fill="#ffffff" stroke="#78868b" stroke-width="1.8"/>
+<text x="316" y="247" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#1a2b30" text-anchor="start">at most 20 per second, changes only</text>
+<text x="316" y="264" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#1a2b30" text-anchor="start">event: pad</text>
+<rect x="58" y="295" width="200" height="58" rx="10.0" fill="#ffffff" stroke="#0d7a69" stroke-width="1.8"/>
+<text x="72" y="319" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="700" fill="#0d7a69" text-anchor="start">Board messages</text>
+<text x="72" y="337" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#1a2b30" text-anchor="start">every command and reply</text>
+<path d="M260,324 L300,324" fill="none" stroke="#0d7a69" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#ah-teal)"/>
+<rect x="302" y="295" width="240" height="58" rx="10.0" fill="#ffffff" stroke="#78868b" stroke-width="1.8"/>
+<text x="316" y="317" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#1a2b30" text-anchor="start">batched 4 times a second</text>
+<text x="316" y="334" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#1a2b30" text-anchor="start">event: msgs</text>
+<rect x="58" y="365" width="200" height="58" rx="10.0" fill="#ffffff" stroke="#0d7a69" stroke-width="1.8"/>
+<text x="72" y="389" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="700" fill="#0d7a69" text-anchor="start">Button actions</text>
+<text x="72" y="407" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#1a2b30" text-anchor="start">A, Y, Menu…</text>
+<path d="M260,394 L300,394" fill="none" stroke="#0d7a69" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#ah-teal)"/>
+<rect x="302" y="365" width="240" height="58" rx="10.0" fill="#ffffff" stroke="#78868b" stroke-width="1.8"/>
+<text x="316" y="387" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#1a2b30" text-anchor="start">straight away</text>
+<text x="316" y="404" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#1a2b30" text-anchor="start">event: action</text>
+<rect x="58" y="435" width="200" height="58" rx="10.0" fill="#ffffff" stroke="#0d7a69" stroke-width="1.8"/>
+<text x="72" y="459" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="700" fill="#0d7a69" text-anchor="start">Health, sessions</text>
+<text x="72" y="477" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#1a2b30" text-anchor="start">Pi sensors, recorder</text>
+<path d="M260,464 L300,464" fill="none" stroke="#0d7a69" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#ah-teal)"/>
+<rect x="302" y="435" width="240" height="58" rx="10.0" fill="#ffffff" stroke="#78868b" stroke-width="1.8"/>
+<text x="316" y="457" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#1a2b30" text-anchor="start">every 2–5 seconds</text>
+<text x="316" y="474" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#1a2b30" text-anchor="start">event: health</text>
+<rect x="58" y="505" width="200" height="58" rx="10.0" fill="#ffffff" stroke="#0d7a69" stroke-width="1.8"/>
+<text x="72" y="529" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="700" fill="#0d7a69" text-anchor="start">Classroom</text>
+<text x="72" y="547" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#1a2b30" text-anchor="start">teacher’s page, answers</text>
+<path d="M260,534 L300,534" fill="none" stroke="#0d7a69" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#ah-teal)"/>
+<rect x="302" y="505" width="240" height="58" rx="10.0" fill="#ffffff" stroke="#78868b" stroke-width="1.8"/>
+<text x="316" y="527" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#1a2b30" text-anchor="start">when they change</text>
+<text x="316" y="544" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#1a2b30" text-anchor="start">event: follow</text>
+<rect x="58" y="585" width="484" height="120" rx="10.0" fill="#ffffff" stroke="#2e7d32" stroke-width="1.8"/>
+<text x="72" y="609" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="700" fill="#2e7d32" text-anchor="start">When a browser connects: “hello”</text>
+<text x="72" y="627" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#1a2b30" text-anchor="start">Everything so far, at once: the robot, the controller,</text>
+<text x="72" y="644" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#1a2b30" text-anchor="start">the last 30 log lines, 10 minutes of battery,</text>
+<text x="72" y="661" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#1a2b30" text-anchor="start">the last 60 board messages, health and the teacher’s page.</text>
+<path d="M562,380 L638,380" fill="none" stroke="#2e7d32" stroke-width="4" stroke-linejoin="round" marker-end="url(#ah-green)"/>
+<text x="600" y="344" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="600" fill="#2e7d32" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">GET</text>
+<text x="600" y="361" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="600" fill="#2e7d32" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">/events</text>
+<text x="600" y="408" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="600" fill="#2e7d32" text-anchor="middle">one per</text>
+<text x="600" y="425" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="600" fill="#2e7d32" text-anchor="middle">browser</text>
+<rect x="640" y="105" width="520" height="620" rx="10.0" fill="#e8f3e9" stroke="#2e7d32" stroke-width="1.8"/>
+<text x="658" y="133" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="16" font-weight="700" fill="#2e7d32" text-anchor="start">In each browser: live/app.js</text>
+<rect x="658" y="155" width="484" height="95" rx="10.0" fill="#ffffff" stroke="#2e7d32" stroke-width="1.8"/>
+<text x="672" y="179" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="700" fill="#2e7d32" text-anchor="start">Timeline: the last 25 seconds</text>
+<text x="672" y="197" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#1a2b30" text-anchor="start">Every robot update is kept with the time it arrived.</text>
+<text x="672" y="214" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#1a2b30" text-anchor="start">Pause, ½× and ¼× slow motion, and 20 s replay</text>
+<text x="672" y="231" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#1a2b30" text-anchor="start">simply move the playhead back along it.</text>
+<text x="658" y="290" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="700" fill="#1a2b30" text-anchor="start">Drawing 260 ms behind the newest update</text>
+<line x1="680" y1="330" x2="1120" y2="330" stroke="#1a2b30" stroke-width="2"/>
+<circle cx="700.0" cy="330.0" r="6" fill="#0d7a69" stroke="none" stroke-width="1.5"/>
+<circle cx="750.0" cy="330.0" r="6" fill="#0d7a69" stroke="none" stroke-width="1.5"/>
+<circle cx="800.0" cy="330.0" r="6" fill="#0d7a69" stroke="none" stroke-width="1.5"/>
+<circle cx="850.0" cy="330.0" r="6" fill="#0d7a69" stroke="none" stroke-width="1.5"/>
+<circle cx="900.0" cy="330.0" r="6" fill="#0d7a69" stroke="none" stroke-width="1.5"/>
+<circle cx="950.0" cy="330.0" r="6" fill="#0d7a69" stroke="none" stroke-width="1.5"/>
+<circle cx="1000.0" cy="330.0" r="6" fill="#0d7a69" stroke="none" stroke-width="1.5"/>
+<circle cx="1050.0" cy="330.0" r="6" fill="#0d7a69" stroke="none" stroke-width="1.5"/>
+<circle cx="1100.0" cy="330.0" r="6" fill="#0d7a69" stroke="none" stroke-width="1.5"/>
+<line x1="970.0" y1="304" x2="970.0" y2="356" stroke="#c62828" stroke-width="3"/>
+<text x="970.0" y="374" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="700" fill="#c62828" text-anchor="middle">drawn now</text>
+<text x="1100" y="374" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="700" fill="#0d7a69" text-anchor="middle">newest</text>
+<text x="680" y="314" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#5f6f75" text-anchor="start">updates, 100 ms apart</text>
+<text x="658" y="410" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="400" fill="#1a2b30" text-anchor="start">There is always a next update to glide towards, so</text>
+<text x="658" y="428" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="400" fill="#1a2b30" text-anchor="start">10 updates a second become smooth 60 fps motion.</text>
+<rect x="658" y="470" width="484" height="115" rx="10.0" fill="#ffffff" stroke="#2e7d32" stroke-width="1.8"/>
+<text x="672" y="494" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="700" fill="#2e7d32" text-anchor="start">Pages read the same data</text>
+<text x="672" y="512" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#1a2b30" text-anchor="start">Live (3D, gait chart, battery) · Controller · How it works</text>
+<text x="672" y="529" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#1a2b30" text-anchor="start">Servo angles · Health · Servo care · Sessions · Messages</text>
+<text x="672" y="546" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#1a2b30" text-anchor="start">Only what is visible and has changed is redrawn,</text>
+<text x="672" y="563" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#1a2b30" text-anchor="start">so an idle robot costs a phone almost nothing.</text>
+<rect x="658" y="600" width="484" height="105" rx="10.0" fill="#ffffff" stroke="#c25e00" stroke-width="1.8"/>
+<text x="672" y="624" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="700" fill="#c25e00" text-anchor="start">The only things a browser sends</text>
+<text x="672" y="642" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#1a2b30" text-anchor="start">Teacher: log in with the code, then lead the class</text>
+<text x="672" y="659" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#1a2b30" text-anchor="start">Students: anonymous quick-question answers</text>
+<text x="672" y="676" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#1a2b30" text-anchor="start">Small, rate-limited, and never robot commands.</text>
+</svg>

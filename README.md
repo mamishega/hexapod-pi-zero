@@ -187,6 +187,8 @@ with a class** (manual, Section 8.2).
     │   ├── wiring-schematic.*   Wiring schematic (PDF, PNG, SVG)
     │   ├── circuit-studio/      Interactive schematic: project file and share link
     │   └── src/                 Schematic and Circuit Studio generators
+    ├── overview/                Robot overview: 12 diagrams (SVG) and index.html to scroll through them
+    │   └── src/                 Diagram generator (make_overview.py)
     └── planning/
         ├── plan.docx            Project plan
         ├── live-view-improvement-plan.docx
@@ -201,6 +203,7 @@ with a class** (manual, Section 8.2).
 | [`software/pi-service/README.md`](software/pi-service/README.md) | Step-by-step install and everyday use of the Pi program |
 | [`wiring-schematic.pdf`](docs/wiring/wiring-schematic.pdf) | Wiring diagram, Rev C, A3 |
 | [`circuit-studio/`](docs/wiring/circuit-studio/) | The schematic in [Circuit Studio](https://circuit-studio.pages.dev/): double-click `open-in-circuit-studio.webloc`, or load the `.json` with **Open** |
+| [`docs/overview/index.html`](docs/overview/index.html) | How the robot behaves, in 12 diagrams: parts, power, software, commands, states, controls, gaits, inverse kinematics, safety, Wi-Fi and the Live View |
 | [`docs/planning/`](docs/planning/) | Project plan and Live View improvement plan (Word) |
 
 ## Development
@@ -218,6 +221,9 @@ Rebuild the documents after editing their sources:
 cd docs/wiring/src
 python3 make_schematic.py ..                    # wiring-schematic.svg (then export PNG / PDF)
 node make_circuit_studio.mjs ../circuit-studio  # Circuit Studio project and link
+
+cd ../../overview/src
+python3 make_overview.py ..                     # overview diagrams + index.html
 
 cd ../../manual/src
 npm install                                     # once

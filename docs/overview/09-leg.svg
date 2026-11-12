@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 820" width="1200" height="820" role="img" aria-label="9 · One leg: inverse kinematics"><title>9 · One leg: inverse kinematics</title><defs><marker id="ah-purple" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5e35b1"/></marker><marker id="ah-teal" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0d7a69"/></marker></defs>
+<rect x="0" y="0" width="1200" height="820" rx="0" fill="#ffffff" stroke="none" stroke-width="1.5"/>
+<text x="40" y="50" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="26" font-weight="700" fill="#1a2b30" text-anchor="start">9 · One leg: inverse kinematics</text>
+<text x="40" y="78" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="400" fill="#5f6f75" text-anchor="start">From a foot position to three servo angles (calculate_angles in FUNCTIONS.py)</text>
+<text x="40" y="120" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#1a2b30" text-anchor="start">Side view, to scale (home stance: foot 175 mm out, 70 mm down)</text>
+<rect x="30" y="260" width="70" height="100" rx="8" fill="#e3f2ef" stroke="#0d7a69" stroke-width="1.5"/>
+<text x="65" y="380" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#0d7a69" text-anchor="middle">body</text>
+<line x1="110" y1="240" x2="110" y2="514.5" stroke="#78868b" stroke-dasharray="4 5"/>
+<text x="110" y="234" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#5f6f75" text-anchor="middle">hip axis</text>
+<line x1="220.4" y1="330.0" x2="521.2" y2="494.5" stroke="#1565c0" stroke-width="1.8" stroke-dasharray="6 5"/>
+<line x1="40" y1="502.5" x2="560" y2="502.5" stroke="#6d4c41" stroke-width="3"/>
+<line x1="110.0" y1="330.0" x2="220.4" y2="330.0" stroke="#c62828" stroke-width="9" stroke-linecap="round"/>
+<line x1="220.4" y1="330.0" x2="365.7" y2="181.3" stroke="#222222" stroke-width="9" stroke-linecap="round"/>
+<line x1="365.7" y1="181.3" x2="521.2" y2="494.5" stroke="#222222" stroke-width="9" stroke-linecap="round"/>
+<circle cx="110.0" cy="330.0" r="9" fill="#c62828" stroke="#ffffff" stroke-width="2"/>
+<circle cx="220.4" cy="330.0" r="9" fill="#c62828" stroke="#ffffff" stroke-width="2"/>
+<circle cx="365.7" cy="181.3" r="9" fill="#222222" stroke="#ffffff" stroke-width="2"/>
+<circle cx="521.2" cy="494.5" r="8" fill="#c62828" stroke="#ffffff" stroke-width="2"/>
+<text x="165.0" y="356.0" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="700" fill="#c62828" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">L1 = 47</text>
+<text x="277.0885504176572" y="249.6543980219982" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="700" fill="#1a2b30" text-anchor="end" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">L2 = 88.46</text>
+<text x="459.4885504176572" y="333.9043980219982" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="700" fill="#1a2b30" text-anchor="start" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">L3 = 148.8</text>
+<text x="362.85" y="438.25" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#1565c0" text-anchor="end" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">B</text>
+<text x="208.45" y="314.0" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="600" fill="#c62828" text-anchor="end" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">upper leg servo (S2)</text>
+<text x="114.0" y="278.0" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="600" fill="#c62828" text-anchor="start" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">hip servo (S1)</text>
+<text x="379.72710083531445" y="171.30879604399635" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="600" fill="#1a2b30" text-anchor="start" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">lower leg servo (S3)</text>
+<text x="533.25" y="488.5" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="600" fill="#c62828" text-anchor="start">foot</text>
+<path d="M110,538.5 L521.25,538.5" fill="none" stroke="#0d7a69" stroke-width="1.6" stroke-linejoin="round" marker-start="url(#ah-teal)" marker-end="url(#ah-teal)"/>
+<text x="315.625" y="560.5" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="600" fill="#0d7a69" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">A = 175 mm out from the hip axis</text>
+<path d="M591.25,330 L591.25,494.5" fill="none" stroke="#0d7a69" stroke-width="1.6" stroke-linejoin="round" marker-start="url(#ah-teal)" marker-end="url(#ah-teal)"/>
+<text x="601.25" y="420" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="600" fill="#0d7a69" text-anchor="start" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">z = 70 mm</text>
+<line x1="220.4" y1="330" x2="597.25" y2="330" stroke="#78868b" stroke-dasharray="3 5"/>
+<text x="640" y="120" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#1a2b30" text-anchor="start">Top view: the hip servo (S1)</text>
+<rect x="700" y="210" width="40" height="80" rx="6" fill="#e3f2ef" stroke="#0d7a69" stroke-width="1.5"/>
+<line x1="760" y1="250" x2="990.0" y2="250" stroke="#78868b" stroke-dasharray="4 5"/>
+<text x="996.0" y="254" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#5f6f75" text-anchor="start">y: out</text>
+<line x1="760" y1="300" x2="760" y2="180" stroke="#78868b" stroke-dasharray="4 5"/>
+<text x="760" y="174" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#5f6f75" text-anchor="middle">x: across the leg</text>
+<line x1="760" y1="250" x2="968.2" y2="222.6" stroke="#1a2b30" stroke-width="7" stroke-linecap="round"/>
+<circle cx="760.0" cy="250.0" r="8" fill="#c62828" stroke="#ffffff" stroke-width="2"/>
+<circle cx="968.2" cy="222.6" r="7" fill="#c62828" stroke="#ffffff" stroke-width="2"/>
+<path d="M830,250 A70,70 0 0,0 829.4,240.9" fill="none" stroke="#c62828" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="836" y="272" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="700" fill="#c62828" text-anchor="start">S1 = 7.5°</text>
+<text x="640" y="360" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="400" fill="#1a2b30" text-anchor="start">S1 = 90° − atan2(y, x)</text>
+<text x="640" y="378" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="400" fill="#1a2b30" text-anchor="start">The hip turns the whole leg sideways;</text>
+<text x="640" y="396" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="400" fill="#1a2b30" text-anchor="start">here the foot is 22.8 mm across (mid-step).</text>
+<rect x="640" y="455" width="520" height="215" rx="10.0" fill="#e6eef9" stroke="#1565c0" stroke-width="1.8"/>
+<text x="654" y="479" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#1565c0" text-anchor="start">The side-view triangle</text>
+<text x="654" y="498" font-family="'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#1a2b30" text-anchor="start">A = √(x² + y²)              out from the hip axis</text>
+<text x="654" y="516" font-family="'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#1a2b30" text-anchor="start">B = √((A − L1)² + z²)       upper-leg joint to foot</text>
+<text x="654" y="534" font-family="'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#1a2b30" text-anchor="start">β = acos((L2² + B² − L3²) ÷ (2·L2·B))</text>
+<text x="654" y="552" font-family="'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#1a2b30" text-anchor="start">ε = atan2(A − L1, z)</text>
+<text x="654" y="570" font-family="'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#1a2b30" text-anchor="start">S2 = β − (90° − ε)           upper leg</text>
+<text x="654" y="588" font-family="'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#1a2b30" text-anchor="start">S3 = 180° − acos((L2² + L3² − B²) ÷ (2·L2·L3))</text>
+<text x="654" y="624" font-family="'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#1a2b30" text-anchor="start">Home stance: S1 = 0.0°,  S2 = 45.7°,  S3 = 109.3°</text>
+<rect x="40" y="730" width="148" height="50" rx="10.0" fill="#efeaf8" stroke="#5e35b1" stroke-width="1.8"/>
+<text x="114.0" y="752" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#1a2b30" text-anchor="middle">foot x, y, z (mm)</text>
+<rect x="201" y="730" width="148" height="50" rx="10.0" fill="#efeaf8" stroke="#5e35b1" stroke-width="1.8"/>
+<text x="275.0" y="752" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#1a2b30" text-anchor="middle">inverse kinematics</text>
+<path d="M189,755 L200,755" fill="none" stroke="#5e35b1" stroke-width="1.6" stroke-linejoin="round" marker-end="url(#ah-purple)"/>
+<rect x="362" y="730" width="148" height="50" rx="10.0" fill="#efeaf8" stroke="#5e35b1" stroke-width="1.8"/>
+<text x="436.0" y="752" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#1a2b30" text-anchor="middle">right side: mirror</text>
+<path d="M350,755 L361,755" fill="none" stroke="#5e35b1" stroke-width="1.6" stroke-linejoin="round" marker-end="url(#ah-purple)"/>
+<rect x="523" y="730" width="148" height="50" rx="10.0" fill="#efeaf8" stroke="#5e35b1" stroke-width="1.8"/>
+<text x="597.0" y="752" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#1a2b30" text-anchor="middle">lower leg: −90°</text>
+<path d="M511,755 L522,755" fill="none" stroke="#5e35b1" stroke-width="1.6" stroke-linejoin="round" marker-end="url(#ah-purple)"/>
+<rect x="684" y="730" width="148" height="50" rx="10.0" fill="#efeaf8" stroke="#5e35b1" stroke-width="1.8"/>
+<text x="758.0" y="752" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#1a2b30" text-anchor="middle">+ calibration offset</text>
+<path d="M672,755 L683,755" fill="none" stroke="#5e35b1" stroke-width="1.6" stroke-linejoin="round" marker-end="url(#ah-purple)"/>
+<rect x="845" y="730" width="148" height="50" rx="10.0" fill="#fbe9e9" stroke="#c62828" stroke-width="1.8"/>
+<text x="919.0" y="752" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#1a2b30" text-anchor="middle">joint-limit check</text>
+<path d="M833,755 L844,755" fill="none" stroke="#5e35b1" stroke-width="1.6" stroke-linejoin="round" marker-end="url(#ah-purple)"/>
+<rect x="1006" y="730" width="148" height="50" rx="10.0" fill="#efeaf8" stroke="#5e35b1" stroke-width="1.8"/>
+<text x="1080.0" y="752" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#1a2b30" text-anchor="middle">servo pulse</text>
+<path d="M994,755 L1005,755" fill="none" stroke="#5e35b1" stroke-width="1.6" stroke-linejoin="round" marker-end="url(#ah-purple)"/>
+<text x="40" y="805" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#5f6f75" text-anchor="start">On the board for every leg, every 20 ms (leg_angles in motion_bridge.py). Unreachable or out-of-limit: the move is refused with an error.</text>
+</svg>

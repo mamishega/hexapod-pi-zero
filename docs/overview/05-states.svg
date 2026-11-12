@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 760" width="1200" height="760" role="img" aria-label="5 · What the robot can be doing"><title>5 · What the robot can be doing</title><defs><marker id="ah-ink" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1a2b30"/></marker><marker id="ah-red" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c62828"/></marker></defs>
+<rect x="0" y="0" width="1200" height="760" rx="0" fill="#ffffff" stroke="none" stroke-width="1.5"/>
+<text x="40" y="50" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="26" font-weight="700" fill="#1a2b30" text-anchor="start">5 · What the robot can be doing</text>
+<text x="40" y="78" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="400" fill="#5f6f75" text-anchor="start">States, and the buttons or events that move the robot between them</text>
+<rect x="40" y="130" width="220" height="92" rx="10.0" fill="#eef1f2" stroke="#78868b" stroke-width="1.8"/>
+<text x="54" y="154" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="16" font-weight="700" fill="#1a2b30" text-anchor="start">Board starting</text>
+<text x="54" y="174" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="400" fill="#1a2b30" text-anchor="start">Servo outputs off</text>
+<text x="54" y="192" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="400" fill="#1a2b30" text-anchor="start">Says “ready”</text>
+<rect x="360" y="130" width="240" height="92" rx="10.0" fill="#eef1f2" stroke="#78868b" stroke-width="1.8"/>
+<text x="374" y="154" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="16" font-weight="700" fill="#1a2b30" text-anchor="start">Connected · motors off</text>
+<text x="374" y="174" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="400" fill="#1a2b30" text-anchor="start">Legs limp</text>
+<text x="374" y="192" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="400" fill="#1a2b30" text-anchor="start">Pi asks for status</text>
+<rect x="700" y="130" width="220" height="92" rx="10.0" fill="#e3f2ef" stroke="#0d7a69" stroke-width="1.8"/>
+<text x="714" y="154" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="16" font-weight="700" fill="#0d7a69" text-anchor="start">Enabling</text>
+<text x="714" y="174" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="400" fill="#1a2b30" text-anchor="start">Servos on one at a time,</text>
+<text x="714" y="192" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="400" fill="#1a2b30" text-anchor="start">then glide home (≈5 s)</text>
+<rect x="700" y="330" width="220" height="92" rx="10.0" fill="#e3f2ef" stroke="#0d7a69" stroke-width="1.8"/>
+<text x="714" y="354" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="16" font-weight="700" fill="#0d7a69" text-anchor="start">Motors on · still</text>
+<text x="714" y="374" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="400" fill="#1a2b30" text-anchor="start">Holding a pose</text>
+<text x="714" y="392" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="400" fill="#1a2b30" text-anchor="start">(home, stand or sit)</text>
+<rect x="980" y="330" width="190" height="92" rx="10.0" fill="#e3f2ef" stroke="#0d7a69" stroke-width="1.8"/>
+<text x="994" y="354" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="16" font-weight="700" fill="#0d7a69" text-anchor="start">Stand or sit</text>
+<text x="994" y="374" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="400" fill="#1a2b30" text-anchor="start">Smooth 2 s move</text>
+<text x="994" y="392" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="400" fill="#1a2b30" text-anchor="start">feet 70 or 30 mm down</text>
+<rect x="700" y="530" width="220" height="92" rx="10.0" fill="#fdf0e3" stroke="#c25e00" stroke-width="1.8"/>
+<text x="714" y="554" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="16" font-weight="700" fill="#c25e00" text-anchor="start">Walking</text>
+<text x="714" y="574" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="400" fill="#1a2b30" text-anchor="start">The board runs the gait</text>
+<text x="714" y="592" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="400" fill="#1a2b30" text-anchor="start">The Pi steers</text>
+<rect x="360" y="530" width="240" height="92" rx="10.0" fill="#fdf0e3" stroke="#c25e00" stroke-width="1.8"/>
+<text x="374" y="554" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="16" font-weight="700" fill="#c25e00" text-anchor="start">Stopping</text>
+<text x="374" y="574" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="400" fill="#1a2b30" text-anchor="start">Finish this step,</text>
+<text x="374" y="592" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="400" fill="#1a2b30" text-anchor="start">settle in the stance</text>
+<path d="M260,176 L358,176" fill="none" stroke="#1a2b30" stroke-width="2.2" stroke-linejoin="round" marker-end="url(#ah-ink)"/>
+<text x="309" y="150" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="600" fill="#1a2b30" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">Pi connects</text>
+<text x="309" y="167" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="600" fill="#1a2b30" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">(retries every 3 s)</text>
+<path d="M600,176 L698,176" fill="none" stroke="#1a2b30" stroke-width="2.2" stroke-linejoin="round" marker-end="url(#ah-ink)"/>
+<text x="649" y="166" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="600" fill="#1a2b30" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">A</text>
+<path d="M810,222 L810,328" fill="none" stroke="#1a2b30" stroke-width="2.2" stroke-linejoin="round" marker-end="url(#ah-ink)"/>
+<text x="822" y="280" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#1a2b30" text-anchor="start" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">arrived</text>
+<path d="M920,360 L978,360" fill="none" stroke="#1a2b30" stroke-width="2.2" stroke-linejoin="round" marker-end="url(#ah-ink)"/>
+<text x="949" y="350" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="600" fill="#1a2b30" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">Y / X</text>
+<path d="M978,400 L922,400" fill="none" stroke="#1a2b30" stroke-width="2.2" stroke-linejoin="round" marker-end="url(#ah-ink)"/>
+<text x="950" y="418" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="600" fill="#1a2b30" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">done</text>
+<path d="M790,422 L790,528" fill="none" stroke="#1a2b30" stroke-width="2.2" stroke-linejoin="round" marker-end="url(#ah-ink)"/>
+<text x="802" y="480" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#1a2b30" text-anchor="start" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">left stick</text>
+<path d="M920,555 L985,555 L985,598 L922,598" fill="none" stroke="#1a2b30" stroke-width="2.0" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#ah-ink)"/>
+<text x="996" y="570" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#1a2b30" text-anchor="start">Menu: blend into the next</text>
+<text x="996" y="587" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#1a2b30" text-anchor="start">gait without stopping.</text>
+<text x="996" y="604" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#1a2b30" text-anchor="start">D-pad, RB, LB: settings</text>
+<text x="996" y="621" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#1a2b30" text-anchor="start">blend in over one step</text>
+<path d="M698,576 L602,576" fill="none" stroke="#1a2b30" stroke-width="2.2" stroke-linejoin="round" marker-end="url(#ah-ink)"/>
+<text x="650" y="566" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="600" fill="#1a2b30" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">let go, or B</text>
+<path d="M540,528 L540,395 L698,395" fill="none" stroke="#1a2b30" stroke-width="2.2" stroke-linejoin="round" marker-end="url(#ah-ink)"/>
+<text x="620" y="385" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="600" fill="#1a2b30" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">in the stance</text>
+<path d="M698,350 L450,350 L450,224" fill="none" stroke="#c62828" stroke-width="2.6" stroke-linejoin="round" marker-end="url(#ah-red)"/>
+<text x="575" y="318" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="600" fill="#c62828" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">View, or no message</text>
+<text x="575" y="335" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="600" fill="#c62828" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">for 3 s (watchdog)</text>
+<rect x="40" y="300" width="290" height="112" rx="10.0" fill="#eef1f2" stroke="#78868b" stroke-width="1.8"/>
+<text x="54" y="324" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="700" fill="#1a2b30" text-anchor="start">Y or X while walking</text>
+<text x="54" y="342" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#1a2b30" text-anchor="start">The steps die down while the</text>
+<text x="54" y="359" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#1a2b30" text-anchor="start">body settles straight into the</text>
+<text x="54" y="376" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#1a2b30" text-anchor="start">standing or sitting pose:</text>
+<text x="54" y="393" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#1a2b30" text-anchor="start">one smooth move</text>
+<rect x="40" y="650" width="1120" height="82" rx="10.0" fill="#fbe9e9" stroke="#c62828" stroke-width="1.8"/>
+<text x="54" y="674" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#c62828" text-anchor="start">From any state with the motors on</text>
+<text x="54" y="693" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="400" fill="#1a2b30" text-anchor="start">View: motors off at once (the robot drops)   ·   Watchdog: no message from the Pi for 3 s → motors off</text>
+<text x="54" y="711" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="400" fill="#1a2b30" text-anchor="start">Controller switched off or lost → walking stops   ·   Service stopping → finishes the step, then the watchdog releases the motors</text>
+</svg>

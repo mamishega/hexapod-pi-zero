@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 770" width="1200" height="770" role="img" aria-label="3 · Where the software runs"><title>3 · Where the software runs</title><defs><marker id="ah-blue" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1565c0"/></marker><marker id="ah-green" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d32"/></marker><marker id="ah-purple" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5e35b1"/></marker></defs>
+<rect x="0" y="0" width="1200" height="770" rx="0" fill="#ffffff" stroke="none" stroke-width="1.5"/>
+<text x="40" y="50" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="26" font-weight="700" fill="#1a2b30" text-anchor="start">3 · Where the software runs</text>
+<text x="40" y="78" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="400" fill="#5f6f75" text-anchor="start">The files in software/pi-service and software/board-files, and how they connect</text>
+<rect x="30" y="100" width="700" height="640" rx="10.0" fill="#e3f2ef" stroke="#0d7a69" stroke-width="1.8"/>
+<text x="48" y="128" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="16" font-weight="700" fill="#0d7a69" text-anchor="start">Raspberry Pi Zero 2 W · Linux · software/pi-service</text>
+<rect x="760" y="100" width="410" height="640" rx="10.0" fill="#efeaf8" stroke="#5e35b1" stroke-width="1.8"/>
+<text x="778" y="128" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="16" font-weight="700" fill="#5e35b1" text-anchor="start">Servo 2040 · MicroPython · board-files</text>
+<rect x="50" y="145" width="320" height="72" rx="10.0" fill="#ffffff" stroke="#0d7a69" stroke-width="1.8"/>
+<text x="64" y="169" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="700" fill="#0d7a69" text-anchor="start">hexapod-drive.service</text>
+<text x="64" y="187" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#1a2b30" text-anchor="start">Starts at power-on; restarts if it stops</text>
+<rect x="390" y="145" width="320" height="72" rx="10.0" fill="#ffffff" stroke="#0d7a69" stroke-width="1.8"/>
+<text x="404" y="169" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="700" fill="#0d7a69" text-anchor="start">hexapod-wifi.timer (every minute)</text>
+<text x="404" y="187" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#1a2b30" text-anchor="start">Joins Wi-Fi or runs the hotspot</text>
+<rect x="50" y="237" width="660" height="58" rx="10.0" fill="#ffffff" stroke="#0d7a69" stroke-width="1.8"/>
+<text x="64" y="261" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="700" fill="#0d7a69" text-anchor="start">src/main.js</text>
+<text x="64" y="279" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#1a2b30" text-anchor="start">Starts every part below and connects them</text>
+<rect x="50" y="320" width="200" height="100" rx="10.0" fill="#ffffff" stroke="#1565c0" stroke-width="1.8"/>
+<text x="64" y="344" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="700" fill="#1565c0" text-anchor="start">linux-gamepad.js</text>
+<text x="64" y="362" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#1a2b30" text-anchor="start">Reads the controller</text>
+<text x="64" y="379" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#1a2b30" text-anchor="start">from /dev/input/js0</text>
+<rect x="270" y="320" width="200" height="100" rx="10.0" fill="#ffffff" stroke="#1565c0" stroke-width="1.8"/>
+<text x="284" y="344" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="700" fill="#1565c0" text-anchor="start">controls.js</text>
+<text x="284" y="362" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#1a2b30" text-anchor="start">Drive loop, every 20 ms</text>
+<text x="284" y="379" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#1a2b30" text-anchor="start">Buttons → actions</text>
+<text x="284" y="396" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#1a2b30" text-anchor="start">Stick → direction</text>
+<rect x="490" y="320" width="220" height="125" rx="10.0" fill="#ffffff" stroke="#0d7a69" stroke-width="1.8"/>
+<text x="504" y="344" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="700" fill="#0d7a69" text-anchor="start">RobotController</text>
+<text x="504" y="362" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#1a2b30" text-anchor="start">vendor/controller/src/robot.js</text>
+<text x="504" y="379" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#1a2b30" text-anchor="start">Checks each move first</text>
+<text x="504" y="396" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#1a2b30" text-anchor="start">Sends commands</text>
+<text x="504" y="413" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#1a2b30" text-anchor="start">Polls the board’s status</text>
+<rect x="490" y="465" width="220" height="70" rx="10.0" fill="#ffffff" stroke="#5e35b1" stroke-width="1.8"/>
+<text x="504" y="489" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="700" fill="#5e35b1" text-anchor="start">node-serial-link.js</text>
+<text x="504" y="507" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#1a2b30" text-anchor="start">/dev/serial0 (the UART)</text>
+<rect x="50" y="455" width="420" height="265" rx="10.0" fill="#ffffff" stroke="#2e7d32" stroke-width="1.8"/>
+<text x="64" y="480" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#2e7d32" text-anchor="start">Live View</text>
+<rect x="64" y="492" width="392" height="62" rx="10.0" fill="#e8f3e9" stroke="#2e7d32" stroke-width="1.8"/>
+<text x="78" y="516" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="700" fill="#2e7d32" text-anchor="start">live-server.js</text>
+<text x="78" y="533" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#1a2b30" text-anchor="start">Web server on port 5181; pushes live updates</text>
+<rect x="64" y="566" width="192" height="44" rx="10.0" fill="#ffffff" stroke="#2e7d32" stroke-width="1.8"/>
+<text x="78" y="588" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11" font-weight="400" fill="#1a2b30" text-anchor="start">health.js</text>
+<text x="78" y="603" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11" font-weight="400" fill="#1a2b30" text-anchor="start">battery, Pi, servo care</text>
+<rect x="264" y="566" width="192" height="44" rx="10.0" fill="#ffffff" stroke="#2e7d32" stroke-width="1.8"/>
+<text x="278" y="588" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11" font-weight="400" fill="#1a2b30" text-anchor="start">recorder.js</text>
+<text x="278" y="603" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11" font-weight="400" fill="#1a2b30" text-anchor="start">sessions, incidents</text>
+<rect x="64" y="618" width="192" height="44" rx="10.0" fill="#ffffff" stroke="#2e7d32" stroke-width="1.8"/>
+<text x="78" y="640" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11" font-weight="400" fill="#1a2b30" text-anchor="start">insights.js</text>
+<text x="78" y="655" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11" font-weight="400" fill="#1a2b30" text-anchor="start">gait scores, battery</text>
+<rect x="264" y="618" width="192" height="44" rx="10.0" fill="#ffffff" stroke="#2e7d32" stroke-width="1.8"/>
+<text x="278" y="640" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11" font-weight="400" fill="#1a2b30" text-anchor="start">classroom.js</text>
+<text x="278" y="655" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11" font-weight="400" fill="#1a2b30" text-anchor="start">follow-the-teacher</text>
+<text x="64" y="690" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="600" fill="#2e7d32" text-anchor="start">live/ — the page each browser loads</text>
+<text x="64" y="708" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#5f6f75" text-anchor="start">(app.js, timeline.js, robot-model.js, …)</text>
+<rect x="490" y="560" width="220" height="160" rx="10.0" fill="#ffffff" stroke="#6d4c41" stroke-width="1.8"/>
+<text x="504" y="584" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="700" fill="#6d4c41" text-anchor="start">~/.hexapod (saved data)</text>
+<text x="504" y="602" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#1a2b30" text-anchor="start">Sessions as CSV files</text>
+<text x="504" y="619" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#1a2b30" text-anchor="start">Incident replays</text>
+<text x="504" y="636" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#1a2b30" text-anchor="start">Servo statistics</text>
+<text x="504" y="653" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#1a2b30" text-anchor="start">Gait scores</text>
+<text x="504" y="670" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#1a2b30" text-anchor="start">Teacher code</text>
+<path d="M250,370 L268,370" fill="none" stroke="#1565c0" stroke-width="2.2" stroke-linejoin="round" marker-end="url(#ah-blue)"/>
+<path d="M470,370 L488,370" fill="none" stroke="#1565c0" stroke-width="2.2" stroke-linejoin="round" marker-end="url(#ah-blue)"/>
+<path d="M600,445 L600,463" fill="none" stroke="#5e35b1" stroke-width="2.2" stroke-linejoin="round" marker-end="url(#ah-purple)"/>
+<path d="M490,430 L470,430 L470,445 L300,445 L300,490" fill="none" stroke="#2e7d32" stroke-width="2.2" stroke-linejoin="round" marker-end="url(#ah-green)"/>
+<text x="385" y="437" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11" font-weight="600" fill="#2e7d32" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">state</text>
+<path d="M710,500 L778,500" fill="none" stroke="#5e35b1" stroke-width="2.6" stroke-linejoin="round" marker-start="url(#ah-purple)" marker-end="url(#ah-purple)"/>
+<text x="744" y="488" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="600" fill="#5e35b1" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">UART</text>
+<rect x="780" y="145" width="370" height="62" rx="10.0" fill="#ffffff" stroke="#5e35b1" stroke-width="1.8"/>
+<text x="794" y="169" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="700" fill="#5e35b1" text-anchor="start">main.py</text>
+<text x="794" y="187" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#1a2b30" text-anchor="start">Starts motion_bridge on USB and UART</text>
+<rect x="780" y="227" width="370" height="280" rx="10.0" fill="#ffffff" stroke="#5e35b1" stroke-width="1.8"/>
+<text x="794" y="251" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="700" fill="#5e35b1" text-anchor="start">motion_bridge.py: one loop, forever</text>
+<text x="794" y="269" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#1a2b30" text-anchor="start">1. tick()</text>
+<text x="794" y="286" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#1a2b30" text-anchor="start">    watchdog: 3 s with no message → off</text>
+<text x="794" y="303" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#1a2b30" text-anchor="start">    next step of: Enable glide, walk, or pose</text>
+<text x="794" y="320" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#1a2b30" text-anchor="start">2. Read the characters waiting on USB and UART</text>
+<text x="794" y="337" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#1a2b30" text-anchor="start">3. Each complete line → handle(op) → reply</text>
+<text x="794" y="371" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#1a2b30" text-anchor="start">Commands: arm · pose · walk · walk_stop</text>
+<text x="794" y="388" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#1a2b30" text-anchor="start">    off · status · release_leg · calibration</text>
+<text x="794" y="405" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#1a2b30" text-anchor="start">Events: ready · arrived · timeout · error</text>
+<rect x="780" y="527" width="370" height="100" rx="10.0" fill="#ffffff" stroke="#5e35b1" stroke-width="1.8"/>
+<text x="794" y="551" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="700" fill="#5e35b1" text-anchor="start">FUNCTIONS.py</text>
+<text x="794" y="569" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#1a2b30" text-anchor="start">calculate_angles(): inverse kinematics</text>
+<text x="794" y="586" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#1a2b30" text-anchor="start">Servo cluster on outputs 1–18</text>
+<text x="794" y="603" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#1a2b30" text-anchor="start">Standing height and leg calibration</text>
+<rect x="780" y="647" width="370" height="75" rx="10.0" fill="#ffffff" stroke="#5e35b1" stroke-width="1.8"/>
+<text x="794" y="671" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="700" fill="#5e35b1" text-anchor="start">calibration_store.py</text>
+<text x="794" y="689" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#1a2b30" text-anchor="start">calibration_offsets.json · joint_limits.json</text>
+<text x="794" y="706" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#1a2b30" text-anchor="start">(kept on the board between updates)</text>
+<path d="M965,207 L965,225" fill="none" stroke="#5e35b1" stroke-width="2.2" stroke-linejoin="round" marker-end="url(#ah-purple)"/>
+<path d="M965,507 L965,525" fill="none" stroke="#5e35b1" stroke-width="2.2" stroke-linejoin="round" marker-end="url(#ah-purple)"/>
+<path d="M965,627 L965,645" fill="none" stroke="#5e35b1" stroke-width="2.2" stroke-linejoin="round" marker-end="url(#ah-purple)"/>
+</svg>

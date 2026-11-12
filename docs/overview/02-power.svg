@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 640" width="1200" height="640" role="img" aria-label="2 · Power: two supplies from one battery"><title>2 · Power: two supplies from one battery</title><defs><marker id="ah-black" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#222222"/></marker><marker id="ah-brown" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#6d4c41"/></marker><marker id="ah-orange" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c25e00"/></marker><marker id="ah-red" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c62828"/></marker><marker id="ah-teal" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0d7a69"/></marker></defs>
+<rect x="0" y="0" width="1200" height="640" rx="0" fill="#ffffff" stroke="none" stroke-width="1.5"/>
+<text x="40" y="50" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="26" font-weight="700" fill="#1a2b30" text-anchor="start">2 · Power: two supplies from one battery</text>
+<text x="40" y="78" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="400" fill="#5f6f75" text-anchor="start">Why the Pi is never powered from the servo supply</text>
+<line x1="40" y1="118" x2="80" y2="118" stroke="#c62828" stroke-width="4"/>
+<text x="90" y="123" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="400" fill="#1a2b30" text-anchor="start">Battery + (after the switch)</text>
+<line x1="40" y1="142" x2="80" y2="142" stroke="#222222" stroke-width="4"/>
+<text x="90" y="147" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="400" fill="#1a2b30" text-anchor="start">Ground (−)</text>
+<line x1="40" y1="166" x2="80" y2="166" stroke="#0d7a69" stroke-width="4"/>
+<text x="90" y="171" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="400" fill="#1a2b30" text-anchor="start">5 V supply</text>
+<line x1="40" y1="190" x2="80" y2="190" stroke="#6d4c41" stroke-width="4"/>
+<text x="90" y="195" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="400" fill="#1a2b30" text-anchor="start">USB lead</text>
+<rect x="40" y="250" width="200" height="125" rx="10.0" fill="#fbe9e9" stroke="#c62828" stroke-width="1.8"/>
+<text x="54" y="274" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="16" font-weight="700" fill="#c62828" text-anchor="start">Battery</text>
+<text x="54" y="294" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="400" fill="#1a2b30" text-anchor="start">2S LiPo, about 7.4 V</text>
+<text x="54" y="312" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="400" fill="#1a2b30" text-anchor="start">Warning at 7.0 V</text>
+<text x="54" y="330" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="400" fill="#1a2b30" text-anchor="start">Critical at 6.6 V</text>
+<rect x="300" y="130" width="200" height="90" rx="10.0" fill="#fbe9e9" stroke="#c62828" stroke-width="1.8"/>
+<text x="314" y="154" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="16" font-weight="700" fill="#c62828" text-anchor="start">Main switch + fuse</text>
+<text x="314" y="174" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="400" fill="#1a2b30" text-anchor="start">On the + wire only</text>
+<rect x="640" y="100" width="240" height="130" rx="10.0" fill="#efeaf8" stroke="#5e35b1" stroke-width="1.8"/>
+<text x="654" y="124" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="16" font-weight="700" fill="#5e35b1" text-anchor="start">Servo 2040 power</text>
+<text x="654" y="144" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="400" fill="#1a2b30" text-anchor="start">Terminal V+ and V−</text>
+<text x="654" y="162" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="400" fill="#1a2b30" text-anchor="start">Feeds all 18 servos</text>
+<text x="654" y="180" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="400" fill="#1a2b30" text-anchor="start">Measures volts and amps</text>
+<rect x="960" y="100" width="200" height="130" rx="10.0" fill="#fdf0e3" stroke="#c25e00" stroke-width="1.8"/>
+<text x="974" y="124" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="16" font-weight="700" fill="#c25e00" text-anchor="start">18 servos</text>
+<text x="974" y="144" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="400" fill="#1a2b30" text-anchor="start">Big current spikes</text>
+<text x="974" y="162" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="400" fill="#1a2b30" text-anchor="start">while walking</text>
+<rect x="640" y="285" width="240" height="110" rx="10.0" fill="#e3f2ef" stroke="#0d7a69" stroke-width="1.8"/>
+<text x="654" y="309" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="16" font-weight="700" fill="#0d7a69" text-anchor="start">5 V buck converter</text>
+<text x="654" y="329" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="400" fill="#1a2b30" text-anchor="start">3 A or more</text>
+<text x="654" y="347" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="400" fill="#1a2b30" text-anchor="start">Steady 5 V for the Pi</text>
+<rect x="960" y="285" width="200" height="110" rx="10.0" fill="#e3f2ef" stroke="#0d7a69" stroke-width="1.8"/>
+<text x="974" y="309" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="16" font-weight="700" fill="#0d7a69" text-anchor="start">Pi Zero 2 W</text>
+<text x="974" y="329" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="400" fill="#1a2b30" text-anchor="start">Power: PWR IN port</text>
+<text x="974" y="347" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="400" fill="#1a2b30" text-anchor="start">USB: the inner port</text>
+<rect x="640" y="470" width="240" height="110" rx="10.0" fill="#f3ede9" stroke="#6d4c41" stroke-width="1.8"/>
+<text x="654" y="494" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="16" font-weight="700" fill="#6d4c41" text-anchor="start">Micro-USB OTG hub</text>
+<text x="654" y="514" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="400" fill="#1a2b30" text-anchor="start">On the Pi’s inner USB port</text>
+<rect x="960" y="450" width="200" height="72" rx="10.0" fill="#efeaf8" stroke="#5e35b1" stroke-width="1.8"/>
+<text x="974" y="474" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="16" font-weight="700" fill="#5e35b1" text-anchor="start">Servo 2040 logic</text>
+<text x="974" y="494" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="400" fill="#1a2b30" text-anchor="start">USB-C: its processor</text>
+<rect x="960" y="538" width="200" height="72" rx="10.0" fill="#f3ede9" stroke="#6d4c41" stroke-width="1.8" stroke-dasharray="7 5"/>
+<text x="974" y="562" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="16" font-weight="700" fill="#6d4c41" text-anchor="start">RPLIDAR C1</text>
+<text x="974" y="582" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="400" fill="#1a2b30" text-anchor="start">Planned</text>
+<path d="M240,280 L270,280 L270,175 L298,175" fill="none" stroke="#c62828" stroke-width="3" stroke-linejoin="round" marker-end="url(#ah-red)"/>
+<path d="M500,175 L545,175 L545,150 L638,150" fill="none" stroke="#c62828" stroke-width="3" stroke-linejoin="round" marker-end="url(#ah-red)"/>
+<text x="590" y="140" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#c62828" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">+</text>
+<path d="M545,175 L545,320 L638,320" fill="none" stroke="#c62828" stroke-width="3" stroke-linejoin="round" marker-end="url(#ah-red)"/>
+<text x="572" y="312" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#c62828" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">+ in</text>
+<path d="M240,345 L600,345 L600,375 L638,375" fill="none" stroke="#222222" stroke-width="3" stroke-linejoin="round" marker-end="url(#ah-black)"/>
+<text x="620" y="395" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#222222" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">− in</text>
+<path d="M600,345 L600,205 L638,205" fill="none" stroke="#222222" stroke-width="3" stroke-linejoin="round" marker-end="url(#ah-black)"/>
+<text x="618" y="196" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#222222" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">V−</text>
+<path d="M880,340 L958,340" fill="none" stroke="#0d7a69" stroke-width="3" stroke-linejoin="round" marker-end="url(#ah-teal)"/>
+<text x="919" y="330" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0d7a69" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">5 V</text>
+<path d="M880,165 L958,165" fill="none" stroke="#c25e00" stroke-width="3" stroke-linejoin="round" marker-end="url(#ah-orange)"/>
+<text x="919" y="155" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="600" fill="#c25e00" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">servo power</text>
+<path d="M1000,395 L1000,435 L760,435 L760,468" fill="none" stroke="#6d4c41" stroke-width="3" stroke-linejoin="round" marker-end="url(#ah-brown)"/>
+<text x="880" y="425" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#6d4c41" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">USB</text>
+<path d="M880,500 L958,486" fill="none" stroke="#6d4c41" stroke-width="3" stroke-linejoin="round" marker-end="url(#ah-brown)"/>
+<path d="M880,550 L958,574" fill="none" stroke="#6d4c41" stroke-width="3" stroke-linejoin="round" stroke-dasharray="7 5" marker-end="url(#ah-brown)"/>
+<rect x="40" y="440" width="500" height="160" rx="10.0" fill="#ffffff" stroke="#c62828" stroke-width="1.8"/>
+<text x="54" y="464" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="16" font-weight="700" fill="#c62828" text-anchor="start">Why two supplies?</text>
+<text x="54" y="484" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="400" fill="#1a2b30" text-anchor="start">When the servos move they pull large current spikes,</text>
+<text x="54" y="502" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="400" fill="#1a2b30" text-anchor="start">which make the battery voltage dip. A Pi on that supply</text>
+<text x="54" y="520" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="400" fill="#1a2b30" text-anchor="start">would restart in the middle of a walk.</text>
+<text x="54" y="538" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="400" fill="#1a2b30" text-anchor="start">Turn the main switch off before touching any wire.</text>
+</svg>

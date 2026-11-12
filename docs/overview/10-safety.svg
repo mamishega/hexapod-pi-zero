@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="1200" height="800" role="img" aria-label="10 · Layers of safety"><title>10 · Layers of safety</title><defs></defs>
+<rect x="0" y="0" width="1200" height="800" rx="0" fill="#ffffff" stroke="none" stroke-width="1.5"/>
+<text x="40" y="50" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="26" font-weight="700" fill="#1a2b30" text-anchor="start">10 · Layers of safety</text>
+<text x="40" y="78" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="400" fill="#5f6f75" text-anchor="start">From the controller to the motors: what is checked, and where</text>
+<rect x="40" y="105" width="1120" height="72" rx="10.0" fill="#e6eef9" stroke="#1565c0" stroke-width="1.5"/>
+<circle cx="72.0" cy="141.0" r="16" fill="#1565c0" stroke="none" stroke-width="1.5"/>
+<text x="72" y="146" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="700" fill="#ffffff" text-anchor="middle">1</text>
+<text x="100" y="135" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="16" font-weight="700" fill="#1565c0" text-anchor="start">Controller</text>
+<rect x="100" y="147" width="31.2" height="21" rx="10.5" fill="#1565c0" stroke="none" stroke-width="1.5"/>
+<text x="115.6" y="160" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11" font-weight="700" fill="#ffffff" text-anchor="middle">Pi</text>
+<text x="330" y="135" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="400" fill="#1a2b30" text-anchor="start">Stick dead zone 0.18 (worn sticks rest at 0.1–0.15). Let go of both sticks → the walk stops.</text>
+<text x="330" y="157" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="400" fill="#1a2b30" text-anchor="start">Controller switched off, battery flat or out of range → drive input drops to zero.</text>
+<rect x="40" y="190" width="1120" height="72" rx="10.0" fill="#e3f2ef" stroke="#0d7a69" stroke-width="1.5"/>
+<circle cx="72.0" cy="226.0" r="16" fill="#0d7a69" stroke="none" stroke-width="1.5"/>
+<text x="72" y="231" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="700" fill="#ffffff" text-anchor="middle">2</text>
+<text x="100" y="220" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="16" font-weight="700" fill="#0d7a69" text-anchor="start">Check before sending</text>
+<rect x="100" y="232" width="31.2" height="21" rx="10.5" fill="#0d7a69" stroke="none" stroke-width="1.5"/>
+<text x="115.6" y="245" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11" font-weight="700" fill="#ffffff" text-anchor="middle">Pi</text>
+<text x="330" y="220" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="400" fill="#1a2b30" text-anchor="start">Every walk, stand and sit is checked with the same maths as the board:</text>
+<text x="330" y="242" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="400" fill="#1a2b30" text-anchor="start">each foot reachable, each joint inside its limits. A failing setting is refused; the old one is kept.</text>
+<rect x="40" y="275" width="1120" height="72" rx="10.0" fill="#efeaf8" stroke="#5e35b1" stroke-width="1.5"/>
+<circle cx="72.0" cy="311.0" r="16" fill="#5e35b1" stroke="none" stroke-width="1.5"/>
+<text x="72" y="316" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="700" fill="#ffffff" text-anchor="middle">3</text>
+<text x="100" y="305" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="16" font-weight="700" fill="#5e35b1" text-anchor="start">Check before moving</text>
+<rect x="100" y="317" width="84.0" height="21" rx="10.5" fill="#5e35b1" stroke="none" stroke-width="1.5"/>
+<text x="142.0" y="330" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11" font-weight="700" fill="#ffffff" text-anchor="middle">Servo 2040</text>
+<text x="330" y="305" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="400" fill="#1a2b30" text-anchor="start">Every pose: feet inside the ±284 mm workspace, reachable, joints inside their limits.</text>
+<text x="330" y="327" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="400" fill="#1a2b30" text-anchor="start">Every servo value is read back; more than 0.5° off → outputs off and an error.</text>
+<rect x="40" y="360" width="1120" height="72" rx="10.0" fill="#efeaf8" stroke="#5e35b1" stroke-width="1.5"/>
+<circle cx="72.0" cy="396.0" r="16" fill="#5e35b1" stroke="none" stroke-width="1.5"/>
+<text x="72" y="401" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="700" fill="#ffffff" text-anchor="middle">4</text>
+<text x="100" y="390" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="16" font-weight="700" fill="#5e35b1" text-anchor="start">Watchdog</text>
+<rect x="100" y="402" width="84.0" height="21" rx="10.5" fill="#5e35b1" stroke="none" stroke-width="1.5"/>
+<text x="142.0" y="415" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11" font-weight="700" fill="#ffffff" text-anchor="middle">Servo 2040</text>
+<text x="330" y="390" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="400" fill="#1a2b30" text-anchor="start">No message from the Pi for 3 s → motors off. The Pi asks for status every 200 ms</text>
+<text x="330" y="412" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="400" fill="#1a2b30" text-anchor="start">while moving and every 650 ms when still, so this only fires if the Pi or its program stops.</text>
+<rect x="40" y="445" width="1120" height="72" rx="10.0" fill="#fbe9e9" stroke="#c62828" stroke-width="1.5"/>
+<circle cx="72.0" cy="481.0" r="16" fill="#c62828" stroke="none" stroke-width="1.5"/>
+<text x="72" y="486" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="700" fill="#ffffff" text-anchor="middle">5</text>
+<text x="100" y="475" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="16" font-weight="700" fill="#c62828" text-anchor="start">Emergency stop</text>
+<rect x="100" y="487" width="84.0" height="21" rx="10.5" fill="#c62828" stroke="none" stroke-width="1.5"/>
+<text x="142.0" y="500" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11" font-weight="700" fill="#ffffff" text-anchor="middle">Controller</text>
+<text x="330" y="475" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="400" fill="#1a2b30" text-anchor="start">View: the board stops sending pulses at once. The legs go limp and the body drops,</text>
+<text x="330" y="497" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="400" fill="#1a2b30" text-anchor="start">so support the robot when testing.</text>
+<rect x="40" y="530" width="1120" height="72" rx="10.0" fill="#fdf0e3" stroke="#c25e00" stroke-width="1.5"/>
+<circle cx="72.0" cy="566.0" r="16" fill="#c25e00" stroke="none" stroke-width="1.5"/>
+<text x="72" y="571" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="700" fill="#ffffff" text-anchor="middle">6</text>
+<text x="100" y="560" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="16" font-weight="700" fill="#c25e00" text-anchor="start">Gentle stops</text>
+<rect x="100" y="572" width="84.0" height="21" rx="10.5" fill="#c25e00" stroke="none" stroke-width="1.5"/>
+<text x="142.0" y="585" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11" font-weight="700" fill="#ffffff" text-anchor="middle">Pi + board</text>
+<text x="330" y="560" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="400" fill="#1a2b30" text-anchor="start">B, letting go, Stand or Sit while walking, and stopping the service all finish the current step</text>
+<text x="330" y="582" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="400" fill="#1a2b30" text-anchor="start">first, so no leg is left in the air.</text>
+<rect x="40" y="615" width="1120" height="72" rx="10.0" fill="#e8f3e9" stroke="#2e7d32" stroke-width="1.5"/>
+<circle cx="72.0" cy="651.0" r="16" fill="#2e7d32" stroke="none" stroke-width="1.5"/>
+<text x="72" y="656" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="700" fill="#ffffff" text-anchor="middle">7</text>
+<text x="100" y="645" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="16" font-weight="700" fill="#2e7d32" text-anchor="start">Web page kept apart</text>
+<rect x="100" y="657" width="31.2" height="21" rx="10.5" fill="#2e7d32" stroke="none" stroke-width="1.5"/>
+<text x="115.6" y="670" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11" font-weight="700" fill="#ffffff" text-anchor="middle">Pi</text>
+<text x="330" y="645" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="400" fill="#1a2b30" text-anchor="start">The Live View only watches. Every part of it is guarded: an error there is logged, never passed on.</text>
+<text x="330" y="667" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="400" fill="#1a2b30" text-anchor="start">Slow viewers are dropped so they cannot fill the Pi’s memory. Teacher actions need a code.</text>
+<rect x="40" y="700" width="1120" height="72" rx="10.0" fill="#f3ede9" stroke="#6d4c41" stroke-width="1.5"/>
+<circle cx="72.0" cy="736.0" r="16" fill="#6d4c41" stroke="none" stroke-width="1.5"/>
+<text x="72" y="741" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="700" fill="#ffffff" text-anchor="middle">8</text>
+<text x="100" y="730" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="16" font-weight="700" fill="#6d4c41" text-anchor="start">No current surges</text>
+<rect x="100" y="742" width="84.0" height="21" rx="10.5" fill="#6d4c41" stroke="none" stroke-width="1.5"/>
+<text x="142.0" y="755" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11" font-weight="700" fill="#ffffff" text-anchor="middle">Servo 2040</text>
+<text x="330" y="730" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="400" fill="#1a2b30" text-anchor="start">Outputs start off. Enable switches the 18 servos on one at a time, 200 ms apart, then glides home.</text>
+<text x="330" y="752" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="400" fill="#1a2b30" text-anchor="start">No move may turn a joint faster than 180°/s. A board restart is logged. The Pi has its own 5 V supply.</text>
+</svg>

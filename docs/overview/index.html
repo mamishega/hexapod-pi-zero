@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hexapod Robot Overview</title>
+<style>
+:root { --bg: #f4f7f8; --card: #ffffff; --ink: #1a2b30; --muted: #5f6f75; --line: #d6dee1; --accent: #0d7a69; --accent-soft: #e3f2ef; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg: #10181b; --card: #172226; --ink: #e6eef0; --muted: #9db0b5; --line: #2a3a3f; --accent: #4fc3ad; --accent-soft: #173a35; } }
+:root[data-theme="dark"] { --bg: #10181b; --card: #172226; --ink: #e6eef0; --muted: #9db0b5; --line: #2a3a3f; --accent: #4fc3ad; --accent-soft: #173a35; }
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 16px; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 Inter, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+.layout { display: grid; grid-template-columns: 270px minmax(0, 1fr); max-width: 1500px; margin: 0 auto; }
+nav { position: sticky; top: 0; height: 100vh; overflow: auto; padding: 28px 18px 28px 24px; border-right: 1px solid var(--line); }
+nav h1 { font-size: 18px; margin: 0 0 4px; }
+nav p { margin: 0 0 18px; color: var(--muted); font-size: 13px; }
+nav ol { list-style: none; margin: 0; padding: 0; counter-reset: d; }
+nav li a { display: flex; gap: 10px; padding: 7px 10px; border-radius: 8px; color: var(--ink); text-decoration: none; font-size: 14px; }
+nav li a span { color: var(--muted); font-variant-numeric: tabular-nums; min-width: 1.4em; }
+nav li a:hover { background: var(--accent-soft); }
+nav li a.on { background: var(--accent-soft); color: var(--accent); font-weight: 600; }
+nav li a.on span { color: var(--accent); }
+.keys { margin-top: 18px; color: var(--muted); font-size: 12px; }
+kbd { border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 4px; padding: 0 5px; font: 12px ui-monospace, Menlo, monospace; }
+main { padding: 32px 40px 80px; min-width: 0; }
+.intro { max-width: 860px; margin-bottom: 36px; }
+.intro h2 { font-size: 30px; margin: 0 0 8px; }
+.intro p { margin: 0; color: var(--muted); }
+section { margin: 0 0 56px; }
+.head { display: flex; align-items: baseline; gap: 12px; margin-bottom: 4px; }
+.num { color: var(--accent); font-weight: 700; font-variant-numeric: tabular-nums; }
+section h3 { font-size: 22px; margin: 0; }
+.summary { color: var(--muted); margin: 0 0 14px; }
+figure { margin: 0; background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 8px; box-shadow: 0 1px 3px rgba(0,0,0,.06); }
+figure img { display: block; width: 100%; height: auto; }
+.notice { margin: 14px 0 0; padding: 14px 18px 14px 20px; background: var(--card); border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: 10px; }
+.notice b { display: block; font-size: 13px; text-transform: uppercase; letter-spacing: .05em; color: var(--accent); margin-bottom: 4px; }
+.notice ul { margin: 0; padding-left: 20px; }
+.notice li + li { margin-top: 3px; }
+.tools { display: flex; gap: 14px; margin-top: 10px; font-size: 14px; }
+.tools a { color: var(--accent); }
+.theme { margin-top: 14px; background: none; border: 1px solid var(--line); color: var(--ink); border-radius: 8px; padding: 6px 10px; font: inherit; font-size: 13px; cursor: pointer; }
+@media (max-width: 900px) {
+  .layout { display: block; }
+  nav { position: static; height: auto; border-right: 0; border-bottom: 1px solid var(--line); padding: 20px 16px; }
+  nav ol { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; }
+  .keys { display: none; }
+  main { padding: 24px 16px 60px; }
+  .intro h2 { font-size: 24px; }
+  figure { overflow-x: auto; }
+  figure img { min-width: 640px; }
+}
+</style>
+</head>
+<body>
+<div class="layout">
+<nav aria-label="Diagrams">
+  <h1>Hexapod overview</h1>
+  <p>How the robot behaves, in 12 diagrams</p>
+  <ol>
+    <li><a href="#system"><span>1</span>The whole robot at a glance</a></li>
+    <li><a href="#power"><span>2</span>Power: two supplies from one battery</a></li>
+    <li><a href="#software"><span>3</span>Where the software runs</a></li>
+    <li><a href="#command"><span>4</span>The journey of one command</a></li>
+    <li><a href="#states"><span>5</span>What the robot can be doing</a></li>
+    <li><a href="#controller"><span>6</span>The controller</a></li>
+    <li><a href="#gaits"><span>7</span>The three gaits</a></li>
+    <li><a href="#step"><span>8</span>One foot, one step</a></li>
+    <li><a href="#leg"><span>9</span>One leg: inverse kinematics</a></li>
+    <li><a href="#safety"><span>10</span>Layers of safety</a></li>
+    <li><a href="#wifi"><span>11</span>Wi-Fi: joined or hotspot</a></li>
+    <li><a href="#liveview"><span>12</span>How the Live View works</a></li>
+  </ol>
+  <div class="keys"><kbd>J</kbd> / <kbd>K</kbd> or <kbd>↓</kbd> / <kbd>↑</kbd>: next / previous diagram</div>
+  <button class="theme" type="button" id="theme">Switch light / dark</button>
+</nav>
+<main>
+  <div class="intro">
+    <h2>How the hexapod works</h2>
+    <p>Start at the top for the big picture, then follow a command through the robot, its states and controls,
+    the way it walks, and what keeps it safe. Each diagram is a separate SVG file in this folder; open one
+    on its own to zoom in.</p>
+  </div>
+  <section id="system">
+    <div class="head"><span class="num">1</span><h3>The whole robot at a glance</h3></div>
+    <p class="summary">What each part does and how the parts talk to each other.</p>
+    <figure><img src="01-system.svg" alt="Diagram 1: The whole robot at a glance" loading="lazy"></figure>
+    <div class="notice"><b>What to notice</b><ul><li>The Pi decides what to do; the Servo 2040 does the fast, precise work of moving 18 servos.</li><li>The Pi does not move individual servos. It sends short text commands such as &quot;walk&quot; or &quot;stop&quot; over three wires.</li><li>The Live View only watches. Nothing in a browser can drive the robot.</li></ul></div>
+    <div class="tools"><a href="01-system.svg" target="_blank" rel="noopener">Open 01-system.svg on its own</a></div>
+  </section>
+  <section id="power">
+    <div class="head"><span class="num">2</span><h3>Power: two supplies from one battery</h3></div>
+    <p class="summary">How the battery feeds the servos, the Pi and the Servo 2040.</p>
+    <figure><img src="02-power.svg" alt="Diagram 2: Power: two supplies from one battery" loading="lazy"></figure>
+    <div class="notice"><b>What to notice</b><ul><li>The servos take their power straight from the battery; the Pi gets its own steady 5 V from a buck converter.</li><li>The Servo 2040 processor is powered by USB from the Pi, so it stays on when the servo power dips.</li><li>The switch and fuse sit on the + wire only; all grounds are joined.</li></ul></div>
+    <div class="tools"><a href="02-power.svg" target="_blank" rel="noopener">Open 02-power.svg on its own</a></div>
+  </section>
+  <section id="software">
+    <div class="head"><span class="num">3</span><h3>Where the software runs</h3></div>
+    <p class="summary">The programs on the Pi and on the Servo 2040, and how they connect.</p>
+    <figure><img src="03-software.svg" alt="Diagram 3: Where the software runs" loading="lazy"></figure>
+    <div class="notice"><b>What to notice</b><ul><li>Two services start by themselves on the Pi: the driving service and the Wi-Fi manager.</li><li>Inside the driving service, main.js connects the parts: controller → drive loop → RobotController → serial link.</li><li>On the board, one loop does everything: watchdog, the next movement step, then reading new commands.</li></ul></div>
+    <div class="tools"><a href="03-software.svg" target="_blank" rel="noopener">Open 03-software.svg on its own</a></div>
+  </section>
+  <section id="command">
+    <div class="head"><span class="num">4</span><h3>The journey of one command</h3></div>
+    <p class="summary">What happens between pushing the stick and the legs moving.</p>
+    <figure><img src="04-command.svg" alt="Diagram 4: The journey of one command" loading="lazy"></figure>
+    <div class="notice"><b>What to notice</b><ul><li>The Pi checks the whole walk before sending it, using the same maths as the board.</li><li>After one &quot;walk&quot; command the board walks on its own, recalculating every leg 50 times a second. The Pi only steers.</li><li>The regular &quot;status&quot; question keeps the board’s 3-second watchdog happy and feeds the Live View.</li></ul></div>
+    <div class="tools"><a href="04-command.svg" target="_blank" rel="noopener">Open 04-command.svg on its own</a></div>
+  </section>
+  <section id="states">
+    <div class="head"><span class="num">5</span><h3>What the robot can be doing</h3></div>
+    <p class="summary">The robot’s states and what moves it from one to the next.</p>
+    <figure><img src="05-states.svg" alt="Diagram 5: What the robot can be doing" loading="lazy"></figure>
+    <div class="notice"><b>What to notice</b><ul><li>Every power-up starts with the motors off; A (Enable) is always the first button.</li><li>Stopping is gentle: the robot finishes its step instead of freezing with a leg in the air.</li><li>View and the watchdog are the two ways to cut the motors at once, from any state.</li></ul></div>
+    <div class="tools"><a href="05-states.svg" target="_blank" rel="noopener">Open 05-states.svg on its own</a></div>
+  </section>
+  <section id="controller">
+    <div class="head"><span class="num">6</span><h3>The controller</h3></div>
+    <p class="summary">What every stick and button does, and the walk settings they change.</p>
+    <figure><img src="06-controller.svg" alt="Diagram 6: The controller" loading="lazy"></figure>
+    <div class="notice"><b>What to notice</b><ul><li>Pushing the left stick further makes the robot walk faster; letting go stops the walk.</li><li>The setting buttons repeat while held, and while walking the board blends each change in.</li><li>View is the emergency stop: the motors switch off at once and the body drops.</li></ul></div>
+    <div class="tools"><a href="06-controller.svg" target="_blank" rel="noopener">Open 06-controller.svg on its own</a></div>
+  </section>
+  <section id="gaits">
+    <div class="head"><span class="num">7</span><h3>The three gaits</h3></div>
+    <p class="summary">Which legs are in the air at each moment of the walking cycle.</p>
+    <figure><img src="07-gaits.svg" alt="Diagram 7: The three gaits" loading="lazy"></figure>
+    <div class="notice"><b>What to notice</b><ul><li>Each bar is one leg lifting and swinging forward; the rest of the time that foot is pushing on the ground.</li><li>Tripod always has 3 feet down (fastest), ripple 4 (smooth, the default), wave 5 (slowest, most stable).</li><li>One cycle takes 1 ÷ speed seconds: 1.43 s at the default 0.7 steps per second.</li></ul></div>
+    <div class="tools"><a href="07-gaits.svg" target="_blank" rel="noopener">Open 07-gaits.svg on its own</a></div>
+  </section>
+  <section id="step">
+    <div class="head"><span class="num">8</span><h3>One foot, one step</h3></div>
+    <p class="summary">The path a single foot follows during one walking cycle.</p>
+    <figure><img src="08-step.svg" alt="Diagram 8: One foot, one step" loading="lazy"></figure>
+    <div class="notice"><b>What to notice</b><ul><li>In the air the foot speeds up and slows down smoothly (a cosine curve); on the ground it moves at a steady speed.</li><li>The feet on the ground all push back at the same speed, which carries the body forward.</li><li>A walk starts and ends gently: the step grows from nothing over the first cycle and shrinks over the last.</li></ul></div>
+    <div class="tools"><a href="08-step.svg" target="_blank" rel="noopener">Open 08-step.svg on its own</a></div>
+  </section>
+  <section id="leg">
+    <div class="head"><span class="num">9</span><h3>One leg: inverse kinematics</h3></div>
+    <p class="summary">How the board turns “put this foot here” into three servo angles.</p>
+    <figure><img src="09-leg.svg" alt="Diagram 9: One leg: inverse kinematics" loading="lazy"></figure>
+    <div class="notice"><b>What to notice</b><ul><li>The gait only says where each foot should be (x, y, z in mm). Inverse kinematics finds the joint angles that put it there.</li><li>The hip angle comes from the top view; the other two come from one triangle in the side view (the law of cosines).</li><li>A foot that cannot be reached, or an angle outside a joint’s limits, is refused with an error rather than attempted.</li></ul></div>
+    <div class="tools"><a href="09-leg.svg" target="_blank" rel="noopener">Open 09-leg.svg on its own</a></div>
+  </section>
+  <section id="safety">
+    <div class="head"><span class="num">10</span><h3>Layers of safety</h3></div>
+    <p class="summary">Every check between the controller and the motors, and where it runs.</p>
+    <figure><img src="10-safety.svg" alt="Diagram 10: Layers of safety" loading="lazy"></figure>
+    <div class="notice"><b>What to notice</b><ul><li>Moves are checked twice: on the Pi before sending, and again on the board before moving.</li><li>If anything goes quiet (the controller, the Pi, the Wi-Fi), the robot stops rather than carrying on.</li><li>The Live View is kept away from driving: a fault in the web page cannot stop or steer the robot.</li></ul></div>
+    <div class="tools"><a href="10-safety.svg" target="_blank" rel="noopener">Open 10-safety.svg on its own</a></div>
+  </section>
+  <section id="wifi">
+    <div class="head"><span class="num">11</span><h3>Wi-Fi: joined or hotspot</h3></div>
+    <p class="summary">How the robot stays reachable with or without a network.</p>
+    <figure><img src="11-wifi.svg" alt="Diagram 11: Wi-Fi: joined or hotspot" loading="lazy"></figure>
+    <div class="notice"><b>What to notice</b><ul><li>At work the Pi joins Robocop like any laptop; elsewhere it becomes its own Wi-Fi network after about 75 seconds.</li><li>The Pi has one Wi-Fi radio, so it is either joined or a hotspot, never both.</li><li>On the hotspot the Pi is always at 10.42.0.1, so the Live View address never changes there.</li></ul></div>
+    <div class="tools"><a href="11-wifi.svg" target="_blank" rel="noopener">Open 11-wifi.svg on its own</a></div>
+  </section>
+  <section id="liveview">
+    <div class="head"><span class="num">12</span><h3>How the Live View works</h3></div>
+    <p class="summary">From the robot to every browser, and how the page draws smooth motion.</p>
+    <figure><img src="12-liveview.svg" alt="Diagram 12: How the Live View works" loading="lazy"></figure>
+    <div class="notice"><b>What to notice</b><ul><li>The Pi pushes updates down one long-lived connection per browser (Server-Sent Events); browsers never ask the robot to do anything.</li><li>Updates are limited (robot 10 per second, controller 20) so 40 viewers do not slow the robot down.</li><li>The page draws a quarter of a second in the past, so it always has the next position to glide towards: smooth motion, pause and replay.</li></ul></div>
+    <div class="tools"><a href="12-liveview.svg" target="_blank" rel="noopener">Open 12-liveview.svg on its own</a></div>
+  </section>
+</main>
+</div>
+<script>
+const sections = [...document.querySelectorAll('main section')];
+const links = new Map([...document.querySelectorAll('nav a')].map(a => [a.getAttribute('href').slice(1), a]));
+const seen = new Set();
+const io = new IntersectionObserver(entries => {
+  for (const e of entries) e.isIntersecting ? seen.add(e.target.id) : seen.delete(e.target.id);
+  const current = sections.find(s => seen.has(s.id));
+  if (current) for (const [id, a] of links) a.classList.toggle('on', id === current.id);
+}, {rootMargin: '-35% 0px -55% 0px'});
+sections.forEach(s => io.observe(s));
+// The diagram at the top of the window (-1: still on the introduction).
+const current = () => sections.reduce((at, s, i) => (s.getBoundingClientRect().top <= 60 ? i : at), -1);
+let target = null, settle = null; // while a smooth scroll runs, more presses count on from its target
+function go(step) {
+  target = Math.max(0, Math.min(sections.length - 1, (target ?? current()) + step));
+  sections[target].scrollIntoView();
+  clearTimeout(settle); settle = setTimeout(() => { target = null; }, 900);
+}
+addEventListener('keydown', e => {
+  if (e.metaKey || e.ctrlKey || e.altKey || /input|textarea/i.test(e.target.tagName)) return;
+  if (e.key === 'j' || e.key === 'ArrowDown') { e.preventDefault(); go(1); }
+  if (e.key === 'k' || e.key === 'ArrowUp') { e.preventDefault(); go(-1); }
+});
+const root = document.documentElement;
+try { const t = localStorage.getItem('hexapod-overview-theme'); if (t) root.dataset.theme = t; } catch {}
+document.getElementById('theme').addEventListener('click', () => {
+  const dark = root.dataset.theme ? root.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+  root.dataset.theme = dark ? 'light' : 'dark';
+  try { localStorage.setItem('hexapod-overview-theme', root.dataset.theme); } catch {}
+});
+</script>
+</body>
+</html>
