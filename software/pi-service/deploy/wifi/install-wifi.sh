@@ -15,7 +15,7 @@ if [ ! -f "$CONF" ]; then
   suffix=$(tr -d ':' < /sys/class/net/wlan0/address | tail -c 5 | tr 'a-f' 'A-F')
   cat > "$CONF" <<EOF
 # Hexapod Wi-Fi settings. After changing the name or password run:
-#   sudo bash ~/pi-service/deploy/wifi/install-wifi.sh
+#   sudo bash $HERE/install-wifi.sh
 # MODE: auto (saved network, otherwise hotspot), hotspot (always), station (never hotspot)
 MODE=auto
 HOTSPOT_SSID=Hexapod-$suffix

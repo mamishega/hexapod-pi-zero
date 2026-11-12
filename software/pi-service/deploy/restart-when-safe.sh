@@ -25,5 +25,5 @@ for ((waited = 0; waited <= WAIT; waited += 3)); do
   if [ -z "$told" ]; then echo "The motors are on. Make the robot sit (X), then press View to switch them off. Waiting…"; told=1; fi
   sleep 3
 done
-echo "Gave up after ${WAIT} s: the motors stayed on. Run 'bash ~/pi-service/deploy/restart-when-safe.sh' when the robot is sitting with its motors off."
+echo "Gave up after ${WAIT} s: the motors stayed on. Run 'bash $(cd "$(dirname "$0")" && pwd)/restart-when-safe.sh' when the robot is sitting with its motors off."
 exit 1

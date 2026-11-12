@@ -33,31 +33,44 @@ In the steps below, each command says **where** to type it:
 
 ## One-time setup
 
-### Step 1. Copy this folder to the Pi
+### Step 1. Copy the repository to the Pi and install
 
-🖥️ **Mac**, from the `software` folder of this repository:
-
-```sh
-scp -r pi-service kangan@hexapod.local:~/
-```
-
-### Step 2. Install it on the Pi
-
-🍓 **Pi**:
+🖥️ **Mac**, from the repository's folder (the one with `send-to-pi.sh`):
 
 ```sh
-cd ~/pi-service
-bash deploy/install.sh
-sudo reboot
+bash send-to-pi.sh --install          # add the Pi's address if hexapod.local is not found
 ```
 
-The installer:
+This copies the whole repository to `~/hexapod-pi-zero` on the Pi over `scp` (you type the Pi's password once),
+then runs `install.sh` there.
+
+### Step 2. (By hand instead) Install it on the Pi
+
+If you copied the repository yourself, 🍓 **Pi**:
+
+```sh
+cd ~/hexapod-pi-zero/software/pi-service
+bash install.sh
+```
+
+`install.sh` sets up Node.js (it offers to install it), runs `deploy/install.sh`, sets up the offline hotspot
+(`--no-wifi` skips it), and reboots (it asks first) or restarts the service once the motors are off.
+`deploy/install.sh`:
 - installs what the program needs
 - switches on the Pi's serial port (the 3 wires to the Servo 2040)
 - switches off the Pi's login prompt on that port, which would otherwise send text to the Servo 2040
 - sets the program to start every time the Pi powers on
 
 ### Step 3. Update the Servo 2040
+
+🖥️ **Mac** (or any Linux computer), with the Servo 2040 plugged in by USB-C, the robot's power off and Thonny closed:
+
+```sh
+bash software/flash-board.sh     # from the repository folder; --dry-run shows the steps first
+```
+
+It backs up the board's files to `software/board-backups/`, copies the four files, checks them and restarts the
+board. It needs `mpremote` and offers to install it. Or do it by hand:
 
 🐍 **Thonny**, with the Servo 2040 plugged into the Mac by USB-C and the robot's power off:
 
@@ -74,7 +87,7 @@ Support the robot's body, then switch its power on.
 🍓 **Pi**:
 
 ```sh
-cd ~/pi-service
+cd ~/hexapod-pi-zero/software/pi-service
 sudo systemctl stop hexapod-drive
 npm run link-test
 ```
@@ -164,7 +177,11 @@ To see what the program is doing, 🍓 **Pi**: `journalctl -u hexapod-drive -f` 
 
 ## Command reference
 
-🍓 All of these run on the **Pi**, inside `~/pi-service`:
+🍓 All of these run on the **Pi**, inside `~/hexapod-pi-zero/software/pi-service`:
+
+**Updating later.** 🖥️ **Mac**: `bash send-to-pi.sh` (or `npm run deploy`). It copies the repository, installs new
+dependencies only if `package.json` changed, and restarts once the motors are off. On the Pi by hand: `bash install.sh --update`.
+
 
 | Command | What it does |
 |---|---|

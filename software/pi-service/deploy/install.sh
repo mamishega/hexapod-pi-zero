@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 # Run ON THE PI from the pi-service folder:   bash deploy/install.sh
+# (Usually run for you by ./install.sh, which also sets up Node.js, the hotspot and the restart.)
 # Installs dependencies, sets up the UART for the Servo 2040, and installs the
 # hexapod-drive service so it starts at boot. Safe to run again after updates.
 set -euo pipefail
@@ -40,6 +41,8 @@ sudo systemctl enable hexapod-drive.service
 [ -f controller-map.json ] || warn "No controller-map.json yet: run  npm run controller-setup  before driving."
 
 say "Done"
+# install.sh (the one-step installer) prints its own next steps.
+[ -n "${HEXAPOD_QUIET_NEXT:-}" ] && exit 0
 cat <<EOF
 Next:
   1. sudo reboot                      (applies the serial and group changes)

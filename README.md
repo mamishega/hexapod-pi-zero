@@ -87,19 +87,19 @@ interactive version is in [`docs/wiring/circuit-studio/`](docs/wiring/circuit-st
 
 1. **Wire and power** the robot (manual, Section 5).
 2. **Set up the Pi** with Raspberry Pi Imager (manual, Section 6): hostname `hexapod`, user `kangan`, Wi-Fi **Robocop**, country **AU**.
-3. **Install the software.** On the Mac, from the `software` folder:
+3. **Install the software.** On the Mac, from this repository's folder:
    ```sh
-   scp -r pi-service kangan@hexapod.local:~/
+   bash send-to-pi.sh --install            # or: bash send-to-pi.sh <pi-address> --install
    ```
-   Then, logged in to the Pi:
-   ```sh
-   cd ~/pi-service
-   bash deploy/install.sh                  # driving service, serial port, start at power-on
-   sudo bash deploy/wifi/install-wifi.sh   # offline (hotspot) mode
-   sudo reboot
-   ```
-4. **Update the Servo 2040.** In Thonny, copy the files in [`software/board-files/`](software/board-files/) to the board. Keep `calibration_offsets.json` and `joint_limits.json` on the board.
-5. **Test the link and set up the controller.** On the Pi:
+   It copies the whole repository to `~/hexapod-pi-zero` on the Pi over `scp`, then runs
+   `software/pi-service/install.sh` there: Node.js, dependencies, serial port, permissions, the
+   service that starts at power-on, and the offline hotspot. It offers to reboot when needed.
+   (By hand: copy the repository over, then on the Pi `cd ~/hexapod-pi-zero/software/pi-service && bash install.sh`.)
+4. **Update the Servo 2040.** Plug it into the computer by USB-C (main switch off), close Thonny, and run
+   `bash software/flash-board.sh`. It backs up the board, copies the files in [`software/board-files/`](software/board-files/),
+   checks them and restarts the board; `calibration_offsets.json` and `joint_limits.json` are never touched.
+   (Or copy the same four files in Thonny.)
+5. **Test the link and set up the controller.** On the Pi, in `~/hexapod-pi-zero/software/pi-service`:
    ```sh
    sudo systemctl stop hexapod-drive
    npm run link-test          # expects "OK  The Servo 2040 answered."
@@ -169,11 +169,14 @@ with a class** (manual, Section 8.2).
 
 ```
 .
+├── send-to-pi.sh                Copies the repository to the Pi over scp and installs or updates the service
 ├── software/
+│   ├── flash-board.sh           Copies board-files onto the Servo 2040 over USB (backs it up first)
 │   ├── pi-service/              Program on the Pi (Node.js)
 │   │   ├── src/                 Driving service, controller input, Live View server, serial link
 │   │   ├── live/                Live View web app (plain ES modules, no build step)
-│   │   ├── deploy/              systemd service, installer, Wi-Fi / hotspot manager
+│   │   ├── install.sh           One-step install on the Pi (--update after copying new files)
+│   │   ├── deploy/              systemd service, installer steps, Wi-Fi / hotspot manager
 │   │   ├── tools/               link-test, controller-setup/test, live-demo, deploy, QR checks
 │   │   ├── tests/               Unit tests (node --test)
 │   │   └── vendor/              Shared robot controller code (do not edit)
@@ -230,9 +233,10 @@ npm install                                     # once
 npm run build                                   # user-manual.docx + web-manual/
 ```
 
-To update the robot, run `npm run deploy` in `software/pi-service` (or `npm run deploy -- <pi-address>`). It copies the
-software, records the version, keeps the controller setup and saved data, and restarts the service only once
-the motors are off, because a restart drops the robot.
+To update the robot, run `bash send-to-pi.sh` (or `bash send-to-pi.sh <pi-address>`) from this folder; `npm run deploy`
+in `software/pi-service` does the same. It copies the repository, records the version, keeps the controller setup,
+`node_modules` and saved data, installs dependencies only if `package.json` changed, and restarts the service only once
+the motors are off, because a restart drops the robot. The previous copy is kept as `~/hexapod-pi-zero.previous`.
 
 ## Safety
 
